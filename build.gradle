@@ -1,4 +1,7 @@
+apply plugin: 'eclipse'
 apply plugin: 'java'
+
+version = '0_9'
 
 repositories {
   mavenCentral()
