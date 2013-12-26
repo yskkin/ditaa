@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'commons-cli:commons-cli:1.2'
+  compile 'net.htmlparser.jericho:jericho-html:3.1'
+  compile 'batik:batik-bridge:1.6-1'
+  compile 'xml-apis:xml-apis:1.3.04'
+  compile files("${System.properties['java.home']}/../lib/tools.jar")
+  compile 'junit:junit:4.11'
+}
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src'
+    }
+    resources {
+      srcDir 'src'
+    }
+  }
+}
