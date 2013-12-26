@@ -17,16 +17,28 @@ dependencies {
   bundleJar 'net.htmlparser.jericho:jericho-html:3.1'
   compile 'batik:batik-bridge:1.6-1'
   compile files("${System.properties['java.home']}/../lib/tools.jar")
-  compile 'junit:junit:4.11'
+
+  testCompile 'junit:junit:4.11'
 }
 
 sourceSets {
   main {
     java {
       srcDir 'src'
+      exclude '**/test/**'
     }
     resources {
       srcDir 'src'
+    }
+  }
+  test {
+    java {
+      srcDir 'src'
+      include '**/test/**'
+    }
+    resources {
+      srcDir rootDir
+      include 'tests/**'
     }
   }
 }
