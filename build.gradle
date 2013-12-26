@@ -1,5 +1,6 @@
 apply plugin: 'eclipse'
 apply plugin: 'java'
+import org.apache.tools.ant.taskdefs.condition.Os
 
 version = '0_9'
 
@@ -13,10 +14,12 @@ configurations {
 }
 
 dependencies {
+  def javadocToolLocation = Os.isFamily(Os.FAMILY_MAC) ? "../Classes/classes.jar" : "../lib/tools.jar";
+
   bundleJar 'commons-cli:commons-cli:1.2'
   bundleJar 'net.htmlparser.jericho:jericho-html:3.1'
   compile 'batik:batik-bridge:1.6-1'
-  compile files("${System.properties['java.home']}/../lib/tools.jar")
+  compile files("${System.properties['java.home']}/${javadocToolLocation}")
 
   testCompile 'junit:junit:4.11'
 }
