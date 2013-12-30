@@ -1412,18 +1412,23 @@ public class TextGrid {
 			Cell sCell = cell.getSouth();
 			Cell eCell = cell.getEast();
 			Cell wCell = cell.getWest();
+                        
+			char nChar = get(nCell);
+			char sChar = get(sCell);
+			char eChar = get(eCell);
+			char wChar = get(wCell);
 			
-			if(get(nCell) == oldChar) stack.push(nCell);
-			else if(get(nCell) == '*') boundaries.add(nCell);
+			if(nChar == oldChar) stack.push(nCell);
+			else if(nChar == '*') boundaries.add(nCell);
 			
-			if(get(sCell) == oldChar) stack.push(sCell);
-			else if(get(sCell) == '*') boundaries.add(sCell);
+			if(sChar == oldChar) stack.push(sCell);
+			else if(sChar == '*') boundaries.add(sCell);
 			
-			if(get(eCell) == oldChar) stack.push(eCell);
-			else if(get(eCell) == '*') boundaries.add(eCell);
+			if(eChar == oldChar) stack.push(eCell);
+			else if(eChar == '*') boundaries.add(eCell);
 			
-			if(get(wCell) == oldChar) stack.push(wCell);
-			else if(get(wCell) == '*') boundaries.add(wCell);
+			if(wChar == oldChar) stack.push(wCell);
+			else if(wChar == '*') boundaries.add(wCell);
 		}
 		
 		return boundaries;
