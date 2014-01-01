@@ -482,7 +482,6 @@ public class Diagram {
 							boundarySetsStep2.add(boundaries.makeScaledOneThirdEquivalent());
 						}
 					
-						copyGrid = new AbstractionGrid(workGrid, set).getCopyOfInternalBuffer();
 						CellSet filled =
 							copyGrid
 							.fillContinuousArea(copyGrid.new Cell(xi, yi), '*');
