@@ -132,19 +132,6 @@ public class Diagram {
 	
 		ArrayList<CellSet> boundarySetsStep2 = findBoundariesFromGrid(workGrid, width, height);
 
-		LOG.finer("******* Removed duplicates *******");
-
-		boundarySetsStep2 = CellSet.removeDuplicateSets(boundarySetsStep2);
-
-		for (CellSet set : boundarySetsStep2) {
-			set.printAsGrid();
-		}
-		LOG.finer(
-				"******* Removed duplicates: now there are "
-				+ boundarySetsStep2.size()
-				+ " shapes.");
-
-
 		//split boundaries to open, closed and mixed
 		
 		LOG.finer("******* First evaluation of openess *******");
@@ -490,7 +477,10 @@ public class Diagram {
 							copyGrid
 							.findBoundariesExpandingFrom(copyGrid.new Cell(xi, yi));
 						if(boundaries.size() == 0) continue; //i'm not sure why these occur
-						boundarySetsStep2.add(boundaries.makeScaledOneThirdEquivalent());
+						CellSet resultCandidate = boundaries.makeScaledOneThirdEquivalent();
+						if (boundarySetsStep2.isEmpty() || !boundarySetsStep2.get(boundarySetsStep2.size() - 1).equals(resultCandidate)) {
+							boundarySetsStep2.add(boundaries.makeScaledOneThirdEquivalent());
+						}
 					
 						copyGrid = new AbstractionGrid(workGrid, set).getCopyOfInternalBuffer();
 						CellSet filled =

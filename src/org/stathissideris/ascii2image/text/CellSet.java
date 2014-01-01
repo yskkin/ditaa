@@ -479,25 +479,10 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		return internalSet.equals(otherSet.internalSet);
 	}
 
-	
-	public static ArrayList<CellSet> removeDuplicateSets(ArrayList<CellSet> list) {
-		ArrayList<CellSet> uniqueSets = new ArrayList<CellSet>();
-
-		Iterator<CellSet> it = list.iterator();
-		while(it.hasNext()){
-			CellSet set = it.next();
-			boolean isOriginal = true;
-			Iterator<CellSet> uniquesIt = uniqueSets.iterator();
-			while(uniquesIt.hasNext()){
-				CellSet uniqueSet = uniquesIt.next();
-				if(set.equals(uniqueSet)){
-					isOriginal = false;
-				}
-			}
-			if(isOriginal) uniqueSets.add(set);
-		}
-		return uniqueSets;
+	public int hashCode() {
+		return internalSet.hashCode();
 	}
+
 	
 	
 	/**
