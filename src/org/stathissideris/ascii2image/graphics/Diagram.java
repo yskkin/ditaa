@@ -23,6 +23,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.stathissideris.ascii2image.core.ConversionOptions;
@@ -360,76 +362,7 @@ public class Diagram {
 			//this tag is not within a shape, skip
 			if(containingShape == null) continue;
 			
-			//TODO: the code below could be a lot more concise
-			if(pair.tag.equals("d")){
-				CustomShapeDefinition def =
-					options.processingOptions.getFromCustomShapes("d");
-				if(def == null)
-					containingShape.setType(DiagramShape.TYPE_DOCUMENT);
-				else {
-					containingShape.setType(DiagramShape.TYPE_CUSTOM);
-					containingShape.setDefinition(def);
-				}
-			} else if(pair.tag.equals("s")){
-				CustomShapeDefinition def =
-					options.processingOptions.getFromCustomShapes("s");
-				if(def == null)
-					containingShape.setType(DiagramShape.TYPE_STORAGE);
-				else {
-					containingShape.setType(DiagramShape.TYPE_CUSTOM);
-					containingShape.setDefinition(def);
-				}
-			} else if(pair.tag.equals("io")){
-				CustomShapeDefinition def =
-					options.processingOptions.getFromCustomShapes("io");
-				if(def == null)
-					containingShape.setType(DiagramShape.TYPE_IO);
-				else {
-					containingShape.setType(DiagramShape.TYPE_CUSTOM);
-					containingShape.setDefinition(def);
-				}
-			} else if(pair.tag.equals("c")){
-				CustomShapeDefinition def =
-					options.processingOptions.getFromCustomShapes("c");
-				if(def == null)
-					containingShape.setType(DiagramShape.TYPE_DECISION);
-				else {
-					containingShape.setType(DiagramShape.TYPE_CUSTOM);
-					containingShape.setDefinition(def);
-				}
-			} else if(pair.tag.equals("mo")){
-				CustomShapeDefinition def =
-					options.processingOptions.getFromCustomShapes("mo");
-				if(def == null)
-					containingShape.setType(DiagramShape.TYPE_MANUAL_OPERATION);
-				else {
-					containingShape.setType(DiagramShape.TYPE_CUSTOM);
-					containingShape.setDefinition(def);
-				}
-			} else if(pair.tag.equals("tr")){
-				CustomShapeDefinition def =
-					options.processingOptions.getFromCustomShapes("tr");
-				if(def == null)
-					containingShape.setType(DiagramShape.TYPE_TRAPEZOID);
-				else {
-					containingShape.setType(DiagramShape.TYPE_CUSTOM);
-					containingShape.setDefinition(def);
-				}
-			} else if(pair.tag.equals("o")){
-				CustomShapeDefinition def =
-					options.processingOptions.getFromCustomShapes("o");
-				if(def == null)
-					containingShape.setType(DiagramShape.TYPE_ELLIPSE);
-				else {
-					containingShape.setType(DiagramShape.TYPE_CUSTOM);
-					containingShape.setDefinition(def);
-				}
-			} else {
-				CustomShapeDefinition def =
-					options.processingOptions.getFromCustomShapes(pair.tag);
-				containingShape.setType(DiagramShape.TYPE_CUSTOM);
-				containingShape.setDefinition(def);						
-			}
+			handleCellTagPair(options, pair, containingShape);
 		}
 		
 		//make arrowheads
@@ -541,6 +474,35 @@ public class Diagram {
 		
 		LOG.info("Corrected color of text according to underlying color");
 
+	}
+
+	private void handleCellTagPair(ConversionOptions options, CellTagPair pair,
+			DiagramShape containingShape) {
+		@SuppressWarnings("serial")
+		final Map<String, Integer> tagType = new HashMap<String, Integer>() {{
+			put("d", DiagramShape.TYPE_DOCUMENT);
+			put("s", DiagramShape.TYPE_STORAGE);
+			put("io", DiagramShape.TYPE_IO);
+			put("c", DiagramShape.TYPE_DECISION);
+			put("mo", DiagramShape.TYPE_MANUAL_OPERATION);
+			put("tr", DiagramShape.TYPE_TRAPEZOID);
+			put("o", DiagramShape.TYPE_ELLIPSE);
+		}};
+		Integer type = tagType.get(pair.tag);
+		if (type != null) {
+			CustomShapeDefinition def = options.processingOptions.getFromCustomShapes(pair.tag);
+			if (def == null) {
+				containingShape.setType(type);
+			} else {
+				containingShape.setType(DiagramShape.TYPE_CUSTOM);
+				containingShape.setDefinition(def);
+			}
+		} else {
+			CustomShapeDefinition def =
+				options.processingOptions.getFromCustomShapes(pair.tag);
+			containingShape.setType(DiagramShape.TYPE_CUSTOM);
+			containingShape.setDefinition(def);						
+		}
 	}
 	
 	/**
