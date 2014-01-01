@@ -20,7 +20,6 @@
 package org.stathissideris.ascii2image.text;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * 
@@ -68,9 +67,7 @@ public class AbstractionGrid {
 			cellSet.printAsGrid();
 		}
 		
-		Iterator it = cellSet.iterator();
-		while(it.hasNext()){
-			TextGrid.Cell cell = (TextGrid.Cell) it.next();
+		for (TextGrid.Cell cell : cellSet){
 			if(textGrid.isBlank(cell)) continue;
 			if(textGrid.isCross(cell)){
 				set(cell.x, cell.y, AbstractCell.makeCross());
@@ -152,9 +149,7 @@ public class AbstractionGrid {
 		CellSet nonBlank = grid.getAllNonBlank();
 		ArrayList<CellSet> distinct = nonBlank.breakIntoDistinctBoundaries();
 		
-		Iterator<CellSet> it = distinct.iterator();
-		while (it.hasNext()) {
-			CellSet set = it.next();
+		for (CellSet set : distinct) {
 			AbstractionGrid temp = new AbstractionGrid(this.getWidth(), this.getHeight());
 			temp.fillCells(set);
 			result.add(temp.getAsTextGrid().getAllNonBlank());

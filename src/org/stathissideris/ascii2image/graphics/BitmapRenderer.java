@@ -38,7 +38,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
@@ -138,13 +137,9 @@ public class BitmapRenderer {
 
 		if(DEBUG) System.out.println("Rendering "+shapes.size()+" shapes (groups flattened)");
 
-		Iterator<DiagramShape> shapesIt;
 		if(options.dropShadows()){
 			//render shadows
-			shapesIt = shapes.iterator();
-			while(shapesIt.hasNext()){
-				DiagramShape shape = shapesIt.next();
-
+			for (DiagramShape shape : shapes) {
 				if(shape.getPoints().isEmpty()) continue;
 
 				//GeneralPath path = shape.makeIntoPath();
@@ -229,9 +224,7 @@ public class BitmapRenderer {
 		
 		//find storage shapes
 		ArrayList<DiagramShape> storageShapes = new ArrayList<DiagramShape>();
-		shapesIt = shapes.iterator();
-		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
+		for (DiagramShape shape : shapes){
 			if(shape.getType() == DiagramShape.TYPE_STORAGE) {
 				storageShapes.add(shape);
 				continue;
@@ -248,10 +241,7 @@ public class BitmapRenderer {
 		Collections.sort(storageShapes, new Shape3DOrderingComparator());
 		
 		g2.setStroke(normalStroke);
-		shapesIt = storageShapes.iterator();
-		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
-
+		for (DiagramShape shape : storageShapes){
 			GeneralPath path;
 			path = shape.makeIntoRenderPath(diagram, options);
 			
@@ -276,9 +266,7 @@ public class BitmapRenderer {
 		
 		//render the rest of the shapes
 		ArrayList<DiagramShape> pointMarkers = new ArrayList<DiagramShape>();
-		shapesIt = shapes.iterator();
-		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
+		for (DiagramShape shape : shapes) {
 			if(shape.getType() == DiagramShape.TYPE_POINT_MARKER) {
 				pointMarkers.add(shape);
 				continue;
@@ -321,9 +309,7 @@ public class BitmapRenderer {
 		//render point markers
 		
 		g2.setStroke(normalStroke);
-		shapesIt = pointMarkers.iterator();
-		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
+		for (DiagramShape shape : pointMarkers) {
 			//if(shape.getType() != DiagramShape.TYPE_POINT_MARKER) continue;
 
 			GeneralPath path;
@@ -339,9 +325,7 @@ public class BitmapRenderer {
 		//g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//renderTextLayer(diagram.getTextObjects().iterator());
 		
-		Iterator<DiagramText> textIt = diagram.getTextObjects().iterator();
-		while(textIt.hasNext()){
-			DiagramText text = textIt.next();
+		for (DiagramText text : diagram.getTextObjects()) {
 			g2.setFont(text.getFont());
 			if(text.hasOutline()){
 				g2.setColor(text.getOutlineColor());
@@ -393,9 +377,7 @@ public class BitmapRenderer {
 		
 		public void paint(Graphics g){
 			Graphics g2 = (Graphics2D) g;
-			Iterator<DiagramText> textIt = textObjects.iterator();
-			while(textIt.hasNext()){
-				DiagramText text = (DiagramText) textIt.next();
+			for (DiagramText text : textObjects){
 				g2.setFont(text.getFont());
 				if(text.hasOutline()){
 					g2.setColor(text.getOutlineColor());

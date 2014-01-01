@@ -235,13 +235,12 @@ public class TextGrid {
 	}
 
 	public void printDebug(){
-		Iterator<StringBuilder> it = rows.iterator();
 		int i = 0;
 		System.out.println(
 			"    "
 			+StringUtils.repeatString("0123456789", (int) Math.floor(getWidth()/10)+1));
-		while(it.hasNext()){
-			String row = it.next().toString();
+		for (StringBuilder sb : rows) {
+			String row = sb.toString();
 			String index = new Integer(i).toString();
 			if(i < 10) index = " "+index;
 			System.out.println(index+" ("+row+")");
@@ -251,13 +250,12 @@ public class TextGrid {
 
 	public String getDebugString(){
 		StringBuilder buffer = new StringBuilder();
-		Iterator<StringBuilder> it = rows.iterator();
 		int i = 0;
 		buffer.append(
 			"    "
 			+StringUtils.repeatString("0123456789", (int) Math.floor(getWidth()/10)+1)+"\n");
-		while(it.hasNext()){
-			String row = it.next().toString();
+		for (StringBuilder sb : rows) {
+			String row = sb.toString();
 			String index = new Integer(i).toString();
 			if(i < 10) index = " "+index;
 			row = row.replaceAll("\n", "\\\\n");
@@ -380,10 +378,8 @@ public class TextGrid {
 	public void replaceHumanColorCodes(){
 		int height = getHeight();
 		for(int y = 0; y < height; y++){
-			String row = rows.get(y).toString();
-			Iterator it = humanColorCodes.keySet().iterator();
-			while(it.hasNext()){
-				String humanCode = (String) it.next();
+			String row = rows.get(y).toString();;
+			for (String humanCode : humanColorCodes.keySet()) {
 				String hexCode = (String) humanColorCodes.get(humanCode);
 				if(hexCode != null){
 					humanCode = "c" + humanCode;
@@ -581,9 +577,8 @@ public class TextGrid {
 	}
 
 	public void removeColorCodes(){
-		Iterator cells = findColorCodes().iterator();
-		while(cells.hasNext()){
-			Cell cell = ((CellColorPair) cells.next()).cell;
+		for (CellColorPair colorPair : findColorCodes()) {
+			Cell cell = colorPair.cell;
 			set(cell, ' ');
 			cell = cell.getEast(); set(cell, ' ');
 			cell = cell.getEast(); set(cell, ' ');
@@ -592,7 +587,7 @@ public class TextGrid {
 	}
 
 	public void removeBoundaries(){
-		ArrayList toBeRemoved = new ArrayList();
+		ArrayList<Cell> toBeRemoved = new ArrayList<Cell>();
 
 		int width = getWidth();
 		int height = getHeight();
@@ -606,9 +601,7 @@ public class TextGrid {
 		//remove in two stages, because decision of
 		//isBoundary depends on contants of surrounding
 		//cells 
-		Iterator it = toBeRemoved.iterator();
-		while(it.hasNext()){
-			Cell cell = (Cell) it.next();
+		for (Cell cell : toBeRemoved) {
 			set(cell, ' ');
 		}
 	}
@@ -680,9 +673,7 @@ public class TextGrid {
 	}
 		
 	public void removeMarkupTags(){
-		Iterator it = findMarkupTags().iterator();
-		while (it.hasNext()) {
-			CellTagPair pair = (CellTagPair) it.next();
+		for (CellTagPair pair : findMarkupTags()) {
 			String tagName = pair.tag;
 			if(tagName == null) continue;
 			int length = 2 + tagName.length();
@@ -803,9 +794,7 @@ public class TextGrid {
 
 
 	public boolean containsAtLeastOneDashedLine(CellSet set){
-		Iterator it = set.iterator();
-		while(it.hasNext()) {
-			Cell cell = (Cell) it.next();
+		for (Cell cell : set) {
 			if(StringUtils.isOneOf(get(cell), dashedLines)) return true;
 		}
 		return false;
@@ -1257,9 +1246,7 @@ public class TextGrid {
 	}
 
 	public void copyCellsTo(CellSet cells, TextGrid grid){
-		Iterator it = cells.iterator();
-		while(it.hasNext()){
-			Cell cell = (Cell) it.next();
+		for (Cell cell : cells) {
 			grid.set(cell, this.get(cell));
 		}
 	}
@@ -1285,10 +1272,8 @@ public class TextGrid {
 	 * @param cells
 	 * @param c
 	 */
-	public void fillCellsWith(Iterable cells, char c){
-		Iterator<Cell> it = cells.iterator();
-		while(it.hasNext()){
-			Cell cell = it.next();
+	public void fillCellsWith(Iterable<Cell> cells, char c){
+		for (Cell cell : cells) {
 			set(cell.x, cell.y, c);
 		}
 	}
@@ -1555,9 +1540,8 @@ public class TextGrid {
 		String encoding = null;
 		if(options != null) encoding = options.getCharacterEncoding();
 		
-		Iterator<StringBuilder> it = rows.iterator();
-		while(it.hasNext()){
-			String row = it.next().toString();
+		for (StringBuilder sb : rows){
+			String row = sb.toString();
 			if(encoding != null){
 				byte[] bytes = row.getBytes();
 				row = new String(bytes, encoding);
@@ -1567,7 +1551,6 @@ public class TextGrid {
 			index++;
 		}
 
-		it = rows.iterator();
 		ArrayList<StringBuilder> newRows = new ArrayList<StringBuilder>();
 		//TODO: make the following depend on blankBorderSize
 		
@@ -1576,9 +1559,7 @@ public class TextGrid {
 		
 		newRows.add(topBottomRow);
 		newRows.add(topBottomRow);
-		while(it.hasNext()){
-			StringBuilder row = it.next();
-			
+		for (StringBuilder row : rows) {
 			if(row.length() < maxLength) {
 				String borderString = StringUtils.repeatString(" ", blankBorderSize);
 				StringBuilder newRow = new StringBuilder();
@@ -1607,10 +1588,9 @@ public class TextGrid {
 	private void fixTabs(int tabSize){
 
 		int rowIndex = 0;
-		Iterator<StringBuilder> it = rows.iterator();
 
-		while(it.hasNext()){
-			String row = it.next().toString();
+		for (StringBuilder sb : rows) {
+			String row = sb.toString();
 			StringBuilder newRow = new StringBuilder();
 			
 			char[] chars = row.toCharArray();

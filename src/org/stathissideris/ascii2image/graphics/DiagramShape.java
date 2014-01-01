@@ -195,9 +195,7 @@ public class DiagramShape extends DiagramComponent {
 	}
 	
 	public void scale(float factor){
-		Iterator it = getPointsIterator();
-		while(it.hasNext()){
-			ShapePoint point = (ShapePoint) it.next();
+		for (ShapePoint point : points) {
 			point.x *= factor;
 			point.y *= factor;
 		}
@@ -329,26 +327,20 @@ public class DiagramShape extends DiagramComponent {
 		if(DEBUG) System.out.println("comparing shapes:");
 		
 		if(DEBUG) System.out.println("points1: ");
-		HashMap points1 = new HashMap();
-		Iterator it = getPointsIterator(); 
-		while(it.hasNext()){
-			ShapePoint point = (ShapePoint) it.next(); 
+		HashMap<String, ?> points1 = new HashMap();
+		for (ShapePoint point : points){
 			points1.put( ""+((int) point.x)+","+((int) point.y), null);
 			if(DEBUG) System.out.println(((int) point.x)+", "+((int) point.y));
 		}
 		
 		if(DEBUG) System.out.println("points2: ");
 		HashMap points2 = new HashMap();
-		it = shape.getPointsIterator(); 
-		while(it.hasNext()){
-			ShapePoint point = (ShapePoint) it.next(); 
+		for (ShapePoint point : shape.points) {
 			points2.put( ""+((int) point.x)+","+((int) point.y), null);
 			if(DEBUG) System.out.println(((int) point.x)+", "+((int) point.y));
 		}
 		
-		it = points1.keySet().iterator();
-		while(it.hasNext()){
-			String key = (String) it.next();
+		for (String key : points1.keySet()) {
 			if(!points2.containsKey(key)) {
 				if (DEBUG)
 					System.out.println("\tare not equal");

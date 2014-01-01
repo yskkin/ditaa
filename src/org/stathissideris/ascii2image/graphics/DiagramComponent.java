@@ -19,9 +19,6 @@
  */
 package org.stathissideris.ascii2image.graphics;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.stathissideris.ascii2image.text.CellSet;
 import org.stathissideris.ascii2image.text.TextGrid;
 

@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.stathissideris.ascii2image.core.ConversionOptions;
 import org.stathissideris.ascii2image.core.Pair;
@@ -133,9 +132,7 @@ public class Diagram {
 		
 		if(DEBUG){
 			System.out.println("******* Distinct shapes found using AbstractionGrid *******");
-			Iterator<CellSet> dit = boundarySetsStep1.iterator();
-			while (dit.hasNext()) {
-				CellSet set = dit.next();
+			for (CellSet set : boundarySetsStep1) {
 				set.printAsGrid();
 			}
 			System.out.println("******* Same set of shapes after processing them by filling *******");
@@ -187,9 +184,7 @@ public class Diagram {
 		boundarySetsStep2 = CellSet.removeDuplicateSets(boundarySetsStep2);
 
 		if(DEBUG){
-			Iterator<CellSet> dit = boundarySetsStep2.iterator();
-			while (dit.hasNext()) {
-				CellSet set = dit.next();
+			for (CellSet set : boundarySetsStep2) {
 				set.printAsGrid();
 			}
 		}
@@ -214,9 +209,7 @@ public class Diagram {
 		ArrayList<CellSet> closed = new ArrayList<CellSet>();
 		ArrayList<CellSet> mixed = new ArrayList<CellSet>();
 		
-		Iterator<CellSet> sets = boundarySetsStep2.iterator();
-		while(sets.hasNext()){
-			CellSet set = (CellSet) sets.next();
+		for (CellSet set : boundarySetsStep2) {
 			int type = set.getType(workGrid);
 			if(type == CellSet.TYPE_CLOSED) closed.add(set);
 			else if(type == CellSet.TYPE_OPEN) open.add(set);
@@ -240,12 +233,8 @@ public class Diagram {
 			hadToEliminateMixed = true;
 			
 			//subtract from each of the mixed sets all the closed sets
-			sets = mixed.iterator();
-			while(sets.hasNext()){
-				CellSet set = (CellSet) sets.next();
-				Iterator<CellSet> closedSets = closed.iterator();
-				while(closedSets.hasNext()){
-					CellSet closedSet = closedSets.next();
+			for (CellSet set : mixed) {
+				for (CellSet closedSet : closed) {
 					set.subtractSet(closedSet);
 				}
 				// this is necessary because some mixed sets produce
@@ -272,9 +261,7 @@ public class Diagram {
 			if (DEBUG)
 				System.out.println("******* Eliminating mixed shapes (advanced algorithm for truly mixed shapes) *******");
 				
-			sets = mixed.iterator();
-			while(sets.hasNext()){
-				CellSet set = (CellSet) sets.next();
+			for (CellSet set : mixed) {
 				boundarySetsStep2.remove(set);
 				boundarySetsStep2.addAll(set.breakTrulyMixedBoundaries(workGrid));
 			}
@@ -294,9 +281,7 @@ public class Diagram {
 			closed = new ArrayList<CellSet>();
 			mixed = new ArrayList<CellSet>();
 		
-			sets = boundarySetsStep2.iterator();
-			while(sets.hasNext()){
-				CellSet set = (CellSet) sets.next();
+			for (CellSet set : boundarySetsStep2){
 				int type = set.getType(workGrid);
 				if(type == CellSet.TYPE_CLOSED) closed.add(set);
 				else if(type == CellSet.TYPE_OPEN) open.add(set);
@@ -323,10 +308,7 @@ public class Diagram {
 		}
 		
 		ArrayList<DiagramComponent> closedShapes = new ArrayList<DiagramComponent>();
-		sets = closed.iterator();
-		while(sets.hasNext()){
-			CellSet set = (CellSet) sets.next();
-			
+		for (CellSet set : closed) {
 			if(DEBUG_MAKE_SHAPES) {
 				set.printAsGrid();
 			}
@@ -345,9 +327,7 @@ public class Diagram {
 			separateCommonEdges(closedShapes);
 
 		//make open shapes
-		sets = open.iterator();
-		while(sets.hasNext()){
-			CellSet set = (CellSet) sets.next();
+		for (CellSet set : open){
 			if(set.size() == 1){ //single cell "shape"
 				TextGrid.Cell cell = (TextGrid.Cell) set.getFirst();
 				if(!grid.cellContainsDashedLineChar(cell)) { 
@@ -382,12 +362,7 @@ public class Diagram {
 
 		//assign color codes to shapes
 		//TODO: text on line should not change its color
-		
-		Iterator<CellColorPair> cellColorPairs = grid.findColorCodes().iterator();
-		while(cellColorPairs.hasNext()){
-			TextGrid.CellColorPair pair =
-				(TextGrid.CellColorPair) cellColorPairs.next();
-			
+		for (CellColorPair pair : grid.findColorCodes()) {
 			ShapePoint point =
 				new ShapePoint(getCellMidX(pair.cell), getCellMidY(pair.cell));
 			DiagramShape containingShape = findSmallestShapeContaining(point);
@@ -397,11 +372,7 @@ public class Diagram {
 		}
 
 		//assign markup to shapes
-		Iterator<CellTagPair> cellTagPairs = grid.findMarkupTags().iterator();
-		while(cellTagPairs.hasNext()){
-			TextGrid.CellTagPair pair =
-				(TextGrid.CellTagPair) cellTagPairs.next();
-			
+		for (CellTagPair pair : grid.findMarkupTags()) {
 			ShapePoint point =
 				new ShapePoint(getCellMidX(pair.cell), getCellMidY(pair.cell));
 			
@@ -483,19 +454,14 @@ public class Diagram {
 		}
 		
 		//make arrowheads
-		Iterator<Cell> arrowheadCells = workGrid.findArrowheads().iterator();
-		while(arrowheadCells.hasNext()){
-			TextGrid.Cell cell = arrowheadCells.next();
+		for (Cell cell : workGrid.findArrowheads()) {
 			DiagramShape arrowhead = DiagramShape.createArrowhead(workGrid, cell, cellWidth, cellHeight);
 			if(arrowhead != null) addToShapes(arrowhead);
 			else System.err.println("Could not create arrowhead shape. Unexpected error.");
 		}
 		
 		//make point markers
-		Iterator<TextGrid.Cell> markersIt = grid.getPointMarkersOnLine().iterator();
-		while (markersIt.hasNext()) {
-			TextGrid.Cell cell = markersIt.next();
-
+		for (Cell cell : grid.getPointMarkersOnLine()) {
 			DiagramShape mark = new DiagramShape();
 			mark.addToPoints(new ShapePoint(
 					getCellMidX(cell),
@@ -528,17 +494,11 @@ public class Diagram {
 		
 		Font font = FontMeasurer.instance().getFontFor(cellHeight);
 		
-		Iterator<CellSet> textGroupIt = textGroups.iterator();
-		while(textGroupIt.hasNext()){
-			CellSet textGroupCellSet = (CellSet) textGroupIt.next();
-			
+		for (CellSet textGroupCellSet : textGroups) {
 			TextGrid isolationGrid = new TextGrid(width, height);
 			workGrid.copyCellsTo(textGroupCellSet, isolationGrid);
 			 
-			ArrayList<CellStringPair> strings = isolationGrid.findStrings();
-			Iterator<CellStringPair> it = strings.iterator();
-			while(it.hasNext()){
-				TextGrid.CellStringPair pair = it.next();
+			for (CellStringPair pair : isolationGrid.findStrings()) {
 				TextGrid.Cell cell = pair.cell;
 				String string = pair.string;
 				if (DEBUG)
@@ -593,13 +553,9 @@ public class Diagram {
 		}
 
 		//set outline to true for test within custom shapes
-		Iterator<DiagramShape> shapes = this.getAllDiagramShapes().iterator();
-		while(shapes.hasNext()){
-			DiagramShape shape = (DiagramShape) shapes.next();
+		for (DiagramShape shape : getAllDiagramShapes()) {
 			if(shape.getType() == DiagramShape.TYPE_CUSTOM){
-				Iterator<DiagramText> textObjects = getTextObjects().iterator();
-				while(textObjects.hasNext()){
-					DiagramText textObject = (DiagramText) textObjects.next();
+				for (DiagramText textObject : getTextObjects()) {
 					textObject.setHasOutline(true);
 					textObject.setColor(DiagramText.DEFAULT_COLOR);
 				}
@@ -642,21 +598,15 @@ public class Diagram {
 		
 		ArrayList<CellSet> filledSets = new ArrayList<CellSet>();
 
-		Iterator it;
-
 		if(DEBUG_VERBOSE) {
 			System.out.println("******* Sets before *******");
-			it = sets.iterator();
-			while(it.hasNext()){
-				CellSet set = (CellSet) it.next();
+			for (CellSet set : sets) {
 				set.printAsGrid();
 			}
 		}
 
 		//make filled versions of all the boundary sets
-		it = sets.iterator();
-		while(it.hasNext()){
-			CellSet set = (CellSet) it.next();
+		for (CellSet set : sets) {
 			set = set.getFilledEquivalent(grid);
 			if(set == null){
 				return false;
@@ -664,10 +614,8 @@ public class Diagram {
 		}
 		
 		ArrayList<Integer> toBeRemovedIndices = new ArrayList<Integer>();
-		it = filledSets.iterator();
-		while(it.hasNext()){
-			CellSet set = (CellSet) it.next();
-			
+
+		for (CellSet set : filledSets){
 			if(DEBUG_VERBOSE){
 				System.out.println("*** Deciding if the following should be removed:");
 				set.printAsGrid();
@@ -676,9 +624,7 @@ public class Diagram {
 			//find the other sets that have common cells with set
 			ArrayList<CellSet> common = new ArrayList<CellSet>();
 			common.add(set);
-			Iterator it2 = filledSets.iterator();
-			while(it2.hasNext()){
-				CellSet set2 = (CellSet) it2.next();
+			for (CellSet set2 : filledSets) {
 				if(set != set2 && set.hasCommonCells(set2)){
 					common.add(set2);
 				}
@@ -688,9 +634,7 @@ public class Diagram {
 			
 			//find largest set
 			CellSet largest = set;
-			it2 = common.iterator();
-			while(it2.hasNext()){
-				CellSet set2 = (CellSet) it2.next();
+			for (CellSet set2 : common) {
 				if(set2.size() > largest.size()){
 					largest = set2;
 				}
@@ -706,10 +650,8 @@ public class Diagram {
 
 			//make the sum set of the small sets on a grid
 			TextGrid gridOfSmalls = new TextGrid(largest.getMaxX() + 2, largest.getMaxY() + 2);
-			CellSet sumOfSmall = new CellSet();
-			it2 = common.iterator();
-			while(it2.hasNext()){
-				CellSet set2 = (CellSet) it2.next();
+
+			for (CellSet set2 : common){
 				if(DEBUG_VERBOSE){
 					System.out.println("One of smalls:");
 					set2.printAsGrid();
@@ -739,24 +681,18 @@ public class Diagram {
 		}
 		
 		ArrayList<CellSet> setsToBeRemoved = new ArrayList<CellSet>();
-		it = toBeRemovedIndices.iterator();
-		while(it.hasNext()){
-			int i = ((Integer) it.next()).intValue();
+		for (int i : toBeRemovedIndices){
 			setsToBeRemoved.add(sets.get(i));
 		}
 	
-		it = setsToBeRemoved.iterator();
-		while(it.hasNext()){
-			CellSet set = (CellSet) it.next();
+		for (CellSet set : setsToBeRemoved) {
 			removedAny = true;
 			sets.remove(set);
 		}
 	
 		if(DEBUG_VERBOSE) {
 			System.out.println("******* Sets after *******");
-			it = sets.iterator();
-			while(it.hasNext()){
-				CellSet set = (CellSet) it.next();
+			for (CellSet set : sets) {
 				set.printAsGrid();
 			}
 		}
@@ -768,29 +704,24 @@ public class Diagram {
 		return Math.min(getCellWidth(), getCellHeight());
 	}
 	
-	private void separateCommonEdges(ArrayList shapes){
+	private void separateCommonEdges(ArrayList<? extends DiagramComponent> shapes){
 
 		float offset = getMinimumOfCellDimension() / 5;
 
 		ArrayList<ShapeEdge> edges = new ArrayList<ShapeEdge>();
 
 		//get all adges
-		Iterator it = shapes.iterator();
-		while (it.hasNext()) {
-			DiagramShape shape = (DiagramShape) it.next();
-			edges.addAll(shape.getEdges());
+		for (DiagramComponent shape : shapes) {
+			edges.addAll(((DiagramShape)shape).getEdges());
 		}
 		
 		//group edges into pairs of touching edges
 		ArrayList<Pair<ShapeEdge, ShapeEdge>> listOfPairs = new ArrayList<Pair<ShapeEdge, ShapeEdge>>();
-		it = edges.iterator();
 		
 		//all-against-all touching test for the edges
 		int startIndex = 1; //skip some to avoid duplicate comparisons and self-to-self comparisons
 		
-		while(it.hasNext()){
-			ShapeEdge edge1 = (ShapeEdge) it.next();
-			
+		for (ShapeEdge edge1 : edges) {
 			for(int k = startIndex; k < edges.size(); k++) {
 				ShapeEdge edge2 =  edges.get(k);
 				
@@ -804,9 +735,7 @@ public class Diagram {
 		ArrayList<ShapeEdge> movedEdges = new ArrayList<ShapeEdge>();
 		
 		//move equivalent edges inwards
-		it = listOfPairs.iterator();
-		while(it.hasNext()){
-			Pair<ShapeEdge, ShapeEdge> pair = (Pair<ShapeEdge, ShapeEdge>) it.next();
+		for (Pair<ShapeEdge, ShapeEdge> pair : listOfPairs) {
 			if(!movedEdges.contains(pair.first)) {
 				pair.first.moveInwardsBy(offset);
 				movedEdges.add(pair.first);
@@ -822,15 +751,11 @@ public class Diagram {
 	
 	//TODO: removes more than it should
 	private void removeDuplicateShapes() {
-		ArrayList originalShapes = new ArrayList();
+		ArrayList<DiagramShape> originalShapes = new ArrayList<DiagramShape>();
 
-		Iterator shapesIt = getShapesIterator();
-		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
+		for (DiagramShape shape : shapes) {
 			boolean isOriginal = true;
-			Iterator originals = originalShapes.iterator();
-			while(originals.hasNext()){
-				DiagramShape originalShape = (DiagramShape) originals.next();
+			for (DiagramShape originalShape : originalShapes) {
 				if(shape.equals(originalShape)){
 					isOriginal = false;
 				}
@@ -844,9 +769,7 @@ public class Diagram {
 	
 	private DiagramShape findSmallestShapeContaining(ShapePoint point) {
 		DiagramShape containingShape = null;
-		Iterator<DiagramShape> shapes = getShapes().iterator();
-		while(shapes.hasNext()){
-			DiagramShape shape = shapes.next();
+		for (DiagramShape shape : getShapes()) {
 			if(shape.contains(point)){
 				if(containingShape == null){
 					containingShape = shape;
@@ -862,9 +785,7 @@ public class Diagram {
 	
 	private DiagramShape findSmallestShapeIntersecting(Rectangle2D rect) {
 		DiagramShape intersectingShape = null;
-		Iterator<DiagramShape> shapes = getShapes().iterator();
-		while(shapes.hasNext()){
-			DiagramShape shape = shapes.next();
+		for (DiagramShape shape : getShapes()) {
 			if(shape.intersects(rect)){
 				if(intersectingShape == null){
 					intersectingShape = shape;
@@ -891,10 +812,6 @@ public class Diagram {
 		shapes.add(shape);
 	}
 	
-	public Iterator getShapesIterator(){
-		return shapes.iterator();
-	}	
-
 	/**
 	 * @return
 	 */
