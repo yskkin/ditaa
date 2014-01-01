@@ -187,18 +187,12 @@ public class Diagram {
 			for (CellSet set : boundarySetsStep2) {
 				set.printAsGrid();
 			}
+			System.out.println(
+					"******* Removed duplicates: now there are "
+					+boundarySetsStep2.size()
+					+" shapes.");
 		}
 
-		int originalSize = boundarySetsStep2.size(); 
-		boundarySetsStep2 = CellSet.removeDuplicateSets(boundarySetsStep2);
-		if(DEBUG) {
-			System.out.println(
-				"******* Removed duplicates: there were "
-				+originalSize
-				+" shapes and now there are "
-				+boundarySetsStep2.size());
-		} 
-		
 
 		//split boundaries to open, closed and mixed
 		
