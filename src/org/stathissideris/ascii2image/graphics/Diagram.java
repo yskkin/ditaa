@@ -222,7 +222,7 @@ public class Diagram {
 			}
 		}
 
-		boolean removedAnyObsolete = removeObsoleteShapes(workGrid, closed);
+		removeObsoleteShapes(workGrid, closed);
 		
 		boolean allCornersRound = false;
 		if(options.processingOptions.areAllCornersRound()) allCornersRound = true;
@@ -239,10 +239,10 @@ public class Diagram {
 			DiagramComponent shape = DiagramComponent.createClosedFromBoundaryCells(workGrid, set, cellWidth, cellHeight, allCornersRound); 
 			if(shape != null){
 				if(shape instanceof DiagramShape){
-					addToShapes((DiagramShape) shape);
+					shapes.add((DiagramShape) shape);
 					closedShapes.add(shape);
 				} else if(shape instanceof CompositeDiagramShape)
-					addToCompositeShapes((CompositeDiagramShape) shape);
+					compositeShapes.add((CompositeDiagramShape) shape);
 			}
 		}
 
@@ -256,7 +256,7 @@ public class Diagram {
 				if(!grid.cellContainsDashedLineChar(cell)) { 
 					DiagramShape shape = DiagramShape.createSmallLine(workGrid, cell, cellWidth, cellHeight); 
 					if(shape != null) {
-						addToShapes(shape); 
+						shapes.add(shape); 
 						shape.connectEndsToAnchors(workGrid, this);
 					}
 				}
@@ -270,10 +270,10 @@ public class Diagram {
 
 				if(shape != null){
 					if(shape instanceof CompositeDiagramShape){
-						addToCompositeShapes((CompositeDiagramShape) shape);
+						compositeShapes.add((CompositeDiagramShape) shape);
 						((CompositeDiagramShape) shape).connectEndsToAnchors(workGrid, this);
 					} else if(shape instanceof DiagramShape) {
-						addToShapes((DiagramShape) shape);
+						shapes.add((DiagramShape) shape);
 						((DiagramShape) shape).connectEndsToAnchors(workGrid, this);
 						((DiagramShape) shape).moveEndsToCellEdges(grid, this);
 					}
@@ -309,7 +309,7 @@ public class Diagram {
 		//make arrowheads
 		for (Cell cell : workGrid.findArrowheads()) {
 			DiagramShape arrowhead = DiagramShape.createArrowhead(workGrid, cell, cellWidth, cellHeight);
-			if(arrowhead != null) addToShapes(arrowhead);
+			if(arrowhead != null) shapes.add(arrowhead);
 			else LOG.warning("Could not create arrowhead shape. Unexpected error.");
 		}
 		
@@ -724,15 +724,6 @@ public class Diagram {
 	
 	private void addToTextObjects(DiagramText shape){
 		textObjects.add(shape);
-	}
-
-	private void addToCompositeShapes(CompositeDiagramShape shape){
-		compositeShapes.add(shape);
-	}
-
-	
-	private void addToShapes(DiagramShape shape){
-		shapes.add(shape);
 	}
 	
 	/**
