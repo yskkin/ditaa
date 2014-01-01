@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -129,54 +130,7 @@ public class Diagram {
 		int height = grid.getHeight();
 
 	
-		//split distinct shapes using AbstractionGrid 
-		AbstractionGrid temp = new AbstractionGrid(workGrid, workGrid.getAllBoundaries());
-		ArrayList<CellSet> boundarySetsStep1 = temp.getDistinctShapes();
-		
-		LOG.finer("******* Distinct shapes found using AbstractionGrid *******");
-		for (CellSet set : boundarySetsStep1) {
-			set.printAsGrid();
-		}
-		LOG.finer("******* Same set of shapes after processing them by filling *******");
-		
-		
-		
-		//Find all the boundaries by using the special version of the filling method
-		//(fills in a different buffer than the buffer it reads from)
-		ArrayList<CellSet> boundarySetsStep2 = new ArrayList<CellSet>();
-		for(CellSet set : boundarySetsStep1) {			
-			//the fill buffer keeps track of which cells have been
-			//filled already
-			TextGrid fillBuffer = new TextGrid(width * 3, height * 3);
-			
-			for(int yi = 0; yi < height * 3; yi++){
-				for(int xi = 0; xi < width * 3; xi++){
-					if(fillBuffer.isBlank(xi, yi)){
-						
-						TextGrid copyGrid = new AbstractionGrid(workGrid, set).getCopyOfInternalBuffer();
-
-						CellSet boundaries =
-							copyGrid
-							.findBoundariesExpandingFrom(copyGrid.new Cell(xi, yi));
-						if(boundaries.size() == 0) continue; //i'm not sure why these occur
-						boundarySetsStep2.add(boundaries.makeScaledOneThirdEquivalent());
-					
-						copyGrid = new AbstractionGrid(workGrid, set).getCopyOfInternalBuffer();
-						CellSet filled =
-							copyGrid
-							.fillContinuousArea(copyGrid.new Cell(xi, yi), '*');
-						fillBuffer.fillCellsWith(filled, '*');
-						fillBuffer.fillCellsWith(boundaries, '-');
-						
-						//System.out.println("Fill buffer:");
-						//fillBuffer.printDebug();
-						boundaries.makeScaledOneThirdEquivalent().printAsGrid();
-						LOG.finer("-----------------------------------");
-						
-					}
-				}
-			}
-		}
+		Collection<CellSet> boundarySetsStep2 = findBoundariesFromGrid(workGrid, width, height);
 
 		LOG.finer("******* Removed duplicates *******");
 
@@ -503,6 +457,62 @@ public class Diagram {
 			containingShape.setType(DiagramShape.TYPE_CUSTOM);
 			containingShape.setDefinition(def);						
 		}
+	}
+
+	private ArrayList<CellSet> findBoundariesFromGrid(TextGrid workGrid,
+			int width, int height) {
+		//split distinct shapes using AbstractionGrid 
+		AbstractionGrid temp = new AbstractionGrid(workGrid, workGrid.getAllBoundaries());
+		ArrayList<CellSet> boundarySetsStep1 = temp.getDistinctShapes();
+		
+		if(DEBUG){
+			System.out.println("******* Distinct shapes found using AbstractionGrid *******");
+			for (CellSet set : boundarySetsStep1) {
+				set.printAsGrid();
+			}
+			System.out.println("******* Same set of shapes after processing them by filling *******");
+		}
+		
+		
+		//Find all the boundaries by using the special version of the filling method
+		//(fills in a different buffer than the buffer it reads from)
+		ArrayList<CellSet> boundarySetsStep2 = new ArrayList<CellSet>();
+		for(CellSet set : boundarySetsStep1) {			
+			//the fill buffer keeps track of which cells have been
+			//filled already
+			TextGrid fillBuffer = new TextGrid(width * 3, height * 3);
+			
+			for(int yi = 0; yi < height * 3; yi++){
+				for(int xi = 0; xi < width * 3; xi++){
+					if(fillBuffer.isBlank(xi, yi)){
+						
+						TextGrid copyGrid = new AbstractionGrid(workGrid, set).getCopyOfInternalBuffer();
+
+						CellSet boundaries =
+							copyGrid
+							.findBoundariesExpandingFrom(copyGrid.new Cell(xi, yi));
+						if(boundaries.size() == 0) continue; //i'm not sure why these occur
+						boundarySetsStep2.add(boundaries.makeScaledOneThirdEquivalent());
+					
+						copyGrid = new AbstractionGrid(workGrid, set).getCopyOfInternalBuffer();
+						CellSet filled =
+							copyGrid
+							.fillContinuousArea(copyGrid.new Cell(xi, yi), '*');
+						fillBuffer.fillCellsWith(filled, '*');
+						fillBuffer.fillCellsWith(boundaries, '-');
+						
+						if(DEBUG){
+							//System.out.println("Fill buffer:");
+							//fillBuffer.printDebug();
+							boundaries.makeScaledOneThirdEquivalent().printAsGrid();
+							System.out.println("-----------------------------------");
+						}
+						
+					}
+				}
+			}
+		}
+		return boundarySetsStep2;
 	}
 	
 	/**
