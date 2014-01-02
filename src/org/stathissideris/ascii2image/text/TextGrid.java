@@ -244,7 +244,7 @@ public class TextGrid {
 			+StringUtils.repeatString("0123456789", (int) Math.floor(getWidth()/10)+1));
 		for (StringBuilder sb : rows) {
 			String row = sb.toString();
-			String index = new Integer(i).toString();
+			String index = Integer.toString(i);
 			if(i < 10) index = " "+index;
 			LOG.finer(index+" ("+row+")");
 			i++; 
@@ -259,7 +259,7 @@ public class TextGrid {
 			+StringUtils.repeatString("0123456789", (int) Math.floor(getWidth()/10)+1)+"\n");
 		for (StringBuilder sb : rows) {
 			String row = sb.toString();
-			String index = new Integer(i).toString();
+			String index = Integer.toString(i);
 			if(i < 10) index = " "+index;
 			row = row.replaceAll("\n", "\\\\n");
 			row = row.replaceAll("\r", "\\\\r");
