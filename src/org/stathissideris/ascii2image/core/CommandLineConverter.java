@@ -120,12 +120,6 @@ public class CommandLineConverter {
 			CommandLineParser parser = new PosixParser();
 			
 			cmdLine = parser.parse(cmdLnOptions, args);
-						
-			// validate that block-size has been set
-			if( cmdLine.hasOption( "block-size" ) ) {
-				// print the value of block-size
-				System.out.println( cmdLine.getOptionValue( "block-size" ) );
-			}
 			
 		} catch (org.apache.commons.cli.ParseException e) {
 			System.err.println(e.getMessage());
