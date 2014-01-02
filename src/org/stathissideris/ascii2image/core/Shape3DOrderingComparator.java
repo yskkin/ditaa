@@ -19,6 +19,7 @@
  */
 package org.stathissideris.ascii2image.core;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.stathissideris.ascii2image.graphics.DiagramShape;
@@ -27,7 +28,8 @@ import org.stathissideris.ascii2image.graphics.DiagramShape;
  * 
  * @author Efstathios Sideris
  */
-public class Shape3DOrderingComparator implements Comparator<DiagramShape> {
+@SuppressWarnings("serial")
+public class Shape3DOrderingComparator implements Comparator<DiagramShape>, Serializable {
 
 	/**
 	 * Puts diagram shapes in pseudo-3d order starting from back to front
