@@ -109,6 +109,12 @@ public class StringUtils {
 	}
 	
 	
+	public static boolean isOneOf(char c, Character[] group){
+		for(int i = 0; i < group.length; i++)
+			if(c == group[i]) return true;
+		return false;
+	}
+
 	public static boolean isOneOf(char c, char[] group){
 		for(int i = 0; i < group.length; i++)
 			if(c == group[i]) return true;

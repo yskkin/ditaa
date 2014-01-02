@@ -52,16 +52,17 @@ public class TextGrid {
 	private static char[] pointMarkers = {'*'};
 	private static char[] dashedLines = {':', '~', '='};
 	
-	private static char[] entryPoints1 = {'\\'};
-	private static char[] entryPoints2 = {'|', ':', '+', '\\', '/'};
-	private static char[] entryPoints3 = {'/'};
-	private static char[] entryPoints4 = {'-', '=', '+', '\\', '/'};
-	private static char[] entryPoints5 = {'\\'};
-	private static char[] entryPoints6 = {'|', ':', '+', '\\', '/'};
-	private static char[] entryPoints7 = {'/'};
-	private static char[] entryPoints8 = {'-', '=', '+', '\\', '/'};
-
-
+	@SuppressWarnings("serial")
+	private static final Map<Integer, Character[]> entryPoints = new HashMap<Integer, Character[]>() {{
+		put(1, new Character[]{'\\'});
+		put(2, new Character[]{'|', ':', '+', '\\', '/'});
+		put(3, new Character[]{'/'});
+		put(4, new Character[]{'-', '=', '+', '\\', '/'});
+		put(5, new Character[]{'\\'});
+		put(6, new Character[]{'|', ':', '+', '\\', '/'});
+		put(7, new Character[]{'/'});
+		put(8, new Character[]{'-', '=', '+', '\\', '/'});
+	}};
 
 	private static HashMap<String, String> humanColorCodes = new HashMap<String, String>();
 	static {
@@ -511,31 +512,9 @@ public class TextGrid {
 	 * @return
 	 */
 	public boolean hasEntryPoint(Cell cell, int entryPointId){
-		String result = "";
-		char c = get(cell);
-		if(entryPointId == 1) {
-			return StringUtils.isOneOf(c, entryPoints1);
-		
-		} else if(entryPointId == 2) {
-			return StringUtils.isOneOf(c, entryPoints2);
-
-		} else if(entryPointId == 3) {
-			return StringUtils.isOneOf(c, entryPoints3);
-
-		} else if(entryPointId == 4) {
-			return StringUtils.isOneOf(c, entryPoints4);
-
-		} else if(entryPointId == 5) {
-			return StringUtils.isOneOf(c, entryPoints5);
-
-		} else if(entryPointId == 6) {
-			return StringUtils.isOneOf(c, entryPoints6);
-
-		} else if(entryPointId == 7) {
-			return StringUtils.isOneOf(c, entryPoints7);
-
-		} else if(entryPointId == 8) {
-			return StringUtils.isOneOf(c, entryPoints8);
+		if (0 < entryPointId && entryPointId < 9) {
+			char c = get(cell);
+			return StringUtils.isOneOf(c, entryPoints.get(entryPointId));
 		}
 		return false;
 	}
