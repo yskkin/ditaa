@@ -1,5 +1,7 @@
 apply plugin: 'eclipse'
 apply plugin: 'java'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
 import org.apache.tools.ant.taskdefs.condition.Os
 
 version = '0_9'
@@ -50,6 +52,13 @@ jar {
   }
   configurations.bundleJar.each {
     from zipTree(it)
+  }
+}
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
   }
 }
 
