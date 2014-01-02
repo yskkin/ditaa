@@ -56,69 +56,7 @@ public class CommandLineConverter {
 		
 		long startTime = System.currentTimeMillis();
 		
-		Options cmdLnOptions = new Options();
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("help")
-				.withDescription( "Prints usage help." )
-				.create() );
-		cmdLnOptions.addOption("v", "verbose", false, "Makes ditaa more verbose.");
-		cmdLnOptions.addOption("o", "overwrite", false, "If the filename of the destination image already exists, an alternative name is chosen. If the overwrite option is selected, the image file is instead overwriten.");
-		cmdLnOptions.addOption("S", "no-shadows", false, "Turns off the drop-shadow effect.");
-		cmdLnOptions.addOption("A", "no-antialias", false, "Turns anti-aliasing off.");
-		cmdLnOptions.addOption("W", "fixed-slope", false, "Makes sides of parallelograms and trapezoids fixed slope instead of fixed width.");
-		cmdLnOptions.addOption("d", "debug", false, "Renders the debug grid over the resulting image.");
-		cmdLnOptions.addOption("r", "round-corners", false, "Causes all corners to be rendered as round corners.");
-		cmdLnOptions.addOption("E", "no-separation", false, "Prevents the separation of common edges of shapes.");
-		cmdLnOptions.addOption("h", "html", false, "In this case the input is an HTML file. The contents of the <pre class=\"textdiagram\"> tags are rendered as diagrams and saved in the images directory and a new HTML file is produced with the appropriate <img> tags.");
-		cmdLnOptions.addOption("T", "transparent", false, "Causes the diagram to be rendered on a transparent background. Overrides --background.");
-		
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("encoding")
-				.withDescription("The encoding of the input file.")
-				.hasArg()
-				.withArgName("ENCODING")
-				.create('e')
-				);
-
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("scale")
-				.withDescription("A natural number that determines the size of the rendered image. The units are fractions of the default size (2.5 renders 1.5 times bigger than the default).")
-				.hasArg()
-				.withArgName("SCALE")
-				.create('s')
-				);
-
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("tabs")
-				.withDescription("Tabs are normally interpreted as 8 spaces but it is possible to change that using this option. It is not advisable to use tabs in your diagrams.")
-				.hasArg()
-				.withArgName("TABS")
-				.create('t')
-				);
-		
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("background")
-				.withDescription("The background colour of the image. The format should be a six-digit hexadecimal number (as in HTML, FF0000 for red). Pass an eight-digit hex to define transparency. This is overridden by --transparent.")
-				.hasArg()
-				.withArgName("BACKGROUND")
-				.create('b')
-				);
-		
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("logfile")
-				.withDescription("Use given FILE for logging.")
-				.hasArg()
-				.withArgName("FILE")
-				.create()
-				);
-		
-//TODO: uncomment this for next version:
-//		cmdLnOptions.addOption(
-//				OptionBuilder.withLongOpt("config")
-//				.withDescription( "The shape configuration file." )
-//				.hasArg()
-//				.withArgName("CONFIG_FILE")
-//				.create('c') );
+		Options cmdLnOptions = defineOptionSpec();
 		
 		CommandLine cmdLine = null;
 		
@@ -272,6 +210,73 @@ public class CommandLineConverter {
 //			}
 			
 		}
+	}
+
+	private static Options defineOptionSpec() {
+		Options cmdLnOptions = new Options();
+		cmdLnOptions.addOption(
+				OptionBuilder.withLongOpt("help")
+				.withDescription( "Prints usage help." )
+				.create() );
+		cmdLnOptions.addOption("v", "verbose", false, "Makes ditaa more verbose.");
+		cmdLnOptions.addOption("o", "overwrite", false, "If the filename of the destination image already exists, an alternative name is chosen. If the overwrite option is selected, the image file is instead overwriten.");
+		cmdLnOptions.addOption("S", "no-shadows", false, "Turns off the drop-shadow effect.");
+		cmdLnOptions.addOption("A", "no-antialias", false, "Turns anti-aliasing off.");
+		cmdLnOptions.addOption("W", "fixed-slope", false, "Makes sides of parallelograms and trapezoids fixed slope instead of fixed width.");
+		cmdLnOptions.addOption("d", "debug", false, "Renders the debug grid over the resulting image.");
+		cmdLnOptions.addOption("r", "round-corners", false, "Causes all corners to be rendered as round corners.");
+		cmdLnOptions.addOption("E", "no-separation", false, "Prevents the separation of common edges of shapes.");
+		cmdLnOptions.addOption("h", "html", false, "In this case the input is an HTML file. The contents of the <pre class=\"textdiagram\"> tags are rendered as diagrams and saved in the images directory and a new HTML file is produced with the appropriate <img> tags.");
+		cmdLnOptions.addOption("T", "transparent", false, "Causes the diagram to be rendered on a transparent background. Overrides --background.");
+		
+		cmdLnOptions.addOption(
+				OptionBuilder.withLongOpt("encoding")
+				.withDescription("The encoding of the input file.")
+				.hasArg()
+				.withArgName("ENCODING")
+				.create('e')
+				);
+
+		cmdLnOptions.addOption(
+				OptionBuilder.withLongOpt("scale")
+				.withDescription("A natural number that determines the size of the rendered image. The units are fractions of the default size (2.5 renders 1.5 times bigger than the default).")
+				.hasArg()
+				.withArgName("SCALE")
+				.create('s')
+				);
+
+		cmdLnOptions.addOption(
+				OptionBuilder.withLongOpt("tabs")
+				.withDescription("Tabs are normally interpreted as 8 spaces but it is possible to change that using this option. It is not advisable to use tabs in your diagrams.")
+				.hasArg()
+				.withArgName("TABS")
+				.create('t')
+				);
+		
+		cmdLnOptions.addOption(
+				OptionBuilder.withLongOpt("background")
+				.withDescription("The background colour of the image. The format should be a six-digit hexadecimal number (as in HTML, FF0000 for red). Pass an eight-digit hex to define transparency. This is overridden by --transparent.")
+				.hasArg()
+				.withArgName("BACKGROUND")
+				.create('b')
+				);
+		
+		cmdLnOptions.addOption(
+				OptionBuilder.withLongOpt("logfile")
+				.withDescription("Use given FILE for logging.")
+				.hasArg()
+				.withArgName("FILE")
+				.create()
+				);
+		
+//TODO: uncomment this for next version:
+//		cmdLnOptions.addOption(
+//				OptionBuilder.withLongOpt("config")
+//				.withDescription( "The shape configuration file." )
+//				.hasArg()
+//				.withArgName("CONFIG_FILE")
+//				.create('c') );
+		return cmdLnOptions;
 	}	
 
 	private static void printRunInfo(CommandLine cmdLine) {
