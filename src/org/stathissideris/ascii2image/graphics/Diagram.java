@@ -130,7 +130,7 @@ public class Diagram {
 		int height = grid.getHeight();
 
 	
-		Collection<CellSet> boundarySetsStep2 = findBoundariesFromGrid(workGrid, width, height);
+		ArrayList<CellSet> boundarySetsStep2 = findBoundariesFromGrid(workGrid, width, height);
 
 		LOG.finer("******* Removed duplicates *******");
 
@@ -465,13 +465,11 @@ public class Diagram {
 		AbstractionGrid temp = new AbstractionGrid(workGrid, workGrid.getAllBoundaries());
 		ArrayList<CellSet> boundarySetsStep1 = temp.getDistinctShapes();
 		
-		if(DEBUG){
-			System.out.println("******* Distinct shapes found using AbstractionGrid *******");
-			for (CellSet set : boundarySetsStep1) {
-				set.printAsGrid();
-			}
-			System.out.println("******* Same set of shapes after processing them by filling *******");
+		LOG.finer("******* Distinct shapes found using AbstractionGrid *******");
+		for (CellSet set : boundarySetsStep1) {
+			set.printAsGrid();
 		}
+		LOG.finer("******* Same set of shapes after processing them by filling *******");
 		
 		
 		//Find all the boundaries by using the special version of the filling method
@@ -501,12 +499,10 @@ public class Diagram {
 						fillBuffer.fillCellsWith(filled, '*');
 						fillBuffer.fillCellsWith(boundaries, '-');
 						
-						if(DEBUG){
-							//System.out.println("Fill buffer:");
-							//fillBuffer.printDebug();
-							boundaries.makeScaledOneThirdEquivalent().printAsGrid();
-							System.out.println("-----------------------------------");
-						}
+						//System.out.println("Fill buffer:");
+						//fillBuffer.printDebug();
+						boundaries.makeScaledOneThirdEquivalent().printAsGrid();
+						LOG.finer("-----------------------------------");
 						
 					}
 				}
