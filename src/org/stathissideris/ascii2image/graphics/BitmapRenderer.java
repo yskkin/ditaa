@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -53,8 +54,7 @@ import org.stathissideris.ascii2image.text.TextGrid;
  */
 public class BitmapRenderer {
 
-	private static final boolean DEBUG = true;
-	private static final boolean DEBUG_LINES = false;
+	private static final Logger LOG = Logger.getLogger(BitmapRenderer.class.getName());
 
 	private static final String IDREGEX = "^.+_vfill$";
 	
@@ -135,7 +135,7 @@ public class BitmapRenderer {
 
 		ArrayList<DiagramShape> shapes = diagram.getAllDiagramShapes();
 
-		if(DEBUG) System.out.println("Rendering "+shapes.size()+" shapes (groups flattened)");
+		LOG.info("Rendering " + shapes.size() + " shapes (groups flattened)");
 
 		if(options.dropShadows()){
 			//render shadows
@@ -338,7 +338,7 @@ public class BitmapRenderer {
 			g2.drawString(text.getText(), text.getXPos(), text.getYPos());
 		}
 		
-		if(options.renderDebugLines() || DEBUG_LINES){
+		if(options.renderDebugLines()){
 			Stroke debugStroke =
 			  new BasicStroke(
 				1,
@@ -469,10 +469,10 @@ public class BitmapRenderer {
 		int brightness = Math.max(color.getRed(), color.getGreen());
 		brightness = Math.max(color.getBlue(), brightness);
 		if(brightness < 200) {
-			if(DEBUG) System.out.println("Color "+color+" is dark");
+			LOG.fine("Color "+color+" is dark");
 			return true;
 		}
-		if(DEBUG) System.out.println("Color "+color+" is not dark");
+		LOG.fine("Color "+color+" is not dark");
 		return false;
 	}
 }

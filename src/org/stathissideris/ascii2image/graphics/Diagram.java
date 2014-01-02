@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.stathissideris.ascii2image.core.ConversionOptions;
 import org.stathissideris.ascii2image.core.Pair;
@@ -40,9 +41,7 @@ import org.stathissideris.ascii2image.text.TextGrid.CellTagPair;
  */
 public class Diagram {
 
-	private static final boolean DEBUG = true;
-	private static final boolean DEBUG_VERBOSE = true;
-	private static final boolean DEBUG_MAKE_SHAPES = false;
+	private static final Logger LOG = Logger.getLogger(Diagram.class.getName());
 
 	private ArrayList<DiagramShape> shapes = new ArrayList<DiagramShape>();
 	private ArrayList<CompositeDiagramShape> compositeShapes = new ArrayList<CompositeDiagramShape>();
@@ -120,7 +119,7 @@ public class Diagram {
 		TextGrid workGrid = new TextGrid(grid);
 		workGrid.replaceTypeOnLine();
 		workGrid.replacePointMarkersOnLine();
-		if(DEBUG) workGrid.printDebug();
+		workGrid.printDebug();
 		
 		int width = grid.getWidth();
 		int height = grid.getHeight();
@@ -130,13 +129,12 @@ public class Diagram {
 		AbstractionGrid temp = new AbstractionGrid(workGrid, workGrid.getAllBoundaries());
 		ArrayList<CellSet> boundarySetsStep1 = temp.getDistinctShapes();
 		
-		if(DEBUG){
-			System.out.println("******* Distinct shapes found using AbstractionGrid *******");
-			for (CellSet set : boundarySetsStep1) {
-				set.printAsGrid();
-			}
-			System.out.println("******* Same set of shapes after processing them by filling *******");
+		LOG.finer("******* Distinct shapes found using AbstractionGrid *******");
+		for (CellSet set : boundarySetsStep1) {
+			set.printAsGrid();
 		}
+		LOG.finer("******* Same set of shapes after processing them by filling *******");
+		
 		
 		
 		//Find all the boundaries by using the special version of the filling method
@@ -166,38 +164,32 @@ public class Diagram {
 						fillBuffer.fillCellsWith(filled, '*');
 						fillBuffer.fillCellsWith(boundaries, '-');
 						
-						if(DEBUG){
-							//System.out.println("Fill buffer:");
-							//fillBuffer.printDebug();
-							boundaries.makeScaledOneThirdEquivalent().printAsGrid();
-							System.out.println("-----------------------------------");
-						}
+						//System.out.println("Fill buffer:");
+						//fillBuffer.printDebug();
+						boundaries.makeScaledOneThirdEquivalent().printAsGrid();
+						LOG.finer("-----------------------------------");
 						
 					}
 				}
 			}
 		}
 
-		if (DEBUG)
-			System.out.println("******* Removed duplicates *******");
+		LOG.finer("******* Removed duplicates *******");
 
 		boundarySetsStep2 = CellSet.removeDuplicateSets(boundarySetsStep2);
 
-		if(DEBUG){
-			for (CellSet set : boundarySetsStep2) {
-				set.printAsGrid();
-			}
-			System.out.println(
-					"******* Removed duplicates: now there are "
-					+boundarySetsStep2.size()
-					+" shapes.");
+		for (CellSet set : boundarySetsStep2) {
+			set.printAsGrid();
 		}
+		LOG.finer(
+				"******* Removed duplicates: now there are "
+				+ boundarySetsStep2.size()
+				+ " shapes.");
 
 
 		//split boundaries to open, closed and mixed
 		
-		if (DEBUG)
-			System.out.println("******* First evaluation of openess *******");
+		LOG.finer("******* First evaluation of openess *******");
 		
 		ArrayList<CellSet> open = new ArrayList<CellSet>();
 		ArrayList<CellSet> closed = new ArrayList<CellSet>();
@@ -208,12 +200,12 @@ public class Diagram {
 			if(type == CellSet.TYPE_CLOSED) closed.add(set);
 			else if(type == CellSet.TYPE_OPEN) open.add(set);
 			else if(type == CellSet.TYPE_MIXED) mixed.add(set);
-			if(DEBUG){
-				if(type == CellSet.TYPE_CLOSED) System.out.println("Closed boundaries:");
-				else if(type == CellSet.TYPE_OPEN) System.out.println("Open boundaries:");
-				else if(type == CellSet.TYPE_MIXED) System.out.println("Mixed boundaries:");
-				set.printAsGrid();
-			}
+
+			if(type == CellSet.TYPE_CLOSED) LOG.finer("Closed boundaries:");
+			else if(type == CellSet.TYPE_OPEN) LOG.finer("Open boundaries:");
+			else if(type == CellSet.TYPE_MIXED) LOG.finer("Mixed boundaries:");
+			set.printAsGrid();
+			
 		}
 		
 		boolean hadToEliminateMixed = false;
@@ -221,8 +213,7 @@ public class Diagram {
 		if(mixed.size() > 0 && closed.size() > 0) {
 							// mixed shapes can be eliminated by
 							// subtracting all the closed shapes from them 
-			if (DEBUG)
-				System.out.println("******* Eliminating mixed shapes (basic algorithm) *******");
+			LOG.finer("******* Eliminating mixed shapes (basic algorithm) *******");
 		
 			hadToEliminateMixed = true;
 			
@@ -252,8 +243,7 @@ public class Diagram {
 
 			hadToEliminateMixed = true;
 
-			if (DEBUG)
-				System.out.println("******* Eliminating mixed shapes (advanced algorithm for truly mixed shapes) *******");
+			LOG.finer("******* Eliminating mixed shapes (advanced algorithm for truly mixed shapes) *******");
 				
 			for (CellSet set : mixed) {
 				boundarySetsStep2.remove(set);
@@ -261,14 +251,12 @@ public class Diagram {
 			}
 
 		} else {
-			if (DEBUG)
-				System.out.println("No mixed shapes found. Skipped mixed shape elimination step");
+			LOG.finer("No mixed shapes found. Skipped mixed shape elimination step");
 		}
 		
 		
 		if(hadToEliminateMixed){
-			if (DEBUG)
-				System.out.println("******* Second evaluation of openess *******");
+			LOG.finer("******* Second evaluation of openess *******");
 		
 			//split boundaries again to open, closed and mixed
 			open = new ArrayList<CellSet>();
@@ -280,12 +268,12 @@ public class Diagram {
 				if(type == CellSet.TYPE_CLOSED) closed.add(set);
 				else if(type == CellSet.TYPE_OPEN) open.add(set);
 				else if(type == CellSet.TYPE_MIXED) mixed.add(set);
-				if(DEBUG){
-					if(type == CellSet.TYPE_CLOSED) System.out.println("Closed boundaries:");
-					else if(type == CellSet.TYPE_OPEN) System.out.println("Open boundaries:");
-					else if(type == CellSet.TYPE_MIXED) System.out.println("Mixed boundaries:");
-					set.printAsGrid();
-				}
+
+				if(type == CellSet.TYPE_CLOSED) LOG.finer("Closed boundaries:");
+				else if(type == CellSet.TYPE_OPEN) LOG.finer("Open boundaries:");
+				else if(type == CellSet.TYPE_MIXED) LOG.finer("Mixed boundaries:");
+				set.printAsGrid();
+				
 			}
 		}
 
@@ -296,16 +284,12 @@ public class Diagram {
 		
 		//make shapes from the boundary sets
 		//make closed shapes
-		if(DEBUG_MAKE_SHAPES) {
-			System.out.println("***** MAKING SHAPES FROM BOUNDARY SETS *****");
-			System.out.println("***** CLOSED: *****");
-		}
+		LOG.finer("***** MAKING SHAPES FROM BOUNDARY SETS *****");
+		LOG.finer("***** CLOSED: *****");
 		
 		ArrayList<DiagramComponent> closedShapes = new ArrayList<DiagramComponent>();
 		for (CellSet set : closed) {
-			if(DEBUG_MAKE_SHAPES) {
-				set.printAsGrid();
-			}
+			set.printAsGrid();
 			
 			DiagramComponent shape = DiagramComponent.createClosedFromBoundaryCells(workGrid, set, cellWidth, cellHeight, allCornersRound); 
 			if(shape != null){
@@ -332,8 +316,7 @@ public class Diagram {
 					}
 				}
 			} else { //normal shape
-                if (DEBUG)
-                    System.out.println(set.getCellsAsString());				
+                LOG.finer(set.getCellsAsString());
 				
 				DiagramComponent shape =
 					CompositeDiagramShape
@@ -451,7 +434,7 @@ public class Diagram {
 		for (Cell cell : workGrid.findArrowheads()) {
 			DiagramShape arrowhead = DiagramShape.createArrowhead(workGrid, cell, cellWidth, cellHeight);
 			if(arrowhead != null) addToShapes(arrowhead);
-			else System.err.println("Could not create arrowhead shape. Unexpected error.");
+			else LOG.warning("Could not create arrowhead shape. Unexpected error.");
 		}
 		
 		//make point markers
@@ -468,8 +451,8 @@ public class Diagram {
 
 		removeDuplicateShapes();
 		
-		if(DEBUG) System.out.println("Shape count: "+shapes.size());
-		if(DEBUG) System.out.println("Composite shape count: "+compositeShapes.size());
+		LOG.finer("Shape count: "+shapes.size());
+		LOG.finer("Composite shape count: "+compositeShapes.size());
 		
 		//copy again
 		workGrid = new TextGrid(grid);
@@ -484,7 +467,7 @@ public class Diagram {
 		textGroupGrid.fillCellsWith(gaps, '|');
 		CellSet nonBlank = textGroupGrid.getAllNonBlank();
 		ArrayList<CellSet> textGroups = nonBlank.breakIntoDistinctBoundaries();
-		if(DEBUG) System.out.println(textGroups.size()+" text groups found");
+		LOG.info(textGroups.size()+" text groups found");
 		
 		Font font = FontMeasurer.instance().getFontFor(cellHeight);
 		
@@ -495,8 +478,7 @@ public class Diagram {
 			for (CellStringPair pair : isolationGrid.findStrings()) {
 				TextGrid.Cell cell = pair.cell;
 				String string = pair.string;
-				if (DEBUG)
-					System.out.println("Found string "+string);
+				LOG.fine("Found string "+string);
 				TextGrid.Cell lastCell = isolationGrid.new Cell(cell.x + string.length() - 1, cell.y);
 			
 				int minX = getCellMinX(cell);
@@ -532,8 +514,7 @@ public class Diagram {
 			}
 		}
 		
-		if (DEBUG)
-			System.out.println("Positioned text");
+		LOG.info("Positioned text");
 		
 		//correct the color of the text objects according
 		//to the underlying color
@@ -556,8 +537,7 @@ public class Diagram {
 			}
 		}
 		
-		if (DEBUG)
-			System.out.println("Corrected color of text according to underlying color");
+		LOG.info("Corrected color of text according to underlying color");
 
 	}
 	
@@ -585,18 +565,15 @@ public class Diagram {
 	 * 
 	 */
 	private boolean removeObsoleteShapes(TextGrid grid, ArrayList<CellSet> sets){
-		if (DEBUG)
-			System.out.println("******* Removing obsolete shapes *******");
+		LOG.finer("******* Removing obsolete shapes *******");
 		
 		boolean removedAny = false;
 		
 		ArrayList<CellSet> filledSets = new ArrayList<CellSet>();
 
-		if(DEBUG_VERBOSE) {
-			System.out.println("******* Sets before *******");
-			for (CellSet set : sets) {
-				set.printAsGrid();
-			}
+		LOG.finer("******* Sets before *******");
+		for (CellSet set : sets) {
+			set.printAsGrid();
 		}
 
 		//make filled versions of all the boundary sets
@@ -610,10 +587,8 @@ public class Diagram {
 		ArrayList<Integer> toBeRemovedIndices = new ArrayList<Integer>();
 
 		for (CellSet set : filledSets){
-			if(DEBUG_VERBOSE){
-				System.out.println("*** Deciding if the following should be removed:");
-				set.printAsGrid();
-			}
+			LOG.finer("*** Deciding if the following should be removed:");
+			set.printAsGrid();
 			
 			//find the other sets that have common cells with set
 			ArrayList<CellSet> common = new ArrayList<CellSet>();
@@ -634,10 +609,8 @@ public class Diagram {
 				}
 			}
 			
-			if(DEBUG_VERBOSE){
-				System.out.println("Largest:");
-				largest.printAsGrid();
-			}
+			LOG.finer("Largest:");
+			largest.printAsGrid();
 
 			//see if largest is sum of others
 			common.remove(largest);
@@ -646,16 +619,15 @@ public class Diagram {
 			TextGrid gridOfSmalls = new TextGrid(largest.getMaxX() + 2, largest.getMaxY() + 2);
 
 			for (CellSet set2 : common){
-				if(DEBUG_VERBOSE){
-					System.out.println("One of smalls:");
-					set2.printAsGrid();
-				}
+				LOG.finer("One of smalls:");
+				set2.printAsGrid();
+
 				gridOfSmalls.fillCellsWith(set2, '*');
 			}
-			if(DEBUG_VERBOSE){
-				System.out.println("Sum of smalls:");
-				gridOfSmalls.printDebug();
-			}
+			
+			LOG.finer("Sum of smalls:");
+			gridOfSmalls.printDebug();
+
 			TextGrid gridLargest = new TextGrid(largest.getMaxX() + 2, largest.getMaxY() + 2);
 			gridLargest.fillCellsWith(largest, '*');
 
@@ -663,10 +635,10 @@ public class Diagram {
 			if(gridLargest.equals(gridOfSmalls)
 					&& !toBeRemovedIndices.contains(new Integer(index))) {
 				toBeRemovedIndices.add(new Integer(index));
-				if (DEBUG){
-					System.out.println("Decided to remove set:");
-					largest.printAsGrid();
-				}
+
+				LOG.finer("Decided to remove set:");
+				largest.printAsGrid();
+
 			} /*else if (DEBUG){
 				System.out.println("This set WILL NOT be removed:");
 				largest.printAsGrid();
@@ -684,11 +656,9 @@ public class Diagram {
 			sets.remove(set);
 		}
 	
-		if(DEBUG_VERBOSE) {
-			System.out.println("******* Sets after *******");
-			for (CellSet set : sets) {
-				set.printAsGrid();
-			}
+		LOG.finer("******* Sets after *******");
+		for (CellSet set : sets) {
+			set.printAsGrid();
 		}
 		
 		return removedAny;

@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -32,8 +33,7 @@ import java.util.Set;
  */
 public class CellSet implements Iterable<TextGrid.Cell> {
 
-	private static final boolean DEBUG = false;
-	private static final boolean VERBOSE_DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(CellSet.class.getName());
 	
 	public static final int TYPE_CLOSED = 0;
 	public static final int TYPE_OPEN = 1;
@@ -88,13 +88,12 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	}
 
 	public void printDebug(){
-		Iterator<TextGrid.Cell> it = iterator();
-		while(it.hasNext()){
-			TextGrid.Cell cell = it.next();
-			System.out.print(cell);
-			if(it.hasNext()) System.out.print(" ");
+		StringBuilder sb = new StringBuilder();
+		for (TextGrid.Cell cell : internalSet){
+			sb.append(cell.toString()).append(",");
 		}
-		System.out.println();
+		sb.deleteCharAt(sb.length() - 1);
+		LOG.finer(sb.toString());
 	}
 
 	public String getCellsAsString(){
@@ -149,9 +148,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		} 
 		int typeTrace = getTypeAccordingToTraceMethod(grid);
 
-		if(DEBUG){
-			System.out.println("trace: "+typeTrace);
-		}
+		LOG.info("trace type: "+typeTrace);
 
 		if(typeTrace == TYPE_OPEN) {
 			type = TYPE_OPEN;
@@ -191,36 +188,30 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 				start = cell;
 		if(start == null) start = (TextGrid.Cell) getFirst();
 		
-		if (DEBUG)
-			System.out.println("Tracing:\nStarting at "+start+" ("+grid.getCellTypeAsString(start)+")");
+		LOG.fine("Tracing:\nStarting at "+start+" ("+grid.getCellTypeAsString(start)+")");
 		TextGrid.Cell previous = start;
 		TextGrid.Cell cell = null;
 		CellSet nextCells = workGrid.followCell(previous);
 		if(nextCells.size() == 0) return TYPE_OPEN;
 		cell = (TextGrid.Cell) nextCells.getFirst();
-		if (DEBUG)
-			System.out.println("\tat cell "+cell+" ("+grid.getCellTypeAsString(cell)+")");
+		LOG.fine("\tat cell "+cell+" ("+grid.getCellTypeAsString(cell)+")");
 
 		
 		while(!cell.equals(start)){
 			nextCells = workGrid.followCell(cell, previous);
 			if(nextCells.size() == 0) {
-				if (DEBUG)
-					System.out.println("-> Found dead-end, shape is open");
+				LOG.fine("-> Found dead-end, shape is open");
 				return TYPE_OPEN;
 			} if(nextCells.size() == 1) {
 				previous = cell;
 				cell = (TextGrid.Cell) nextCells.getFirst();
-				if (DEBUG)
-					System.out.println("\tat cell "+cell+" ("+grid.getCellTypeAsString(cell)+")");
+				LOG.fine("\tat cell "+cell+" ("+grid.getCellTypeAsString(cell)+")");
 			} else if(nextCells.size() > 1) {
-				if (DEBUG)
-					System.out.println("-> Found intersection at cell "+cell);
+				LOG.fine("-> Found intersection at cell "+cell);
 				return TYPE_UNDETERMINED;
 			}
 		}
-		if (DEBUG)
-			System.out.println("-> Arrived back to start, shape is closed");
+		LOG.fine("-> Arrived back to start, shape is closed");
 		return TYPE_CLOSED;
 		
 //		boolean hasMoved = false;
@@ -281,7 +272,8 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		}
 		
 		temp.fillContinuousArea(fillCell, '*');
-		if(VERBOSE_DEBUG) {System.out.println("Buffer after filling:"); temp.printDebug();}
+		LOG.finer("Buffer after filling:");
+		temp.printDebug();
 		
 		if(temp.hasBlankCells()) return TYPE_HAS_CLOSED_AREA;
 		else return TYPE_OPEN;
@@ -585,22 +577,19 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		TextGrid workGrid = TextGrid.makeSameSizeAs(grid);
 		grid.copyCellsTo(this, workGrid);
 
-		if (DEBUG){
-			System.out.println("Breaking truly mixed boundaries below:");
-			workGrid.printDebug();
-		}
+		LOG.finer("Breaking truly mixed boundaries below:");
+		workGrid.printDebug();
 
 		Iterator<TextGrid.Cell> it = iterator();
 		while(it.hasNext()){
 			TextGrid.Cell start = (TextGrid.Cell) it.next();
 			if(workGrid.isLinesEnd(start) && !visitedEnds.contains(start)){
 				
-				if (DEBUG)
-					System.out.println("Starting new subshape:");
+				LOG.fine("Starting new subshape:");
 				
 				CellSet set = new CellSet();
 				set.add(start);
-				if(DEBUG) System.out.println("Added boundary "+start);
+				LOG.fine("Added boundary "+start);
 				
 				TextGrid.Cell previous = start;
 				TextGrid.Cell cell = null;
@@ -609,7 +598,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 					throw new IllegalArgumentException("This shape is either open but multipart or has only one cell, and cannot be processed by this method");
 				cell = (TextGrid.Cell) nextCells.getFirst();
 				set.add(cell);
-				if(DEBUG) System.out.println("Added boundary "+cell);
+				LOG.fine("Added boundary "+cell);
 				
 				boolean finished = false;
 				if(workGrid.isLinesEnd(cell)){
@@ -621,7 +610,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 					nextCells = workGrid.followCell(cell, previous);
 					if(nextCells.size() == 1) {
 						set.add(cell);
-						if(DEBUG) System.out.println("Added boundary " + cell);
+						LOG.fine("Added boundary " + cell);
 						previous = cell;
 						cell = (TextGrid.Cell) nextCells.getFirst();
 						//if(!cell.equals(start) && grid.isPointCell(cell))
@@ -642,10 +631,10 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		CellSet whatsLeft = new CellSet(this);
 		for(CellSet set : result) {
 			whatsLeft.subtractSet(set);
-			if(DEBUG) set.printAsGrid();
+			set.printAsGrid();
 		}
 		result.add(whatsLeft);
-		if(DEBUG) whatsLeft.printAsGrid();
+		whatsLeft.printAsGrid();
 		
 		return result;
 	}
@@ -660,10 +649,8 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	public CellSet makeScaledOneThirdEquivalent(){
 		TextGrid gridBig = this.makeIntoGrid();
 		gridBig.fillCellsWith(this, '*');
-		if (VERBOSE_DEBUG){
-			System.out.println("---> making ScaledOneThirdEquivalent of:");
-			gridBig.printDebug();
-		}
+		LOG.finer("---> making ScaledOneThirdEquivalent of:");
+		gridBig.printDebug();
 
 		
 		TextGrid gridSmall = new TextGrid((getMaxX() + 2) / 3, (getMaxY() + 2) / 3);
@@ -676,10 +663,8 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 			}
 		}
 		
-		if (VERBOSE_DEBUG){
-			System.out.println("---> made into grid:");
-			gridSmall.printDebug();
-		}
+		LOG.finer("---> made into grid:");
+		gridSmall.printDebug();
 		
 		return gridSmall.getAllNonBlank();
 	}

@@ -20,6 +20,7 @@
 package org.stathissideris.ascii2image.graphics;
 
 import java.awt.geom.GeneralPath;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -27,7 +28,7 @@ import java.awt.geom.GeneralPath;
  */
 public class ShapeEdge {
 	
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(ShapeEdge.class.getName());
 	
 	private static final int TYPE_HORIZONTAL = 0;
 	private static final int TYPE_VERTICAL = 1;
@@ -85,7 +86,7 @@ public class ShapeEdge {
 			if(path.contains(left)) xOffset = -offset;
 			else if(path.contains(right)) xOffset = offset;
 		}
-		if(DEBUG) System.out.println("Moved edge "+this+" by "+xOffset+", "+yOffset);
+		LOG.info("Moved edge "+this+" by "+xOffset+", "+yOffset);
 		translate(xOffset, yOffset);
 	}
 

@@ -27,6 +27,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.stathissideris.ascii2image.core.RenderingOptions;
 import org.stathissideris.ascii2image.text.*;
@@ -37,7 +38,7 @@ import org.stathissideris.ascii2image.text.*;
  */
 public class DiagramShape extends DiagramComponent {
 	
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(DiagramShape.class.getName());
 	
 	public static final int TYPE_SIMPLE = 0;
 	public static final int TYPE_ARROWHEAD = 1;
@@ -298,8 +299,7 @@ public class DiagramShape extends DiagramComponent {
 	}
 
 	public void printDebug(){
-		System.out.print("DiagramShape: ");
-		System.out.println(points.size()+" points");
+		LOG.finer("DiagramShape: " + points.size() + "points");
 	}
 
 	/**
@@ -324,31 +324,29 @@ public class DiagramShape extends DiagramComponent {
 		else shape = (DiagramShape) object;
 		if(getPoints().size() != shape.getPoints().size()) return false;
 		
-		if(DEBUG) System.out.println("comparing shapes:");
+		LOG.fine("comparing shapes:");
 		
-		if(DEBUG) System.out.println("points1: ");
+		LOG.fine("points1: ");
 		HashMap<String, ?> points1 = new HashMap();
 		for (ShapePoint point : points){
 			points1.put( ""+((int) point.x)+","+((int) point.y), null);
-			if(DEBUG) System.out.println(((int) point.x)+", "+((int) point.y));
+			LOG.fine(((int) point.x)+", "+((int) point.y));
 		}
 		
-		if(DEBUG) System.out.println("points2: ");
+		LOG.fine("points2: ");
 		HashMap points2 = new HashMap();
 		for (ShapePoint point : shape.points) {
 			points2.put( ""+((int) point.x)+","+((int) point.y), null);
-			if(DEBUG) System.out.println(((int) point.x)+", "+((int) point.y));
+			LOG.fine(((int) point.x)+", "+((int) point.y));
 		}
 		
 		for (String key : points1.keySet()) {
 			if(!points2.containsKey(key)) {
-				if (DEBUG)
-					System.out.println("\tare not equal");
+				LOG.fine("\tare not equal");
 				return false;
 			} 
 		}
-		if (DEBUG)
-			System.out.println("\tare equal");
+		LOG.fine("\tare equal");
 		return true;
 	}
 

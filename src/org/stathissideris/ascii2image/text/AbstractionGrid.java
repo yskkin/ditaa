@@ -20,6 +20,7 @@
 package org.stathissideris.ascii2image.text;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  */
 public class AbstractionGrid {
 
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(AbstractionGrid.class.getName());
 	
 	private TextGrid grid;
 	
@@ -60,12 +61,12 @@ public class AbstractionGrid {
 		cellSet = new CellSet(cellSet);
 		cellSet.translate( - cellSet.getMinX(), - cellSet.getMinY());*/
 		
-		if(DEBUG){
-			System.out.println("Making AbstractionGrid using buffer:");
-			textGrid.printDebug();
-			System.out.println("...and the following CellSet:");
-			cellSet.printAsGrid();
-		}
+		
+		LOG.finer("Making AbstractionGrid using buffer:");
+		textGrid.printDebug();
+		LOG.finer("...and the following CellSet:");
+		cellSet.printAsGrid();
+		
 		
 		for (TextGrid.Cell cell : cellSet){
 			if(textGrid.isBlank(cell)) continue;
@@ -98,10 +99,8 @@ public class AbstractionGrid {
 			}
 		}
 
-		if(DEBUG){
-			System.out.println("...the resulting AbstractionGrid is:");
-			grid.printDebug();
-		}
+		LOG.finer("...the resulting AbstractionGrid is:");
+		grid.printDebug();
 	}
 	
 	private AbstractionGrid(int width, int height){
@@ -133,12 +132,11 @@ public class AbstractionGrid {
 				if(!grid.isBlank(cell)) result.set(x/3, y/3, '*');
 			}
 		}
-		if (DEBUG){
-			System.out.println("Getting AbstractionGrid as textGrid.\nAbstractionGrid:");
-			grid.printDebug();
-			System.out.println("...as text grid:");
-			result.printDebug();
-		}
+
+		LOG.finer("Getting AbstractionGrid as textGrid.\nAbstractionGrid:");
+		grid.printDebug();
+		LOG.finer("...as text grid:");
+		result.printDebug();
 
 		return result;
 	}

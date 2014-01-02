@@ -22,6 +22,7 @@ package org.stathissideris.ascii2image.text;
 import java.awt.Color;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +37,7 @@ import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
  */
 public class TextGrid {
 
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(TextGrid.class.getName());
 
 	private ArrayList<StringBuilder> rows;
 
@@ -236,14 +237,14 @@ public class TextGrid {
 
 	public void printDebug(){
 		int i = 0;
-		System.out.println(
+		LOG.finer(
 			"    "
 			+StringUtils.repeatString("0123456789", (int) Math.floor(getWidth()/10)+1));
 		for (StringBuilder sb : rows) {
 			String row = sb.toString();
 			String index = new Integer(i).toString();
 			if(i < 10) index = " "+index;
-			System.out.println(index+" ("+row+")");
+			LOG.finer(index+" ("+row+")");
 			i++; 
 		}
 	}
@@ -308,13 +309,13 @@ public class TextGrid {
 					boolean isOnVerticalLine = isOnVerticalLine(xi, yi); 
 					if(isOnHorizontalLine && isOnVerticalLine){
 						set(xi, yi, '+');
-						if(DEBUG) System.out.println("replaced type on line '"+c+"' with +");
+						LOG.info("replaced type on line '"+c+"' with +");
 					} else if(isOnHorizontalLine){
 						set(xi, yi, '-');
-						if(DEBUG) System.out.println("replaced type on line '"+c+"' with -");
+						LOG.info("replaced type on line '"+c+"' with -");
 					} else if(isOnVerticalLine){
 						set(xi, yi, '|');
-						if(DEBUG) System.out.println("replaced type on line '"+c+"' with |");
+						LOG.info("replaced type on line '"+c+"' with |");
 					}
 				}
 			}
@@ -345,13 +346,13 @@ public class TextGrid {
  
 					if(isOnHorizontalLine && isOnVerticalLine){
 						set(xi, yi, '+');
-						if(DEBUG) System.out.println("replaced marker on line '"+c+"' with +");
+						LOG.info("replaced marker on line '"+c+"' with +");
 					} else if(isOnHorizontalLine){
 						set(xi, yi, '-');
-						if(DEBUG) System.out.println("replaced marker on line '"+c+"' with -");
+						LOG.info("replaced marker on line '"+c+"' with -");
 					} else if(isOnVerticalLine){
 						set(xi, yi, '|');
-						if(DEBUG) System.out.println("replaced marker on line '"+c+"' with |");
+						LOG.info("replaced marker on line '"+c+"' with |");
 					}
 				}
 			}
@@ -616,7 +617,7 @@ public class TextGrid {
 				if(isArrowhead(cell)) result.add(cell);
 			}
 		}
-		if(DEBUG) System.out.println(result.size()+" arrowheads found");
+		LOG.fine(result.size()+" arrowheads found");
 		return result;
 	}
 
@@ -642,7 +643,7 @@ public class TextGrid {
 				}
 			}
 		}
-		if(DEBUG) System.out.println(result.size()+" color codes found");
+		LOG.info(result.size()+" color codes found");
 		return result;
 	}
 
@@ -662,7 +663,7 @@ public class TextGrid {
 					if(matcher.find()){
 						String tagName = matcher.group(1);
 						if(markupTags.contains(tagName)){
-							if(DEBUG) System.out.println("found tag "+tagName+" at "+x+", "+y);
+							LOG.fine("found tag "+tagName+" at "+x+", "+y);
 							result.add(new CellTagPair(new Cell(x, y), tagName));
 						}
 					}
@@ -721,7 +722,6 @@ public class TextGrid {
 		char c = get(cell.x, cell.y);
 		if(0 == c) return false;
 		if('+' == c || '\\' == c || '/' == c){
-			System.out.print("");
 			if(
 			       isIntersection(cell) 
 				|| isCorner(cell)
@@ -1113,7 +1113,7 @@ public class TextGrid {
 		if(isLine(cell)) return followLine(cell, blocked);
 		if(isStub(cell)) return followStub(cell, blocked);
 		if(isCrossOnLine(cell)) return followCrossOnLine(cell, blocked);
-		System.err.println("Umbiguous input at position "+cell+":");
+		LOG.severe("Umbiguous input at position "+cell+":");
 		TextGrid subGrid = getTestingSubGrid(cell);
 		subGrid.printDebug();
 		throw new RuntimeException("Cannot follow cell "+cell+": cannot determine cell type");
@@ -1597,9 +1597,7 @@ public class TextGrid {
 			for(int i = 0; i < chars.length; i++){
 				if(chars[i] == '\t'){
 					int spacesLeft = tabSize - newRow.length() % tabSize;
-					if(DEBUG){
-						System.out.println("Found tab. Spaces left: "+spacesLeft);
-					}
+					LOG.info("Found tab. Spaces left: "+spacesLeft);
 					String spaces = StringUtils.repeatString(" ", spacesLeft);
 					newRow.append(spaces);
 				} else {

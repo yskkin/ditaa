@@ -28,6 +28,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -40,7 +41,7 @@ public class FontMeasurer {
 	private static final String fontFamilyName = "Dialog";
 	//private static final String fontFamilyName = "Helvetica";
 	
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(FontMeasurer.class.getName());
 	
 	private static final FontMeasurer instance = new FontMeasurer();
 	FontRenderContext fakeRenderContext;
@@ -50,7 +51,7 @@ public class FontMeasurer {
 		BufferedImage image = new BufferedImage(1,1, BufferedImage.TYPE_INT_RGB);
 		fakeGraphics = image.createGraphics();
 		
-		if(DEBUG) System.out.println("Locale: "+Locale.getDefault());
+		LOG.info("Locale: "+Locale.getDefault());
 		
 		fakeRenderContext = fakeGraphics.getFontRenderContext();
 	}		 
@@ -91,13 +92,13 @@ public class FontMeasurer {
 	public int getAscent(Font font){
 		fakeGraphics.setFont(font);
 		FontMetrics metrics = fakeGraphics.getFontMetrics();
-		if(DEBUG) System.out.println("Ascent: "+metrics.getAscent());
+		LOG.info("Ascent: "+metrics.getAscent());
 		return metrics.getAscent();
 	}
 
 	public int getZHeight(Font font){
 		int height = (int) font.createGlyphVector(fakeRenderContext, "Z").getOutline().getBounds().getHeight();
-		if(DEBUG) System.out.println("Z height: "+height);
+		LOG.info("Z height: "+height);
 		return height;
 	}
 
@@ -142,7 +143,7 @@ public class FontMeasurer {
 		float size = 12;
 		Font currentFont = new Font(fontFamilyName, Font.BOLD, (int) size);
 //		Font currentFont = new Font("Times", Font.BOLD, (int) size);
-		if(DEBUG) System.out.println(currentFont.getFontName());
+		LOG.info(currentFont.getFontName());
 		//ascent is the distance between the baseline and the tallest character
 		int ascent = getAscent(currentFont);
 
@@ -186,7 +187,7 @@ public class FontMeasurer {
 		//FontMeasurer.instance().getFontFor(7);
 		float size = 12;
 		Font currentFont = new Font("Sans", Font.BOLD, (int) size);
-		if(DEBUG) System.out.println(currentFont.getSize());
+		System.out.println("font size : " + currentFont.getSize());
 		currentFont = currentFont.deriveFont(--size);
 		System.out.println(currentFont.getSize());
 		currentFont = currentFont.deriveFont(--size);

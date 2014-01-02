@@ -20,6 +20,7 @@
 package org.stathissideris.ascii2image.text;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -78,7 +79,7 @@ public class GridPattern extends TextGrid {
 	private ArrayList<Pattern> regExps = new ArrayList<Pattern>(); //TODO optimise: store as PatternS
 	private boolean regExpsAreValid = false;
 	
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(GridPattern.class.getName());
 	
 	private boolean usesStandardSyntax = false;
 
@@ -110,8 +111,7 @@ public class GridPattern extends TextGrid {
 			String row = grid.getRow(i).toString();
 			Pattern regexp = regExps.get(i);
 			if(!regexp.matcher(row).matches()) {
-				if(DEBUG)
-					System.out.println(row+" does not match "+regexp);
+				LOG.fine(row + " does not match " + regexp);
 				return false;
 			} 
 		}
@@ -121,14 +121,12 @@ public class GridPattern extends TextGrid {
 	private void prepareRegExps(){
 		regExpsAreValid = true;
 		regExps.clear();
-		if (DEBUG)
-			System.out.println("Trying to match:");
+		LOG.fine("Trying to match:");
 		if(!usesStandardSyntax){
 			for (StringBuilder sb : getRows()) {
 				String row = sb.toString();
 				regExps.add(Pattern.compile(makeRegExp(row)));
-				if(DEBUG)
-					System.out.println(row+" becomes "+makeRegExp(row));
+				LOG.fine(row + " becomes " + makeRegExp(row));
 			}			
 		} else {
 			for (StringBuilder sb : getRows()) {

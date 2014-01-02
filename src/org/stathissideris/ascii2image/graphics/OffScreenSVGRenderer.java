@@ -25,6 +25,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.logging.Logger;
 
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.bridge.GVTBuilder;
@@ -40,7 +41,7 @@ import org.w3c.dom.svg.SVGElement;
 
 public class OffScreenSVGRenderer {
 		
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(OffScreenSVGRenderer.class.getName());
 	
 	public BufferedImage renderXMLToImage(String xmlContent, int width, int height) throws IOException {
 		return renderXMLToImage(xmlContent, width, height, false, null, null);
@@ -78,17 +79,17 @@ public class OffScreenSVGRenderer {
 	public void replaceFill(SVGDocument document, String idRegex, Color color){
 		String colorCode = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()); 
 		
-		if(DEBUG) System.out.println("color code: "+colorCode);
+		LOG.info("color code: "+colorCode);
 		
 		NodeList children = document.getElementsByTagName("*");
 		for(int i = 0; i < children.getLength(); i++){
 			if(children.item(i) instanceof SVGElement){
 				SVGElement element = (SVGElement) children.item(i);
 				if(element.getId().matches(idRegex)){
-					if(DEBUG) System.out.println("child>>> "+element+", "+element.getId());
+					LOG.fine("child>>> "+element+", "+element.getId());
 					String style = element.getAttributeNS(null, "style");
 					style = style.replaceFirst("fill:#[a-zA-z0-9]+", "fill:"+colorCode);
-					if(DEBUG) System.out.println(style);
+					LOG.fine(style);
 					element.setAttributeNS(null, "style", style);
 				}
 			}

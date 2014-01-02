@@ -19,7 +19,10 @@
  */
 package org.stathissideris.ascii2image.core;
 
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 
@@ -31,7 +34,6 @@ public class ProcessingOptions {
 
 	private HashMap<String, CustomShapeDefinition> customShapes = new HashMap<String, CustomShapeDefinition>();
 	
-	private boolean beVerbose = false;
 	private boolean printDebugOutput = false;
 	private boolean overwriteFiles = false;
 	private boolean performSeparationOfCommonEdges = true;
@@ -161,13 +163,6 @@ public class ProcessingOptions {
 	/**
 	 * @return
 	 */
-	public boolean verbose() {
-		return beVerbose;
-	}
-
-	/**
-	 * @return
-	 */
 	public boolean printDebugOutput() {
 		return printDebugOutput;
 	}
@@ -176,7 +171,11 @@ public class ProcessingOptions {
 	 * @param b
 	 */
 	public void setVerbose(boolean b) {
-		beVerbose = b;
+		LogManager logManager = LogManager.getLogManager();
+		Enumeration<String> loggers = logManager.getLoggerNames();
+		while (loggers.hasMoreElements()) {
+			logManager.getLogger(loggers.nextElement()).setLevel(Level.ALL);
+		}
 	}
 
 	/**

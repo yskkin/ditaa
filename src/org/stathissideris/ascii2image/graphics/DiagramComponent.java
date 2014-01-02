@@ -19,6 +19,8 @@
  */
 package org.stathissideris.ascii2image.graphics;
 
+import java.util.logging.Logger;
+
 import org.stathissideris.ascii2image.text.CellSet;
 import org.stathissideris.ascii2image.text.TextGrid;
 
@@ -28,11 +30,10 @@ import org.stathissideris.ascii2image.text.TextGrid;
  */
 public abstract class DiagramComponent {
 	
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(DiagramComponent.class.getName());
 	
 	protected static ShapePoint makePointForCell(TextGrid.Cell cell, TextGrid grid, int cellWidth, int cellHeight, boolean allRound){
-		if (DEBUG)
-			System.out.println("Found point at cell "+cell);
+		LOG.info("Found point at cell "+cell);
 		if(grid.isCorner(cell) && allRound){
 			return new ShapePoint(
 							cell.x * cellWidth + cellWidth/2,
@@ -82,10 +83,8 @@ public abstract class DiagramComponent {
 		TextGrid workGrid = new TextGrid(grid.getWidth(), grid.getHeight());
 		grid.copyCellsTo(cells, workGrid);
 		
-		if (DEBUG){
-			System.out.println("Making closed shape from buffer:");
-			workGrid.printDebug();
-		}
+		LOG.finer("Making closed shape from buffer:");
+		workGrid.printDebug();
 		
 		TextGrid.Cell start = (TextGrid.Cell) cells.getFirst();
 		if(workGrid.isCorner(start)) shape.addToPoints(makePointForCell(start, workGrid, cellWidth, cellHeight, allRound));

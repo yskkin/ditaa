@@ -21,6 +21,7 @@ package org.stathissideris.ascii2image.graphics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.stathissideris.ascii2image.core.DebugUtils;
 import org.stathissideris.ascii2image.text.*;
@@ -31,7 +32,7 @@ import org.stathissideris.ascii2image.text.*;
  */
 public class CompositeDiagramShape extends DiagramComponent {
 
-	private static final boolean DEBUG = false;
+	private static final Logger LOG = Logger.getLogger(CompositeDiagramShape.class.getName());
 
 	private ArrayList<DiagramShape> shapes = new ArrayList<DiagramShape>();
 
@@ -66,10 +67,8 @@ public class CompositeDiagramShape extends DiagramComponent {
 		TextGrid workGrid = new TextGrid(grid.getWidth(), grid.getHeight());
 		grid.copyCellsTo(boundaryCells, workGrid);
 
-		if(DEBUG) {
-			System.out.println("Making composite shape from grid:");
-			workGrid.printDebug();
-		}
+		LOG.finer("Making composite shape from grid:");
+		workGrid.printDebug();
 		
 		
 		CellSet visitedCells = new CellSet();
@@ -115,14 +114,14 @@ public class CompositeDiagramShape extends DiagramComponent {
 		DiagramShape shape = new DiagramShape();
 		
 		shape.addToPoints(makePointForCell(previousCell, workGrid, cellWidth, cellHeight, allRound));
-		if(DEBUG) System.out.println("point at "+previousCell+" (call from line: "+DebugUtils.getLineNumber()+")");
+		LOG.fine("point at "+previousCell+" (call from line: "+DebugUtils.getLineNumber()+")");
 		if(workGrid.cellContainsDashedLineChar(previousCell)) shape.setStrokeDashed(true);
 
 		boolean finished = false;
 		while(!finished) {
 			visitedCells.add(cell);
 			if(workGrid.isPointCell(cell)) {
-				if(DEBUG) System.out.println("point at "+cell+" (call from line: "+DebugUtils.getLineNumber()+")");
+				LOG.fine("point at "+cell+" (call from line: "+DebugUtils.getLineNumber()+")");
 				shape.addToPoints(makePointForCell(cell, workGrid, cellWidth, cellHeight, allRound));
 			}
 			
@@ -130,14 +129,14 @@ public class CompositeDiagramShape extends DiagramComponent {
 
 			if(workGrid.isLinesEnd(cell)){
 				finished = true;
-				if(DEBUG) System.out.println("finished shape");
+				LOG.fine("finished shape");
 			}
 			
 			CellSet nextCells = workGrid.followCell(cell, previousCell);
 			if(nextCells.size() == 1) {
 				previousCell = cell;
 				cell = (TextGrid.Cell) nextCells.getFirst();
-				if(DEBUG) System.out.println("tracing at "+cell+" (call from line: "+DebugUtils.getLineNumber()+")");
+				LOG.fine("tracing at "+cell+" (call from line: "+DebugUtils.getLineNumber()+")");
 			} else if(nextCells.size() > 1 || nextCells.size() == 0) {//3- or 4- way intersection
 				finished = true;
 				for(TextGrid.Cell nextCell : nextCells)
@@ -233,7 +232,7 @@ public class CompositeDiagramShape extends DiagramComponent {
 							Diagram.getCellMaxY(start, cellHeight)));
 			}			
 		} else { //corner
-			if(DEBUG) System.out.println("Corner");
+			LOG.info("Corner");
 			int type = (grid.isRoundCorner(start))?ShapePoint.TYPE_ROUND:ShapePoint.TYPE_NORMAL;
 			line.addToPoints(new ShapePoint(
 						Diagram.getCellMidX(start, cellWidth),
@@ -264,7 +263,7 @@ public class CompositeDiagramShape extends DiagramComponent {
 			}			
 		} else { //corner
 			int type = (grid.isRoundCorner(end))?ShapePoint.TYPE_ROUND:ShapePoint.TYPE_NORMAL;
-			if(DEBUG) System.out.println("Corner");
+			LOG.info("Corner");
 			line.addToPoints(new ShapePoint(
 						Diagram.getCellMidX(end, cellWidth),
 						Diagram.getCellMidY(end, cellHeight),
