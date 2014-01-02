@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * This is a TextGrid (usually 3x3) that contains the equivalent of a
  * 2D reqular expression (which uses custom syntax to make things more
@@ -79,7 +81,7 @@ public class GridPattern extends TextGrid {
 	private ArrayList<Pattern> regExps = new ArrayList<Pattern>(); //TODO optimise: store as PatternS
 	private boolean regExpsAreValid = false;
 	
-	private static final Logger LOG = Logger.getLogger(GridPattern.class.getName());
+	private static final Logger LOG = Loggers.getLogger(GridPattern.class);
 	
 	private boolean usesStandardSyntax = false;
 

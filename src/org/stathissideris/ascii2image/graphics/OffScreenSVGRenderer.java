@@ -39,9 +39,11 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.svg.SVGElement;
 
+import yskkin.ascii2image.util.Loggers;
+
 public class OffScreenSVGRenderer {
 		
-	private static final Logger LOG = Logger.getLogger(OffScreenSVGRenderer.class.getName());
+	private static final Logger LOG = Loggers.getLogger(OffScreenSVGRenderer.class);
 	
 	public BufferedImage renderXMLToImage(String xmlContent, int width, int height) throws IOException {
 		return renderXMLToImage(xmlContent, width, height, false, null, null);

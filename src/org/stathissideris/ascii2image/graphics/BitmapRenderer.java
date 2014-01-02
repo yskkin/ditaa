@@ -48,13 +48,15 @@ import org.stathissideris.ascii2image.core.Shape3DOrderingComparator;
 import org.stathissideris.ascii2image.core.ShapeAreaComparator;
 import org.stathissideris.ascii2image.text.TextGrid;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
  */
 public class BitmapRenderer {
 
-	private static final Logger LOG = Logger.getLogger(BitmapRenderer.class.getName());
+	private static final Logger LOG = Loggers.getLogger(BitmapRenderer.class);
 
 	private static final String IDREGEX = "^.+_vfill$";
 	

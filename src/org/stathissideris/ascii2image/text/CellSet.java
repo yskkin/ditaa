@@ -27,13 +27,15 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
  */
 public class CellSet implements Iterable<TextGrid.Cell> {
 
-	private static final Logger LOG = Logger.getLogger(CellSet.class.getName());
+	private static final Logger LOG = Loggers.getLogger(CellSet.class);
 	
 	public static final int TYPE_CLOSED = 0;
 	public static final int TYPE_OPEN = 1;

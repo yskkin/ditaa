@@ -24,13 +24,15 @@ import java.util.logging.Logger;
 import org.stathissideris.ascii2image.text.CellSet;
 import org.stathissideris.ascii2image.text.TextGrid;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
  */
 public abstract class DiagramComponent {
 	
-	private static final Logger LOG = Logger.getLogger(DiagramComponent.class.getName());
+	private static final Logger LOG = Loggers.getLogger(DiagramComponent.class);
 	
 	protected static ShapePoint makePointForCell(TextGrid.Cell cell, TextGrid grid, int cellWidth, int cellHeight, boolean allRound){
 		LOG.info("Found point at cell "+cell);

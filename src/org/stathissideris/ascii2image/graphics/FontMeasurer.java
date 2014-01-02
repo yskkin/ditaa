@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
@@ -41,7 +43,7 @@ public class FontMeasurer {
 	private static final String fontFamilyName = "Dialog";
 	//private static final String fontFamilyName = "Helvetica";
 	
-	private static final Logger LOG = Logger.getLogger(FontMeasurer.class.getName());
+	private static final Logger LOG = Loggers.getLogger(FontMeasurer.class);
 	
 	private static final FontMeasurer instance = new FontMeasurer();
 	FontRenderContext fakeRenderContext;

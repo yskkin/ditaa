@@ -40,6 +40,8 @@ import org.stathissideris.ascii2image.graphics.BitmapRenderer;
 import org.stathissideris.ascii2image.graphics.Diagram;
 import org.stathissideris.ascii2image.text.TextGrid;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
@@ -102,6 +104,14 @@ public class CommandLineConverter {
 				.create('b')
 				);
 		
+		cmdLnOptions.addOption(
+				OptionBuilder.withLongOpt("logfile")
+				.withDescription("Use given FILE for logging.")
+				.hasArg()
+				.withArgName("FILE")
+				.create()
+				);
+		
 //TODO: uncomment this for next version:
 //		cmdLnOptions.addOption(
 //				OptionBuilder.withLongOpt("config")
@@ -132,6 +142,8 @@ public class CommandLineConverter {
 			new HelpFormatter().printHelp("java -jar ditaa.jar <INPFILE> [OUTFILE]", cmdLnOptions, true);
 			System.exit(0);			
 		}
+		String logFileName = cmdLine.getOptionValue("logfile");
+		Loggers.addFileOutputToAllLoggers(logFileName);
 		
 		ConversionOptions options = null;
 		try {

@@ -26,13 +26,15 @@ import java.util.logging.Logger;
 import org.stathissideris.ascii2image.core.DebugUtils;
 import org.stathissideris.ascii2image.text.*;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
  */
 public class CompositeDiagramShape extends DiagramComponent {
 
-	private static final Logger LOG = Logger.getLogger(CompositeDiagramShape.class.getName());
+	private static final Logger LOG = Loggers.getLogger(CompositeDiagramShape.class);
 
 	private ArrayList<DiagramShape> shapes = new ArrayList<DiagramShape>();
 

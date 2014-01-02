@@ -22,13 +22,15 @@ package org.stathissideris.ascii2image.text;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
  */
 public class AbstractionGrid {
 
-	private static final Logger LOG = Logger.getLogger(AbstractionGrid.class.getName());
+	private static final Logger LOG = Loggers.getLogger(AbstractionGrid.class);
 	
 	private TextGrid grid;
 	

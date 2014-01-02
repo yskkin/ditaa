@@ -32,13 +32,15 @@ import java.util.logging.Logger;
 import org.stathissideris.ascii2image.core.RenderingOptions;
 import org.stathissideris.ascii2image.text.*;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
  */
 public class DiagramShape extends DiagramComponent {
 	
-	private static final Logger LOG = Logger.getLogger(DiagramShape.class.getName());
+	private static final Logger LOG = Loggers.getLogger(DiagramShape.class);
 	
 	public static final int TYPE_SIMPLE = 0;
 	public static final int TYPE_ARROWHEAD = 1;

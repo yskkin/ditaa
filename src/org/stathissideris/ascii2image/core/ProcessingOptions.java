@@ -26,6 +26,8 @@ import java.util.logging.LogManager;
 
 import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * @author Efstathios Sideris
  *
@@ -171,11 +173,7 @@ public class ProcessingOptions {
 	 * @param b
 	 */
 	public void setVerbose(boolean b) {
-		LogManager logManager = LogManager.getLogManager();
-		Enumeration<String> loggers = logManager.getLoggerNames();
-		while (loggers.hasMoreElements()) {
-			logManager.getLogger(loggers.nextElement()).setLevel(Level.ALL);
-		}
+		Loggers.setLevelToAllLoggers(Level.ALL);
 	}
 
 	/**

@@ -35,13 +35,15 @@ import org.stathissideris.ascii2image.text.TextGrid.CellColorPair;
 import org.stathissideris.ascii2image.text.TextGrid.CellStringPair;
 import org.stathissideris.ascii2image.text.TextGrid.CellTagPair;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
  */
 public class Diagram {
 
-	private static final Logger LOG = Logger.getLogger(Diagram.class.getName());
+	private static final Logger LOG = Loggers.getLogger(Diagram.class);
 
 	private ArrayList<DiagramShape> shapes = new ArrayList<DiagramShape>();
 	private ArrayList<CompositeDiagramShape> compositeShapes = new ArrayList<CompositeDiagramShape>();

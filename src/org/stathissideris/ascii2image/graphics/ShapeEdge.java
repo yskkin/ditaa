@@ -22,13 +22,15 @@ package org.stathissideris.ascii2image.graphics;
 import java.awt.geom.GeneralPath;
 import java.util.logging.Logger;
 
+import yskkin.ascii2image.util.Loggers;
+
 /**
  * 
  * @author Efstathios Sideris
  */
 public class ShapeEdge {
 	
-	private static final Logger LOG = Logger.getLogger(ShapeEdge.class.getName());
+	private static final Logger LOG = Loggers.getLogger(ShapeEdge.class);
 	
 	private static final int TYPE_HORIZONTAL = 0;
 	private static final int TYPE_VERTICAL = 1;

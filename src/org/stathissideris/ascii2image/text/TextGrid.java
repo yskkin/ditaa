@@ -30,6 +30,8 @@ import org.stathissideris.ascii2image.core.FileUtils;
 import org.stathissideris.ascii2image.core.ProcessingOptions;
 import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 
+import yskkin.ascii2image.util.Loggers;
+
 
 /**
  * 
@@ -37,7 +39,7 @@ import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
  */
 public class TextGrid {
 
-	private static final Logger LOG = Logger.getLogger(TextGrid.class.getName());
+	private static final Logger LOG = Loggers.getLogger(TextGrid.class);
 
 	private ArrayList<StringBuilder> rows;
 
