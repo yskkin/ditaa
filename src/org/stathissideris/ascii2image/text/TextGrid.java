@@ -379,20 +379,21 @@ public class TextGrid {
 
 
 	public void replaceHumanColorCodes(){
-		int height = getHeight();
-		for(int y = 0; y < height; y++){
-			String row = rows.get(y).toString();;
-			for (String humanCode : humanColorCodes.keySet()) {
-				String hexCode = (String) humanColorCodes.get(humanCode);
-				if(hexCode != null){
-					humanCode = "c" + humanCode;
-					hexCode = "c" + hexCode;
-					row = row.replaceAll(humanCode, hexCode);
-					rows.set(y, new StringBuilder(row)); //TODO: this is not the most efficient way to do this
-					row = rows.get(y).toString();
+		for (StringBuilder row : rows) {
+			for (Map.Entry<String, String> entry : humanColorCodes.entrySet()) {
+				String humanCode = entry.getKey();
+				String hexCode = entry.getValue();
+
+				humanCode = "c" + humanCode;
+				hexCode = "c" + hexCode;
+				int start = row.indexOf(humanCode);
+				while (start != -1) {
+					int end = start + humanCode.length();
+					row.replace(start, end, hexCode);
+					start = row.indexOf(humanCode, end);
 				}
 			}
-		}		
+		}
 	}
 
 
@@ -1462,11 +1463,10 @@ public class TextGrid {
 		ArrayList<StringBuilder> newRows = new ArrayList<StringBuilder>();
 		//TODO: make the following depend on blankBorderSize
 		
-		StringBuilder topBottomRow =
-			new StringBuilder(StringUtils.repeatString(" ", maxLength + blankBorderSize * 2));
+		String topBottomRow = StringUtils.repeatString(" ", maxLength + blankBorderSize * 2);
 		
-		newRows.add(topBottomRow);
-		newRows.add(topBottomRow);
+		newRows.add(new StringBuilder(topBottomRow));
+		newRows.add(new StringBuilder(topBottomRow));
 		for (StringBuilder row : rows) {
 			if(row.length() < maxLength) {
 				String borderString = StringUtils.repeatString(" ", blankBorderSize);
@@ -1483,8 +1483,8 @@ public class TextGrid {
 			}
 		}
 		//TODO: make the following depend on blankBorderSize
-		newRows.add(topBottomRow);
-		newRows.add(topBottomRow);
+		newRows.add(new StringBuilder(topBottomRow));
+		newRows.add(new StringBuilder(topBottomRow));
 		rows = newRows;
 		
 		replaceBullets();
