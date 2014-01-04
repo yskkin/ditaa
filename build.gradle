@@ -22,6 +22,7 @@ dependencies {
   compile files(javadocTools())
 
   testCompile 'junit:junit:4.11'
+  testCompile 'com.github.stefanbirkner:system-rules:1.4.0'
 }
 
 sourceSets {
