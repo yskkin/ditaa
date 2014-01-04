@@ -88,6 +88,18 @@ public class CommandLineConverterTest {
 		execute("--unknown-option", "input.txt");
 	}
 
+	@Test
+	public void testNoInputFile() {
+		exit.expectSystemExitWithStatus(2);
+		exit.checkAssertionAfterwards(new Assertion() {
+			public void checkAssertion() throws Exception {
+				assertThat(out.getLog(), containsString(USAGE_HEAD));
+				assertThat(err.getLog(), is("Error: Please provide the input file filename\n"));
+			}
+		});
+		execute("-v");
+	}
+
 	private void execute(String... args) {
 		CommandLineConverter.main(args);
 	}

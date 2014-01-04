@@ -20,7 +20,6 @@
 package org.stathissideris.ascii2image.core;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
 import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 import org.xml.sax.SAXException;
 
@@ -108,20 +107,18 @@ public class ConversionOptions {
 		
 		ConfigurationParser configParser = new ConfigurationParser();
 		try {
-			for (Option curOption : cmdLine.getOptions()) {
-				if(curOption.getLongOpt().equals("config")) {
-					String configFilename = curOption.getValue();
-					System.out.println("Parsing configuration file "+configFilename);
-					File file = new File(configFilename);
-					if(file.exists()){
-						configParser.parseFile(file);
-						HashMap<String, CustomShapeDefinition> shapes = configParser.getShapeDefinitionsHash();
-						processingOptions.putAllInCustomShapes(shapes);
-					} else {
-						System.err.println("File "+file+" does not exist, skipping");
-					}
+			if(cmdLine.hasOption("config")) {
+				String configFilename = cmdLine.getOptionValue("config");
+				System.out.println("Parsing configuration file "+configFilename);
+				File file = new File(configFilename);
+				if(file.exists()){
+					configParser.parseFile(file);
+					HashMap<String, CustomShapeDefinition> shapes = configParser.getShapeDefinitionsHash();
+					processingOptions.putAllInCustomShapes(shapes);
+				} else {
+					System.err.println("File "+file+" does not exist, skipping");
 				}
-			}
+				}
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

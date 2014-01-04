@@ -30,8 +30,6 @@ import java.io.UnsupportedEncodingException;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
 import org.stathissideris.ascii2image.graphics.BitmapRenderer;
 import org.stathissideris.ascii2image.graphics.Diagram;
 import org.stathissideris.ascii2image.text.TextGrid;
@@ -43,10 +41,6 @@ import yskkin.ascii2image.util.DitaaCommandLineParser;
  * @author Efstathios Sideris
  */
 public class CommandLineConverter {
-		
-	private static String notice = "ditaa version 0.9, Copyright (C) 2004--2009  Efstathios (Stathis) Sideris";
-	
-	private static String[] markupModeAllowedValues = {"use", "ignore", "render"};
 	
 	public static void main(String[] args){
 		
@@ -63,29 +57,11 @@ public class CommandLineConverter {
 			System.exit(parser.getExitStatus());
 		}
 		
-		ConversionOptions options = null;
-		try {
-			options = new ConversionOptions(cmdLine);
-		} catch (UnsupportedEncodingException e2) {
-			System.err.println("Error: " + e2.getMessage());
-			System.exit(2);
-		} catch (IllegalArgumentException e2) {
-			System.err.println("Error: " + e2.getMessage());
-			printDitaaHelp();
-			System.exit(2);
-		}
+		ConversionOptions options = parser.getConversionOptions();
 		
 		args = cmdLine.getArgs();
 		
-		if(args.length == 0) {
-			System.err.println("Error: Please provide the input file filename");
-			printDitaaHelp();
-			System.exit(2);
-		} 
-		
 		if(cmdLine.hasOption("html")){
-			/////// print options before running
-			printRunInfo(cmdLine);
 			String filename = args[0];
 			
 			boolean overwrite = false;
@@ -137,8 +113,6 @@ public class CommandLineConverter {
 			}
 
 			if (!stdOut) {
-				/////// print options before running
-				printRunInfo(cmdLine);
 				System.out.println("Reading "+ (stdIn ? "standard input" : "file: " + fromFilename));
 			}
 
@@ -183,27 +157,5 @@ public class CommandLineConverter {
 			long totalTime  = (endTime - startTime) / 1000;
 			if (!stdOut) System.out.println("Done in "+totalTime+"sec");
 		}
-	}
-
-	private static void printRunInfo(CommandLine cmdLine) {
-		System.out.println("\n"+notice+"\n");
-		
-		System.out.println("Running with options:");
-		Option[] opts = cmdLine.getOptions();
-		for (Option option : opts) {
-			if(option.hasArgs()){
-				for(String value:option.getValues()){
-					System.out.println(option.getLongOpt()+" = "+value);
-				}
-			} else if(option.hasArg()){
-				System.out.println(option.getLongOpt()+" = "+option.getValue());
-			} else {
-				System.out.println(option.getLongOpt());
-			}
-		}
-	}
-	
-	private static void printDitaaHelp() {
-		new HelpFormatter().printHelp("java -jar ditaa.jar <inpfile> [outfile]", DitaaCommandLineParser.DITAA_CLI_SPEC, true);
 	}
 }

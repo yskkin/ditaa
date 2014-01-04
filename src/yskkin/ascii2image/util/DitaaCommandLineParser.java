@@ -1,5 +1,7 @@
 package yskkin.ascii2image.util;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -8,6 +10,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.stathissideris.ascii2image.core.ConversionOptions;
 
 public class DitaaCommandLineParser {
 
@@ -107,6 +110,7 @@ public class DitaaCommandLineParser {
 
 	private boolean exitImmediately = false;
 	private int exitStatus = 0;
+	private ConversionOptions conversionOptions;
 
 	public CommandLine parse(String[] arguments) {
 		CommandLine result;
@@ -121,27 +125,56 @@ public class DitaaCommandLineParser {
 
 		String logFileName = result.getOptionValue("logfile");
 		Loggers.addFileOutputToAllLoggers(logFileName);
-		if(result.hasOption("help") || arguments.length == 0) {
+		if (result.hasOption("help") || arguments.length == 0) {
 			exit(0);
 			printDitaaHelp();
+			return null;
 		}
+
+		try {
+			conversionOptions = new ConversionOptions(result);
+		} catch (UnsupportedEncodingException e2) {
+			System.err.println("Error: " + e2.getMessage());
+			exit(2);
+			return null;
+		} catch (IllegalArgumentException e2) {
+			System.err.println("Error: " + e2.getMessage());
+			printDitaaHelp();
+			exit(2);
+			return null;
+		}
+
+		String[] args = result.getArgs();
+		if (args.length == 0) {
+			System.err.println("Error: Please provide the input file filename");
+			printDitaaHelp();
+			exit(2);
+			return null;
+		}
+		printRunInfo(result);
 		return result;
 	}
 
 	private void printRunInfo(CommandLine cmdLine) {
-		System.out.println("\n" + NOTICE + "\n");
+		String[] args = cmdLine.getArgs();
+		if (cmdLine.hasOption("html")
+				|| (args.length == 1 && args[0].equals("-")
+				|| args[1].equals("-"))) {
+			System.out.println("\n" + NOTICE + "\n");
 
-		System.out.println("Running with options:");
-		Option[] opts = cmdLine.getOptions();
-		for (Option option : opts) {
-			if(option.hasArgs()){
-				for(String value:option.getValues()){
-					System.out.println(option.getLongOpt() + " = " + value);
+			System.out.println("Running with options:");
+			Option[] opts = cmdLine.getOptions();
+			for (Option option : opts) {
+				if (option.hasArgs()) {
+					for (String value : option.getValues()) {
+						System.out.println(option.getLongOpt() + " = " + value);
+					}
+				} else if (option.hasArg()) {
+					System.out.println(option.getLongOpt() + " = "
+							+ option.getValue());
+				} else {
+					System.out.println(option.getLongOpt());
 				}
-			} else if(option.hasArg()){
-				System.out.println(option.getLongOpt() + " = " + option.getValue());
-			} else {
-				System.out.println(option.getLongOpt());
 			}
 		}
 	}
@@ -152,6 +185,10 @@ public class DitaaCommandLineParser {
 
 	public int getExitStatus() {
 		return exitStatus;
+	}
+
+	public ConversionOptions getConversionOptions() {
+		return conversionOptions;
 	}
 
 	private void exit(int exitStatus) {
