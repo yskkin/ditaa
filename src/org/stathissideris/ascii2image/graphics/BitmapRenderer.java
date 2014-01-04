@@ -367,7 +367,7 @@ public class BitmapRenderer {
 		return (RenderedImage) image;
 	}
 	
-	private class TextCanvas extends Canvas {
+	private static class TextCanvas extends Canvas {
 		ArrayList<DiagramText> textObjects;
 		
 		public TextCanvas(ArrayList<DiagramText> textObjects){

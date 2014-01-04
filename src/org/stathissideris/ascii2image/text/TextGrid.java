@@ -1638,7 +1638,7 @@ public class TextGrid {
 		return rows;
 	}
 	
-	public class CellColorPair{
+	public static class CellColorPair{
 		public CellColorPair(Cell cell, Color color){
 			this.cell = cell;
 			this.color = color;
@@ -1647,7 +1647,7 @@ public class TextGrid {
 		public Cell cell;
 	}
 
-	public class CellStringPair{
+	public static class CellStringPair{
 		public CellStringPair(Cell cell, String string){
 			this.cell = cell;
 			this.string = string;
@@ -1656,7 +1656,7 @@ public class TextGrid {
 		public String string;
 	}
 
-	public class CellTagPair{
+	public static class CellTagPair{
 		public CellTagPair(Cell cell, String tag){
 			this.cell = cell;
 			this.tag = tag;
@@ -1777,7 +1777,7 @@ public class TextGrid {
 		
 	}
 
-	private class LineSegment{
+	private static class LineSegment{
 		int x1, x2, y, dy;
 		public LineSegment(int x1, int x2, int y, int dy){
 			this.x1 = x1;

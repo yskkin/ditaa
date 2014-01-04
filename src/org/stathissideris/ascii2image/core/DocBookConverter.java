@@ -26,7 +26,7 @@ import org.xml.sax.helpers.*;
 // using SAX
 public class DocBookConverter {
 
-	class HowToHandler extends DefaultHandler {
+	static class HowToHandler extends DefaultHandler {
     	boolean title = false;
     	boolean url   = false;
 
