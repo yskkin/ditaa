@@ -20,9 +20,7 @@
 package org.stathissideris.ascii2image.graphics;
 
 import java.awt.BasicStroke;
-import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -280,7 +278,6 @@ public class BitmapRenderer {
 
 			if(shape.getPoints().isEmpty()) continue;
 
-			int size = shape.getPoints().size();
 			
 			GeneralPath path;
 			path = shape.makeIntoRenderPath(diagram, options);
@@ -357,38 +354,6 @@ public class BitmapRenderer {
 		g2.dispose();
 		
 		return renderedImage;
-	}
-	
-	private RenderedImage renderTextLayer(ArrayList<DiagramText> textObjects, int width, int height){
-		TextCanvas canvas = new TextCanvas(textObjects);
-		Image image = canvas.createImage(width, height);
-		Graphics g = image.getGraphics();
-		canvas.paint(g);
-		return (RenderedImage) image;
-	}
-	
-	private static class TextCanvas extends Canvas {
-		ArrayList<DiagramText> textObjects;
-		
-		public TextCanvas(ArrayList<DiagramText> textObjects){
-			this.textObjects = textObjects;
-		}
-		
-		public void paint(Graphics g){
-			Graphics g2 = (Graphics2D) g;
-			for (DiagramText text : textObjects){
-				g2.setFont(text.getFont());
-				if(text.hasOutline()){
-					g2.setColor(text.getOutlineColor());
-					g2.drawString(text.getText(), text.getXPos() + 1, text.getYPos());
-					g2.drawString(text.getText(), text.getXPos() - 1, text.getYPos());
-					g2.drawString(text.getText(), text.getXPos(), text.getYPos() + 1);
-					g2.drawString(text.getText(), text.getXPos(), text.getYPos() - 1);
-				}
-				g2.setColor(text.getColor());
-				g2.drawString(text.getText(), text.getXPos(), text.getYPos());
-			}
-		}
 	}
 	
 	private void renderCustomShape(DiagramShape shape, Graphics2D g2){

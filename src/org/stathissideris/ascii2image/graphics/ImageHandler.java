@@ -22,38 +22,17 @@ package org.stathissideris.ascii2image.graphics;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import org.apache.batik.bridge.BridgeContext;
-import org.apache.batik.bridge.GVTBuilder;
-import org.apache.batik.bridge.UserAgentAdapter;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.dom.util.DocumentFactory;
-import org.apache.batik.ext.awt.image.codec.PNGEncodeParam;
-import org.apache.batik.ext.awt.image.codec.PNGImageEncoder;
-import org.apache.batik.gvt.GraphicsNode;
-import org.apache.batik.gvt.renderer.ConcreteImageRendererFactory;
-import org.apache.batik.gvt.renderer.ImageRenderer;
-import org.apache.batik.gvt.renderer.ImageRendererFactory;
-import org.apache.batik.gvt.renderer.StaticRenderer;
 import org.stathissideris.ascii2image.core.FileUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.svg.SVGDocument;
 
 public class ImageHandler {
 	

@@ -21,7 +21,6 @@ package org.stathissideris.ascii2image.graphics;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
 /**

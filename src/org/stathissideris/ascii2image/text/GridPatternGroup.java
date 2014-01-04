@@ -25,6 +25,7 @@ import java.util.ArrayList;
  * 
  * @author Efstathios Sideris
  */
+@SuppressWarnings("serial")
 public class GridPatternGroup extends ArrayList<GridPattern> {
 	public boolean areAllMatchedBy(TextGrid grid){
 		for (GridPattern pattern : this) {

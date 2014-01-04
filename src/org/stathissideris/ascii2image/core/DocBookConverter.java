@@ -19,7 +19,6 @@
  */
 package org.stathissideris.ascii2image.core;
 
-import java.io.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 

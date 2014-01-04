@@ -25,7 +25,8 @@ import java.awt.geom.Point2D.Float;
  * 
  * @author Efstathios Sideris
  */
-public class ShapePoint extends java.awt.geom.Point2D.Float {
+@SuppressWarnings("serial")
+public class ShapePoint extends Float {
 
 	public static final int TYPE_NORMAL = 0;
 	public static final int TYPE_ROUND = 1;

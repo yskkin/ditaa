@@ -20,9 +20,7 @@
 package org.stathissideris.ascii2image.text;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;

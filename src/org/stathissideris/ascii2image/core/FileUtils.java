@@ -21,7 +21,6 @@ package org.stathissideris.ascii2image.core;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -56,7 +55,7 @@ public class FileUtils {
 		return targetName;
 	}
 	
-	public static String makeAlternativePathname(String pathName){
+	private static String makeAlternativePathname(String pathName){
 		int limit = 100;
 		
 		for(int i = 2; i <= limit; i++){
@@ -82,7 +81,7 @@ public class FileUtils {
 		return readFile(file, null);
 	}
 	
-	public static String readFile(File file, String encoding) throws IOException {
+	private static String readFile(File file, String encoding) throws IOException {
         long length = file.length();
         
         if (length > Integer.MAX_VALUE) {
@@ -97,7 +96,7 @@ public class FileUtils {
 		return readFile(is, name, encoding, -1);
 	}
 
-	public static String readFile(InputStream is, String name, String encoding, long length) throws IOException {
+	private static String readFile(InputStream is, String name, String encoding, long length) throws IOException {
 
 		if (length < 0) {
 			LineNumberReader reader = new LineNumberReader(new InputStreamReader(is));

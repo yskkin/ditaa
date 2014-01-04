@@ -30,7 +30,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.html.HTMLEditorKit;
 
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
@@ -48,7 +47,7 @@ import org.stathissideris.ascii2image.text.TextGrid;
  * 
  * @author Efstathios Sideris
  */
-public class HTMLConverter extends HTMLEditorKit {
+public class HTMLConverter {
 
 	private static final String TAG_CLASS = "textdiagram";
 	private static final String testDir = "tests/html-converter/";

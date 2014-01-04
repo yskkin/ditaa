@@ -21,10 +21,8 @@
  */
 package org.stathissideris.ascii2image.core;
 
-import com.sun.javadoc.ProgramElementDoc;
 import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
-import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.standard.Standard;
 import java.awt.image.RenderedImage;
 import java.io.File;

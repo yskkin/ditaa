@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 import org.stathissideris.ascii2image.core.FileUtils;
 import org.stathissideris.ascii2image.core.ProcessingOptions;
-import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 
 import yskkin.ascii2image.util.Loggers;
 

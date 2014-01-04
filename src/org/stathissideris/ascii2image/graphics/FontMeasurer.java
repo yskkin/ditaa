@@ -22,15 +22,11 @@ package org.stathissideris.ascii2image.graphics;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 
 import yskkin.ascii2image.util.Loggers;
 

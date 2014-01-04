@@ -19,10 +19,8 @@
  */
 package org.stathissideris.ascii2image.core;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 
 import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 

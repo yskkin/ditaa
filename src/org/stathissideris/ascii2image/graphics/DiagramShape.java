@@ -25,8 +25,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.stathissideris.ascii2image.core.RenderingOptions;
@@ -191,10 +190,6 @@ public class DiagramShape extends DiagramComponent {
 
 	public void addToPoints(ShapePoint point){
 		points.add(point);
-	}
-	
-	public Iterator getPointsIterator(){
-		return points.iterator();
 	}
 	
 	public void scale(float factor){
@@ -436,7 +431,6 @@ public class DiagramShape extends DiagramComponent {
 
 		GeneralPath path = new GeneralPath();
 		ShapePoint point = (ShapePoint) getPoints().get(0);
-		TextGrid.Cell cell = diagram.getCellFor(point);
 		//path.moveTo((int) point.x, (int) point.y);
 		ShapePoint previous = (ShapePoint) getPoints().get(size - 1);
 		ShapePoint next = (ShapePoint) getPoints().get(1);
@@ -463,8 +457,6 @@ public class DiagramShape extends DiagramComponent {
 			if(i < size - 1)
 				next = (ShapePoint) getPoints().get(i + 1);
 			else next = (ShapePoint) getPoints().get(0);
-
-			cell = diagram.getCellFor(point);
 
 			if(point.getType() == ShapePoint.TYPE_NORMAL)
 				//if(!isPointLinesEnd(point))
