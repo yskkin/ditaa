@@ -1546,7 +1546,7 @@ public class TextGrid {
 		rows = new ArrayList<StringBuilder>(lines.subList(0, i + 2));
 
 		if(options != null) fixTabs(options.getTabSize());
-		else fixTabs(options.DEFAULT_TAB_SIZE);
+		else fixTabs(ProcessingOptions.DEFAULT_TAB_SIZE);
 
 
 		// make all lines of equal length
