@@ -40,7 +40,7 @@ public class TextGrid {
 
 	private static final Logger LOG = Loggers.getLogger(TextGrid.class);
 
-	private ArrayList<StringBuilder> rows;
+	private List<StringBuilder> rows;
 
 	private static char[] boundaries = {'/', '\\', '|', '-', '*', '=', ':'};
 	private static char[] undisputableBoundaries = {'|', '-', '*', '=', ':'};
@@ -90,22 +90,6 @@ public class TextGrid {
 	public void addToMarkupTags(Collection<String> tags){
 		markupTags.addAll(tags);
 	}
-	
-	public static void main(String[] args) throws Exception {
-		TextGrid grid = new TextGrid();
-		grid.loadFrom("tests/text/art10.txt");
-
-		grid.writeStringTo(grid.new Cell(28, 1), "testing");
-
-		grid.findMarkupTags();
-		
-		grid.printDebug();
-		//System.out.println(grid.fillContinuousArea(0, 0, '-').size()+" cells filled");
-		//grid.fillContinuousArea(4, 4, '-');
-		//grid.getSubGrid(1,1,3,3).printDebug();
-		//grid.printDebug();
-	}
-
 
 	public TextGrid(){
 		rows = new ArrayList<StringBuilder>();
@@ -130,16 +114,8 @@ public class TextGrid {
 		}		
 	}
 
-	public void clear(){
-		String blank = StringUtils.repeatString(" ", getWidth());
-		int height = getHeight();
-		rows.clear();
-		for(int i = 0; i < height; i++)
-			rows.add(new StringBuilder(blank)); 
-	}
-
 //	duplicated code due to lots of hits to this function
-	public char get(int x, int y){
+	private char get(int x, int y){
 		if(x > getWidth() - 1
 			|| y > getHeight() - 1
 			|| x < 0
@@ -148,7 +124,7 @@ public class TextGrid {
 	}
 
 	//duplicated code due to lots of hits to this function
-	public char get(Cell cell){
+	private char get(Cell cell){
 		if(cell.x > getWidth() - 1
 			|| cell.y > getHeight() - 1
 			|| cell.x < 0
@@ -168,16 +144,11 @@ public class TextGrid {
 		return grid;
 	}
 
-	public TextGrid getTestingSubGrid(Cell cell){
+	private TextGrid getTestingSubGrid(Cell cell){
 		return getSubGrid(cell.x - 1, cell.y - 1, 3, 3);
 	}
 
-
-	public String getStringAt(int x, int y, int length){
-		return getStringAt(new Cell(x, y), length);
-	}
-
-	public String getStringAt(Cell cell, int length){
+	private String getStringAt(Cell cell, int length){
 		int x = cell.x;
 		int y = cell.y;
 		if(x > getWidth() - 1
@@ -187,26 +158,16 @@ public class TextGrid {
 		return rows.get(y).substring(x, x + length);		
 	}
 
-	public char getNorthOf(int x, int y){ return get(x, y - 1); }
-	public char getSouthOf(int x, int y){ return get(x, y + 1); }
-	public char getEastOf(int x, int y){ return get(x + 1, y); }
-	public char getWestOf(int x, int y){ return get(x - 1, y); }
-
-	public char getNorthOf(Cell cell){ return getNorthOf(cell.x, cell.y); }
-	public char getSouthOf(Cell cell){ return getSouthOf(cell.x, cell.y); }
-	public char getEastOf(Cell cell){ return getEastOf(cell.x, cell.y); }
-	public char getWestOf(Cell cell){ return getWestOf(cell.x, cell.y); }
-
 	public void writeStringTo(int x, int y, String str){
 		writeStringTo(new Cell(x, y), str);
 	}
 
-	public void writeStringTo(Cell cell, String str){
+	private void writeStringTo(Cell cell, String str){
 		if(isOutOfBounds(cell)) return;
 		rows.get(cell.y).replace(cell.x, cell.x + str.length(), str);
 	}
 
-	public void set(Cell cell, char c){
+	private void set(Cell cell, char c){
 		set(cell.x, cell.y, c);
 	}
 
@@ -222,7 +183,7 @@ public class TextGrid {
 		rows.set(y, new StringBuilder(row));
 	}
 
-	public void setRow(int y, StringBuilder row){
+	private void setRow(int y, StringBuilder row){
 		if(y > getHeight() || row.length() != getWidth())
 			throw new IllegalArgumentException("setRow out of bounds or string wrong size");
 		rows.set(y, row);
@@ -271,27 +232,6 @@ public class TextGrid {
 
 	public String toString(){
 		return getDebugString();
-	}
-
-	/**
-	 * Adds grid to this. Space characters in this grid
-	 * are replaced with the corresponding contents of 
-	 * grid, otherwise the contents are unchanged.
-	 * 
-	 * @param grid
-	 * @return false if the grids are of different size
-	 */
-	public boolean add(TextGrid grid){
-		if(getWidth() != grid.getWidth()
-			|| getHeight() != grid.getHeight()) return false;
-		int width = getWidth();
-		int height = getHeight();
-		for(int yi = 0; yi < height; yi++){
-			for(int xi = 0; xi < width; xi++){
-				if(get(xi, yi) == ' ') set(xi, yi, grid.get(xi, yi));
-			}
-		}
-		return true;
 	}
 
 	/**
@@ -378,7 +318,7 @@ public class TextGrid {
 	}
 
 
-	public void replaceHumanColorCodes(){
+	private void replaceHumanColorCodes(){
 		for (StringBuilder row : rows) {
 			for (Map.Entry<String, String> entry : humanColorCodes.entrySet()) {
 				String humanCode = entry.getKey();
@@ -390,28 +330,10 @@ public class TextGrid {
 				while (start != -1) {
 					int end = start + humanCode.length();
 					row.replace(start, end, hexCode);
-					start = row.indexOf(humanCode, end);
+					start = row.indexOf(humanCode, end	);
 				}
 			}
 		}
-	}
-
-
-	/**
-	 * Replace all occurences of c1 with c2
-	 * 
-	 * @param c1
-	 * @param c2
-	 */
-	public void replaceAll(char c1, char c2){
-		int width = getWidth();
-		int height = getHeight();
-		for(int yi = 0; yi < height; yi++){
-			for(int xi = 0; xi < width; xi++){
-				char c = get(xi, yi);
-				if(c == c1) set(xi, yi, c2);
-			}
-		}		
 	}
 
 	public boolean hasBlankCells(){
@@ -511,7 +433,7 @@ public class TextGrid {
 	 * @param entryPointId
 	 * @return
 	 */
-	public boolean hasEntryPoint(Cell cell, int entryPointId){
+	private boolean hasEntryPoint(Cell cell, int entryPointId){
 		if (0 < entryPointId && entryPointId < 9) {
 			char c = get(cell);
 			return StringUtils.isOneOf(c, entryPoints.get(entryPointId));
@@ -526,7 +448,7 @@ public class TextGrid {
 	 * @param cell
 	 * @return
 	 */
-	public boolean isBlankBetweenCharacters(Cell cell){
+	private boolean isBlankBetweenCharacters(Cell cell){
 		return (isBlank(cell)
 				&& !isBlank(cell.getEast())
 				&& !isBlank(cell.getWest()));
@@ -546,7 +468,7 @@ public class TextGrid {
 		removeMarkupTags();
 	}
 
-	public void removeArrowheads(){
+	private void removeArrowheads(){
 		int width = getWidth();
 		int height = getHeight();
 		for(int yi = 0; yi < height; yi++){
@@ -557,7 +479,7 @@ public class TextGrid {
 		}		
 	}
 
-	public void removeColorCodes(){
+	private void removeColorCodes(){
 		for (CellColorPair colorPair : findColorCodes()) {
 			Cell cell = colorPair.cell;
 			set(cell, ' ');
@@ -567,7 +489,7 @@ public class TextGrid {
 		}
 	}
 
-	public void removeBoundaries(){
+	private void removeBoundaries(){
 		ArrayList<Cell> toBeRemoved = new ArrayList<Cell>();
 
 		int width = getWidth();
@@ -653,7 +575,7 @@ public class TextGrid {
 		return result;
 	}
 		
-	public void removeMarkupTags(){
+	private void removeMarkupTags(){
 		for (CellTagPair pair : findMarkupTags()) {
 			String tagName = pair.tag;
 			if(tagName == null) continue;
@@ -664,20 +586,10 @@ public class TextGrid {
 		
 
 
-	public boolean matchesAny(GridPatternGroup criteria){
+	private boolean matchesAny(GridPatternGroup criteria){
 		return criteria.isAnyMatchedBy(this);
 	}
 
-	public boolean matchesAll(GridPatternGroup criteria){
-		return criteria.areAllMatchedBy(this);
-	}
-
-	public boolean matches(GridPattern criteria){
-		return criteria.isMatchedBy(this);
-	}
-
-
-	public boolean isOnHorizontalLine(Cell cell){ return isOnHorizontalLine(cell.x, cell.y); }
 	private boolean isOnHorizontalLine(int x, int y){
 		char c1 = get(x - 1, y);
 		char c2 = get(x + 1, y);
@@ -685,7 +597,6 @@ public class TextGrid {
 		return false;
 	}
 
-	public boolean isOnVerticalLine(Cell cell){ return isOnVerticalLine(cell.x, cell.y); }
 	private boolean isOnVerticalLine(int x, int y){
 		char c1 = get(x, y - 1);
 		char c2 = get(x, y + 1);
@@ -693,12 +604,7 @@ public class TextGrid {
 		return false;
 	}
 
-
-	public static boolean isBoundary(char c){
-		return StringUtils.isOneOf(c, boundaries);
-	}
-	public boolean isBoundary(int x, int y){ return isBoundary(new Cell(x, y)); }
-	public boolean isBoundary(Cell cell){
+	private boolean isBoundary(Cell cell){
 		char c = get(cell.x, cell.y);
 		if(0 == c) return false;
 		if('+' == c || '\\' == c || '/' == c){
@@ -721,30 +627,26 @@ public class TextGrid {
 		return isHorizontalLine(cell) || isVerticalLine(cell);
 	}
 
-	public static boolean isHorizontalLine(char c){
+	private static boolean isHorizontalLine(char c){
 		return StringUtils.isOneOf(c, horizontalLines);
 	}
 	public boolean isHorizontalLine(Cell cell){ return isHorizontalLine(cell.x, cell.y); }
-	public boolean isHorizontalLine(int x, int y){
+	private boolean isHorizontalLine(int x, int y){
 		char c = get(x, y);
 		if(0 == c) return false;
 		return StringUtils.isOneOf(c, horizontalLines);
 	}
 
-	public static boolean isVerticalLine(char c){
+	private static boolean isVerticalLine(char c){
 		return StringUtils.isOneOf(c, verticalLines);
 	}
 	public boolean isVerticalLine(Cell cell){ return isVerticalLine(cell.x, cell.y); }
-	public boolean isVerticalLine(int x, int y){
+	private boolean isVerticalLine(int x, int y){
 		char c = get(x, y);
 		if(0 == c) return false;
 		return StringUtils.isOneOf(c, verticalLines);
 	}
 
-	public boolean isLinesEnd(int x, int y){
-		return isLinesEnd(new Cell(x, y));
-	}
-	
 	/**
 	 * Stubs are also considered end of lines
 	 * 
@@ -754,15 +656,6 @@ public class TextGrid {
 	public boolean isLinesEnd(Cell cell){
 		return matchesAny(cell, GridPatternGroup.linesEndCriteria);
 	}
-
-	public boolean isVerticalLinesEnd(Cell cell){
-		return matchesAny(cell, GridPatternGroup.verticalLinesEndCriteria);
-	}
-
-	public boolean isHorizontalLinesEnd(Cell cell){
-		return matchesAny(cell, GridPatternGroup.horizontalLinesEndCriteria);
-	}
-
 
 	public boolean isPointCell(Cell cell){
 		return (
@@ -780,15 +673,6 @@ public class TextGrid {
 		return false;
 	}
 
-	public boolean exactlyOneNeighbourIsBoundary(Cell cell) {
-		int howMany = 0;
-		if(isBoundary(cell.getNorth())) howMany++;
-		if(isBoundary(cell.getSouth())) howMany++;
-		if(isBoundary(cell.getEast())) howMany++;
-		if(isBoundary(cell.getWest())) howMany++;
-		return (howMany == 1);
-	}
-
 	/**
 	 * 
 	 * A stub looks like that:
@@ -804,7 +688,7 @@ public class TextGrid {
 	 * @return
 	 */
 
-	public boolean isStub(Cell cell){
+	private boolean isStub(Cell cell){
 		return matchesAny(cell, GridPatternGroup.stubCriteria);
 	}
 
@@ -812,11 +696,11 @@ public class TextGrid {
 		return matchesAny(cell, GridPatternGroup.crossOnLineCriteria);
 	}
 
-	public boolean isHorizontalCrossOnLine(Cell cell){
+	private boolean isHorizontalCrossOnLine(Cell cell){
 		return matchesAny(cell, GridPatternGroup.horizontalCrossOnLineCriteria);
 	}
 
-	public boolean isVerticalCrossOnLine(Cell cell){
+	private boolean isVerticalCrossOnLine(Cell cell){
 		return matchesAny(cell, GridPatternGroup.verticalCrossOnLineCriteria);
 	}
 
@@ -824,17 +708,8 @@ public class TextGrid {
 		return matchesAny(cell, GridPatternGroup.starOnLineCriteria);
 	}
 
-	public boolean isLoneDiagonal(Cell cell){
+	private boolean isLoneDiagonal(Cell cell){
 		return matchesAny(cell, GridPatternGroup.loneDiagonalCriteria);
-	}
-
-
-	public boolean isHorizontalStarOnLine(Cell cell){
-		return matchesAny(cell, GridPatternGroup.horizontalStarOnLineCriteria);
-	}
-
-	public boolean isVerticalStarOnLine(Cell cell){
-		return matchesAny(cell, GridPatternGroup.verticalStarOnLineCriteria);
 	}
 
 	public boolean isArrowhead(Cell cell){
@@ -872,12 +747,8 @@ public class TextGrid {
 //	25CB white circle
 //	25BA black right-pointing pointer
 
-
-	public boolean isBullet(int x, int y){
-		return isBullet(new Cell(x, y));
-	}
 	
-	public boolean isBullet(Cell cell){
+	private boolean isBullet(Cell cell){
 		char c = get(cell);
 		if((c == 'o' || c == '*')
 			&& isBlank(cell.getEast())
@@ -887,7 +758,7 @@ public class TextGrid {
 		return false;
 	}
 	
-	public void replaceBullets(){
+	private void replaceBullets(){
 		int width = getWidth();
 		int height = getHeight();
 		for(int yi = 0; yi < height; yi++){
@@ -908,7 +779,7 @@ public class TextGrid {
 	 * @param cell
 	 * @return
 	 */
-	public boolean isStringsStart(Cell cell){
+	private boolean isStringsStart(Cell cell){
 		return (!isBlank(cell) && isBlank(cell.getWest()));
 	}
 
@@ -919,7 +790,7 @@ public class TextGrid {
 	 * @param cell
 	 * @return
 	 */
-	public boolean isStringsEnd(Cell cell){
+	private boolean isStringsEnd(Cell cell){
 		return (!isBlank(cell)
 			//&& (isBlank(cell.getEast()) || get(cell.getEast()) == 0));
 			&& isBlank(cell.getEast()));
@@ -951,24 +822,7 @@ public class TextGrid {
 		return result;
 	}
 
-	public boolean isColumnBlank(int x){
-		int height = getHeight();
-		for(int y = 0; y < height; y++){
-			if(!isBlank(x, y)) return false;
-		}
-		return true;
-	}
-
-
-	public CellSet followLine(int x, int y){
-		return followLine(new Cell(x, y));
-	}
-
-	public CellSet followIntersection(Cell cell){
-		return followIntersection(cell, null);
-	}
-
-	public CellSet followIntersection(Cell cell, Cell blocked){
+	private CellSet followIntersection(Cell cell, Cell blocked){
 		if(!isIntersection(cell)) return null;
 		CellSet result = new CellSet();
 		Cell cN = cell.getNorth();
@@ -990,7 +844,7 @@ public class TextGrid {
 	 * @param cell
 	 * @return null if the cell is not a line
 	 */
-	public CellSet followLine(Cell cell){
+	private CellSet followLine(Cell cell){
 		if(isHorizontalLine(cell)){
 			CellSet result = new CellSet();
 			if(isBoundary(cell.getEast())) result.add(cell.getEast());
@@ -1005,17 +859,13 @@ public class TextGrid {
 		return null;
 	}
 
-	public CellSet followLine(Cell cell, Cell blocked){
+	private CellSet followLine(Cell cell, Cell blocked){
 		CellSet nextCells = followLine(cell);
 		if(nextCells.contains(blocked)) nextCells.remove(blocked);
 		return nextCells;
 	}
 
-	public CellSet followCorner(Cell cell){
-		return followCorner(cell, null);
-	}
-
-	public CellSet followCorner(Cell cell, Cell blocked){
+	private CellSet followCorner(Cell cell, Cell blocked){
 		if(!isCorner(cell)) return null;
 		if(isCorner1(cell)) return followCorner1(cell, blocked);
 		if(isCorner2(cell)) return followCorner2(cell, blocked);
@@ -1024,10 +874,7 @@ public class TextGrid {
 		return null;
 	}
 
-	public CellSet followCorner1(Cell cell){
-		return followCorner1(cell, null);
-	}
-	public CellSet followCorner1(Cell cell, Cell blocked){
+	private CellSet followCorner1(Cell cell, Cell blocked){
 		if(!isCorner1(cell)) return null;
 		CellSet result = new CellSet();
 		if(!cell.getSouth().equals(blocked)) result.add(cell.getSouth());
@@ -1035,10 +882,7 @@ public class TextGrid {
 		return result;
 	}
 
-	public CellSet followCorner2(Cell cell){
-		return followCorner2(cell, null);
-	}
-	public CellSet followCorner2(Cell cell, Cell blocked){
+	private CellSet followCorner2(Cell cell, Cell blocked){
 		if(!isCorner2(cell)) return null;
 		CellSet result = new CellSet();
 		if(!cell.getSouth().equals(blocked)) result.add(cell.getSouth());
@@ -1046,10 +890,7 @@ public class TextGrid {
 		return result;
 	}
 
-	public CellSet followCorner3(Cell cell){
-		return followCorner3(cell, null);
-	}
-	public CellSet followCorner3(Cell cell, Cell blocked){
+	private CellSet followCorner3(Cell cell, Cell blocked){
 		if(!isCorner3(cell)) return null;
 		CellSet result = new CellSet();
 		if(!cell.getNorth().equals(blocked)) result.add(cell.getNorth());
@@ -1057,10 +898,7 @@ public class TextGrid {
 		return result;
 	}
 
-	public CellSet followCorner4(Cell cell){
-		return followCorner4(cell, null);
-	}
-	public CellSet followCorner4(Cell cell, Cell blocked){
+	private CellSet followCorner4(Cell cell, Cell blocked){
 		if(!isCorner4(cell)) return null;
 		CellSet result = new CellSet();
 		if(!cell.getNorth().equals(blocked)) result.add(cell.getNorth());
@@ -1068,11 +906,7 @@ public class TextGrid {
 		return result;
 	}
 
-
-	public CellSet followStub(Cell cell){
-		return followStub(cell, null);
-	}
-	public CellSet followStub(Cell cell, Cell blocked){
+	private CellSet followStub(Cell cell, Cell blocked){
 		if(!isStub(cell)) return null;
 		CellSet result = new CellSet();
 		if(isBoundary(cell.getEast())) result.add(cell.getEast());
@@ -1115,7 +949,7 @@ public class TextGrid {
 	}
 
 	
-	public CellSet followCrossOnLine(Cell cell, Cell blocked){
+	private CellSet followCrossOnLine(Cell cell, Cell blocked){
 		CellSet result = new CellSet();
 		if(isHorizontalCrossOnLine(cell)){
 			result.add(cell.getEast());
@@ -1136,12 +970,6 @@ public class TextGrid {
 		return false;
 	}
 
-	public boolean isOutOfBounds(int x, int y){
-		char c = get(x, y);
-		if(0 == c) return true;
-		return false;
-	}
-
 	public boolean isBlank(Cell cell){
 		char c = get(cell);
 		if(0 == c) return false;
@@ -1157,12 +985,12 @@ public class TextGrid {
 	public boolean isCorner(Cell cell){
 		return isCorner(cell.x, cell.y);
 	}
-	public boolean isCorner(int x, int y){
+	private boolean isCorner(int x, int y){
 		return (isNormalCorner(x,y) || isRoundCorner(x,y));
 	}
 
 
-	public boolean matchesAny(Cell cell, GridPatternGroup criteria){
+	private boolean matchesAny(Cell cell, GridPatternGroup criteria){
 		TextGrid subGrid = getTestingSubGrid(cell);
 		return subGrid.matchesAny(criteria);
 	}
@@ -1206,7 +1034,7 @@ public class TextGrid {
 	public boolean isNormalCorner(Cell cell){
 		return matchesAny(cell, GridPatternGroup.normalCornerCriteria);
 	}
-	public boolean isNormalCorner(int x, int y){
+	private boolean isNormalCorner(int x, int y){
 		return isNormalCorner(new Cell(x, y));
 	}
 
@@ -1214,15 +1042,12 @@ public class TextGrid {
 		return matchesAny(cell, GridPatternGroup.roundCornerCriteria);
 	}
 
-	public boolean isRoundCorner(int x, int y){
+	private boolean isRoundCorner(int x, int y){
 		return isRoundCorner(new Cell(x, y));
 	}
 
 	public boolean isIntersection(Cell cell){
 		return matchesAny(cell, GridPatternGroup.intersectionCriteria);
-	}
-	public boolean isIntersection(int x, int y){
-		return isIntersection(new Cell(x, y));
 	}
 
 	public void copyCellsTo(CellSet cells, TextGrid grid){
@@ -1422,7 +1247,7 @@ public class TextGrid {
 		return initialiseWithLines(lines, options);
 	}
 
-	public boolean initialiseWithLines(ArrayList<StringBuilder> lines, ProcessingOptions options) throws UnsupportedEncodingException {
+	private boolean initialiseWithLines(ArrayList<StringBuilder> lines, ProcessingOptions options) throws UnsupportedEncodingException {
 
 		//remove blank rows at the bottom
 		boolean done = false;
@@ -1431,7 +1256,7 @@ public class TextGrid {
 			StringBuilder row = lines.get(i);
 			if(!StringUtils.isBlank(row.toString())) done = true;
 		}
-		rows = new ArrayList<StringBuilder>(lines.subList(0, i + 2));
+		rows = lines.subList(0, i + 2);
 
 		if(options != null) fixTabs(options.getTabSize());
 		else fixTabs(ProcessingOptions.DEFAULT_TAB_SIZE);
@@ -1521,7 +1346,7 @@ public class TextGrid {
 	/**
 	 * @return
 	 */
-	protected ArrayList<StringBuilder> getRows() {
+	protected List<StringBuilder> getRows() {
 		return rows;
 	}
 	
@@ -1576,55 +1401,6 @@ public class TextGrid {
 		public Cell getSW(){ return new Cell(x - 1, y + 1); }
 		public Cell getSE(){ return new Cell(x + 1, y + 1); }
 
-		public CellSet getNeighbours4(){
-			CellSet result = new CellSet();
-
-			result.add(getNorth());
-			result.add(getSouth());
-			result.add(getWest());
-			result.add(getEast());
-
-			return result;
-		}
-
-		public CellSet getNeighbours8(){
-			CellSet result = new CellSet();
-
-			result.add(getNorth());
-			result.add(getSouth());
-			result.add(getWest());
-			result.add(getEast());
-
-			result.add(getNW());
-			result.add(getNE());
-			result.add(getSW());
-			result.add(getSE());
-
-			return result;
-		}
-
-
-		public boolean isNorthOf(Cell cell){
-			if(this.y < cell.y) return true;
-			return false;
-		}
-
-		public boolean isSouthOf(Cell cell){
-			if(this.y > cell.y) return true;
-			return false;
-		}
-
-		public boolean isWestOf(Cell cell){
-			if(this.x < cell.x) return true;
-			return false;
-		}
-
-		public boolean isEastOf(Cell cell){
-			if(this.x > cell.x) return true;
-			return false;
-		}
-
-
 		public boolean equals(Object o){
 			if (o == null) {
 				return false;
@@ -1641,7 +1417,7 @@ public class TextGrid {
 			return (x << 16) | y;
 		}
 		
-		public boolean isNextTo(int x2, int y2){
+		private boolean isNextTo(int x2, int y2){
 			if(Math.abs(x2 - x) == 1 && Math.abs(y2 - y) == 1) return false;
 			if(Math.abs(x2 - x) == 1 && y2 == y) return true;
 			if(Math.abs(y2 - y) == 1 && x2 == x) return true;
