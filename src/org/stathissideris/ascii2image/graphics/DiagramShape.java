@@ -743,14 +743,15 @@ public class DiagramShape extends DiagramComponent {
 
 	
 	public String toString(){
-		String s = "DiagramShape, "+points.size()+" points: ";
-		Iterator it = getPointsIterator();
-		while(it.hasNext()){
-			ShapePoint point = (ShapePoint) it.next(); 
-			s += point;
-			if(it.hasNext()) s += " "; 
+		StringBuilder sb = new StringBuilder();
+		sb.append("DiagramShape, ").append(points.size()).append(" points ");
+		for (ShapePoint point : points) {
+			sb.append(point).append(" ");
 		}
-		return s;
+		if (!points.isEmpty()) {
+			sb.deleteCharAt(sb.lastIndexOf(" "));
+		}
+		return sb.toString();
 	}
 
 	/**

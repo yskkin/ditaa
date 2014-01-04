@@ -92,11 +92,11 @@ public class HTMLConverter extends HTMLEditorKit {
 			return false;
 		}
 		
-		String htmlText = "";
+		StringBuilder htmlText = new StringBuilder();
 		
 		try {
 			while(in.ready()){
-				htmlText += in.readLine()+"\n";
+				htmlText.append(in.readLine()).append("\n");
 			}
 			in.close();
 		} catch (IOException e1) {

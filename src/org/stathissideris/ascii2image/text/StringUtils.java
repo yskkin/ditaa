@@ -40,11 +40,11 @@ public class StringUtils {
 	
 	public static String repeatString(String string, int repeats){
 		if(repeats == 0) return "";
-		String buffer = "";
+		StringBuilder buffer = new StringBuilder();
 		for(int i=0; i < repeats; i++){
-			buffer += string;
+			buffer.append(string);
 		}
-		return buffer;
+		return buffer.toString();
 	}
 	
 	/*public static String repeatString(String string, int repeats){

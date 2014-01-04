@@ -485,18 +485,18 @@ public class TextGrid {
 			for(int x = 0; x < width; x++){
 				if(!isBlank(x, y)){
 					Cell start = new Cell(x, y);
-					String str = String.valueOf(get(x,y));
+					StringBuilder sb = new StringBuilder(String.valueOf(get(x, y)));
 					char c = get(++x, y);
 					boolean finished = false;
 					//while(c != ' '){
 					while(!finished){
-						str += String.valueOf(c);
+						sb.append(c);
 						c = get(++x, y);
 						char next = get(x + 1, y);
 						if((c == ' ' || c == 0) && (next == ' ' || next == 0))
 							finished = true;
 					}
-					result.add(new CellStringPair(start, str));
+					result.add(new CellStringPair(start, sb.toString()));
 				}
 			}
 		}
