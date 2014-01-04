@@ -20,6 +20,7 @@
 package org.stathissideris.ascii2image.test;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,6 +36,22 @@ public class TextGridTest {
 	@Before public void setUp() {
 	}
 	
+	@Test public void testLoadFrom() throws Exception {
+		TextGrid testee = new TextGrid();
+		testee.loadFrom("tests/text/simple_square01.txt");
+		assertThat(testee.getHeight(), is(6 + 3)); // 1 top + 2 bottom rows
+		assertThat(testee.getWidth(), is(7 + 2 * 2)); // blankBorderSize * 2
+		assertThat(testee.getRow(0).toString(), is("           "));
+		assertThat(testee.getRow(1).toString(), is("           "));
+		assertThat(testee.getRow(2).toString(), is("  +-----+  "));
+		assertThat(testee.getRow(3).toString(), is("  |     |  "));
+		assertThat(testee.getRow(4).toString(), is("  |     |  "));
+		assertThat(testee.getRow(5).toString(), is("  |     |  "));
+		assertThat(testee.getRow(6).toString(), is("  +-----+  "));
+		assertThat(testee.getRow(7).toString(), is("           "));
+		assertThat(testee.getRow(8).toString(), is("           "));
+	}
+
 	@Test public void testFillContinuousAreaSquareOutside() throws FileNotFoundException, IOException {
 		TextGrid squareGrid;
 		squareGrid = new TextGrid();
