@@ -319,7 +319,7 @@ public class DiagramShape extends DiagramComponent {
 		points.set(i, point);
 	}
 
-
+	@Override
 	public boolean equals(Object object){
 		DiagramShape shape = null;
 		if(!(object instanceof DiagramShape)) { return false; }
@@ -350,6 +350,16 @@ public class DiagramShape extends DiagramComponent {
 		}
 		LOG.fine("\tare equal");
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 0;
+		for (ShapePoint point : points) {
+			result *= 23;
+			result += point.x + point.y;
+		}
+		return result;
 	}
 
 	public GeneralPath makeIntoPath() {

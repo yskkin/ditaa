@@ -475,6 +475,12 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	}
 
 	public boolean equals(Object o){
+		if (o == null) {
+			return false;
+		}
+		if (o.getClass() != this.getClass()) {
+			return false;
+		}
 		CellSet otherSet = (CellSet) o;
 		return internalSet.equals(otherSet.internalSet);
 	}

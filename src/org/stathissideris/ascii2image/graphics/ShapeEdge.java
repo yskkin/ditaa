@@ -159,7 +159,8 @@ public class ShapeEdge {
 	public void setOwner(DiagramShape shape) {
 		owner = shape;
 	}
-	
+
+	@Override
 	public boolean equals(Object object){
 		if(!(object instanceof ShapeEdge)) return false;
 		ShapeEdge edge = (ShapeEdge) object;
@@ -168,6 +169,11 @@ public class ShapeEdge {
 		if(startPoint.equals(edge.getEndPoint())
 			&& endPoint.equals(edge.getStartPoint())) return true;
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return startPoint.hashCode() + endPoint.hashCode();
 	}
 
 	public boolean touchesWith(ShapeEdge other){

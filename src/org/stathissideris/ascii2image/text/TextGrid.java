@@ -1253,19 +1253,34 @@ public class TextGrid {
 		}
 	}
 	
-	public boolean equals(TextGrid grid){
-		if(grid.getHeight() != this.getHeight()
-			|| grid.getWidth() != this.getWidth()
-			){
+	public boolean equals(Object o){
+		if (o == null) {
+			return false;
+		}
+		if (this.getClass() != o.getClass()) {
+			return false;
+		}
+		TextGrid grid = (TextGrid) o;
+		if (grid.getHeight() != this.getHeight()
+		|| grid.getWidth() != this.getWidth()) {
 			return false;
 		}
 		int height = grid.getHeight();
-		for(int i = 0; i < height; i++){
+		for (int i = 0; i < height; i++) {
 			String row1 = this.getRow(i).toString();
 			String row2 = grid.getRow(i).toString();
-			if(!row1.equals(row2)) return false;
+			if (!row1.equals(row2)) return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		int result = 0;
+		for (StringBuilder sb : rows) {
+			result += sb.toString().hashCode();
+		}
+		return result;
 	}
 	
 	/**
@@ -1725,8 +1740,13 @@ public class TextGrid {
 
 
 		public boolean equals(Object o){
+			if (o == null) {
+				return false;
+			}
+			if (o.getClass() != this.getClass()) {
+				return false;
+			}
 			Cell cell = (Cell) o;
-			if(cell == null) return false;
 			if(x == cell.x && y == cell.y) return true;
 			else return false;
 		}
