@@ -71,44 +71,6 @@ public class StringUtils {
 		return string.substring(0,1).toUpperCase()+string.substring(1);
 	}
 	
-	public static String insertSpaceAtCaps(String string){
-
-		int uppers = 0;
-
-		//first we count
-		for(int i=0; i < string.length(); i++){
-			if(Character.isUpperCase(string.charAt(i))) uppers++;
-		}
-
-		int[] indexes = null;
-		
-		if(Character.isUpperCase(string.charAt(0))){		
-			indexes = new int[uppers];
-		} else {
-			indexes = new int[++uppers];
-		}
-		indexes[0] = 0;		
-		int k = 1;
-
-		//then we find the indexes (we have ckecked the first char already)
-		for(int j =1; j < string.length(); j++){
-			if(Character.isUpperCase(string.charAt(j))) indexes[k++] = j;
-		}
-		
-		StringBuffer buffer = new StringBuffer("");
-		//and finally we breakup the String
-		for(int i =0; i < indexes.length; i++){
-			if(i+1 < indexes.length){
-				buffer.append(string.substring(indexes[i], indexes[i+1]));
-				buffer.append(" ");
-			} else {
-				buffer.append(string.substring(indexes[i]));
-			}			
-		}
-		return buffer.toString();
-	}
-	
-	
 	public static boolean isOneOf(char c, Character[] group){
 		for(int i = 0; i < group.length; i++)
 			if(c == group[i]) return true;

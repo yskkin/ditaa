@@ -1300,37 +1300,6 @@ public class TextGrid {
 		return seedFillOld(cell, c);
 	}
 
-	private CellSet seedFill(Cell seed, char newChar){
-		CellSet cellsFilled = new CellSet();
-		char oldChar = get(seed);
-		
-		if(oldChar == newChar) return cellsFilled;
-		if(isOutOfBounds(seed)) return cellsFilled;
-
-		Stack<Cell> stack = new Stack<Cell>();
-
-		stack.push(seed);
-		
-		while(!stack.isEmpty()){
-			Cell cell = (Cell) stack.pop();
-			
-			//set(cell, newChar);
-			cellsFilled.add(cell);
-
-			Cell nCell = cell.getNorth();
-			Cell sCell = cell.getSouth();
-			Cell eCell = cell.getEast();
-			Cell wCell = cell.getWest();
-			
-			if(get(nCell) == oldChar && !cellsFilled.contains(nCell)) stack.push(nCell);
-			if(get(sCell) == oldChar && !cellsFilled.contains(sCell)) stack.push(sCell);
-			if(get(eCell) == oldChar && !cellsFilled.contains(eCell)) stack.push(eCell);
-			if(get(wCell) == oldChar && !cellsFilled.contains(wCell)) stack.push(wCell);
-		}
-		
-		return cellsFilled;
-	}
-
 	private CellSet seedFillOld(Cell seed, char newChar){
 		CellSet cellsFilled = new CellSet();
 		char oldChar = get(seed);
@@ -1412,66 +1381,6 @@ public class TextGrid {
 		}
 		
 		return boundaries;
-	}
-	
-	
-	//TODO: incomplete method seedFillLine()
-	private CellSet seedFillLine(Cell cell, char newChar){
-		CellSet cellsFilled = new CellSet();
-		
-		Stack stack = new Stack();
-		
-		char oldChar = get(cell);
-		
-		if(oldChar == newChar) return cellsFilled;
-		if(isOutOfBounds(cell)) return cellsFilled;
-		
-		stack.push(new LineSegment(cell.x, cell.x, cell.y, 1));
-		stack.push(new LineSegment(cell.x, cell.x, cell.y + 1, -1));
-		
-		int left;
-		while(!stack.isEmpty()){
-			LineSegment segment = (LineSegment) stack.pop();
-			int x;
-			//expand to the left
-			for(
-					x = segment.x1;
-					x >= 0 && get(x, segment.y) == oldChar;
-					--x){
-				set(x, segment.y, newChar);
-				cellsFilled.add(new Cell(x, segment.y));
-			}
-			
-			left = cell.getEast().x;
-			boolean skip = (x > segment.x1)? true : false; 
-
-			if(left < segment.x1){ //leak on left?
-				//TODO: i think the first param should be x
-				stack.push(
-				        //new LineSegment(segment.y, left, segment.x1 - 1, -segment.dy));
-				        new LineSegment(x, left, segment.y - 1, -segment.dy));
-			}
-
-			x = segment.x1 + 1;
-			do {
-			    if(!skip) {
-			       	for( ; x < getWidth() && get(x, segment.y) == oldChar; ++x){
-			       	    set(x, segment.y, newChar);
-			       	    cellsFilled.add(new Cell(x, segment.y));
-			       	}
-					
-			       	stack.push(new LineSegment(left, x - 1, segment.y, segment.dy));
-				   	if(x > segment.x2 + 1) //leak on right?
-			        stack.push(new LineSegment(segment.x2 + 1, x - 1, segment.y, -segment.dy));
-			    }
-				skip = false; //skip only once
-				
-				for(++x; x <= segment.x2 && get(x, segment.y) != oldChar; ++x){;}
-				left = x;
-			} while( x < segment.x2);
-		}
-
-		return cellsFilled;
 	}
 	
 	public boolean cellContainsDashedLineChar(Cell cell){
@@ -1754,16 +1663,6 @@ public class TextGrid {
 			y = y * s;
 		}
 		
-	}
-
-	private static class LineSegment{
-		int x1, x2, y, dy;
-		public LineSegment(int x1, int x2, int y, int dy){
-			this.x1 = x1;
-			this.x2 = x2;
-			this.y = y;
-			this.dy = dy;
-		}
 	}
 }
 

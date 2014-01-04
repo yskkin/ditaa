@@ -47,8 +47,6 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	
 	private int type = TYPE_UNDETERMINED;
 	private boolean typeIsValid = false;
-
-	private static final Object FAKE = new Object();
 	
 	public CellSet(){
 		
@@ -68,10 +66,6 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 
 	public void addAll(CellSet set){
 		internalSet.addAll(set.internalSet);
-	}
-	
-	void clear(){
-		internalSet.clear();
 	}
 	
 	public int size() {
