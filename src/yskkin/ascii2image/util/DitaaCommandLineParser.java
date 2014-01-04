@@ -2,6 +2,7 @@ package yskkin.ascii2image.util;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
@@ -18,7 +19,8 @@ public class DitaaCommandLineParser {
 			addOption(
 					OptionBuilder
 					.withLongOpt("help")
-					.withDescription("Prints usage help.").create());
+					.withDescription("Prints usage help.")
+					.create());
 			addOption("v", "verbose", false, "Makes ditaa more verbose.");
 			addOption(
 					"o",
@@ -103,12 +105,26 @@ public class DitaaCommandLineParser {
 		}
 	};
 
-	public CommandLine parse(String[] arguments)
-			throws ParseException {
-		CommandLine result =  parser.parse(DITAA_CLI_SPEC, arguments, false);
+	private boolean exitImmediately = false;
+	private int exitStatus = 0;
+
+	public CommandLine parse(String[] arguments) {
+		CommandLine result;
+		try {
+			result = parser.parse(DITAA_CLI_SPEC, arguments, false);
+		} catch (ParseException e) {
+			exit(2);
+			System.err.println(e.getMessage());
+			printDitaaHelp();
+			return null;
+		}
 
 		String logFileName = result.getOptionValue("logfile");
 		Loggers.addFileOutputToAllLoggers(logFileName);
+		if(result.hasOption("help") || arguments.length == 0) {
+			exit(0);
+			printDitaaHelp();
+		}
 		return result;
 	}
 
@@ -128,5 +144,22 @@ public class DitaaCommandLineParser {
 				System.out.println(option.getLongOpt());
 			}
 		}
+	}
+
+	public boolean shouldExitImmediately() {
+		return exitImmediately;
+	}
+
+	public int getExitStatus() {
+		return exitStatus;
+	}
+
+	private void exit(int exitStatus) {
+		exitImmediately = true;
+		this.exitStatus = exitStatus;
+	}
+
+	private static void printDitaaHelp() {
+		new HelpFormatter().printHelp("java -jar ditaa.jar <inpfile> [outfile]", DITAA_CLI_SPEC, true);
 	}
 }

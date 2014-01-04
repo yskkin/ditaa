@@ -54,25 +54,13 @@ public class CommandLineConverter {
 		
 		CommandLine cmdLine = null;
 		
-		
-		
 		///// parse command line options
-		try {
-			// parse the command line arguments
-			DitaaCommandLineParser parser = new DitaaCommandLineParser();
-			
-			cmdLine = parser.parse(args);
-			
-		} catch (org.apache.commons.cli.ParseException e) {
-			System.err.println(e.getMessage());
-			printDitaaHelp();
-			System.exit(2);
-		}
-		
-		
-		if(cmdLine.hasOption("help") || args.length == 0 ){
-			printDitaaHelp();
-			System.exit(0);			
+		// parse the command line arguments
+		DitaaCommandLineParser parser = new DitaaCommandLineParser();
+		cmdLine = parser.parse(args);
+
+		if (parser.shouldExitImmediately()) {
+			System.exit(parser.getExitStatus());
 		}
 		
 		ConversionOptions options = null;
