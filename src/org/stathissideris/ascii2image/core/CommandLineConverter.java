@@ -30,17 +30,13 @@ import java.io.UnsupportedEncodingException;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
 import org.stathissideris.ascii2image.graphics.BitmapRenderer;
 import org.stathissideris.ascii2image.graphics.Diagram;
 import org.stathissideris.ascii2image.text.TextGrid;
 
-import yskkin.ascii2image.util.Loggers;
+import yskkin.ascii2image.util.DitaaCommandLineParser;
 
 /**
  * 
@@ -56,32 +52,16 @@ public class CommandLineConverter {
 		
 		long startTime = System.currentTimeMillis();
 		
-		Options cmdLnOptions = defineOptionSpec();
-		
 		CommandLine cmdLine = null;
 		
-		
-		
 		///// parse command line options
-		try {
-			// parse the command line arguments
-			CommandLineParser parser = new PosixParser();
-			
-			cmdLine = parser.parse(cmdLnOptions, args);
-			
-		} catch (org.apache.commons.cli.ParseException e) {
-			System.err.println(e.getMessage());
-			new HelpFormatter().printHelp("java -jar ditaa.jar <INPFILE> [OUTFILE]", cmdLnOptions, true);
-			System.exit(2);
+		// parse the command line arguments
+		DitaaCommandLineParser parser = new DitaaCommandLineParser();
+		cmdLine = parser.parse(args);
+
+		if (parser.shouldExitImmediately()) {
+			System.exit(parser.getExitStatus());
 		}
-		
-		
-		if(cmdLine.hasOption("help") || args.length == 0 ){
-			new HelpFormatter().printHelp("java -jar ditaa.jar <INPFILE> [OUTFILE]", cmdLnOptions, true);
-			System.exit(0);			
-		}
-		String logFileName = cmdLine.getOptionValue("logfile");
-		Loggers.addFileOutputToAllLoggers(logFileName);
 		
 		ConversionOptions options = null;
 		try {
@@ -91,7 +71,7 @@ public class CommandLineConverter {
 			System.exit(2);
 		} catch (IllegalArgumentException e2) {
 			System.err.println("Error: " + e2.getMessage());
-			new HelpFormatter().printHelp("java -jar ditaa.jar <INPFILE> [OUTFILE]", cmdLnOptions, true);
+			printDitaaHelp();
 			System.exit(2);
 		}
 		
@@ -99,7 +79,7 @@ public class CommandLineConverter {
 		
 		if(args.length == 0) {
 			System.err.println("Error: Please provide the input file filename");
-			new HelpFormatter().printHelp("java -jar ditaa.jar <inpfile> [outfile]", cmdLnOptions, true);
+			printDitaaHelp();
 			System.exit(2);
 		} 
 		
@@ -202,82 +182,8 @@ public class CommandLineConverter {
 			long endTime = System.currentTimeMillis();
 			long totalTime  = (endTime - startTime) / 1000;
 			if (!stdOut) System.out.println("Done in "+totalTime+"sec");
-			
-//			try {
-//			Thread.sleep(Long.MAX_VALUE);
-//			} catch (InterruptedException e) {
-//			e.printStackTrace();
-//			}
-			
 		}
 	}
-
-	private static Options defineOptionSpec() {
-		Options cmdLnOptions = new Options();
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("help")
-				.withDescription( "Prints usage help." )
-				.create() );
-		cmdLnOptions.addOption("v", "verbose", false, "Makes ditaa more verbose.");
-		cmdLnOptions.addOption("o", "overwrite", false, "If the filename of the destination image already exists, an alternative name is chosen. If the overwrite option is selected, the image file is instead overwriten.");
-		cmdLnOptions.addOption("S", "no-shadows", false, "Turns off the drop-shadow effect.");
-		cmdLnOptions.addOption("A", "no-antialias", false, "Turns anti-aliasing off.");
-		cmdLnOptions.addOption("W", "fixed-slope", false, "Makes sides of parallelograms and trapezoids fixed slope instead of fixed width.");
-		cmdLnOptions.addOption("d", "debug", false, "Renders the debug grid over the resulting image.");
-		cmdLnOptions.addOption("r", "round-corners", false, "Causes all corners to be rendered as round corners.");
-		cmdLnOptions.addOption("E", "no-separation", false, "Prevents the separation of common edges of shapes.");
-		cmdLnOptions.addOption("h", "html", false, "In this case the input is an HTML file. The contents of the <pre class=\"textdiagram\"> tags are rendered as diagrams and saved in the images directory and a new HTML file is produced with the appropriate <img> tags.");
-		cmdLnOptions.addOption("T", "transparent", false, "Causes the diagram to be rendered on a transparent background. Overrides --background.");
-		
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("encoding")
-				.withDescription("The encoding of the input file.")
-				.hasArg()
-				.withArgName("ENCODING")
-				.create('e')
-				);
-
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("scale")
-				.withDescription("A natural number that determines the size of the rendered image. The units are fractions of the default size (2.5 renders 1.5 times bigger than the default).")
-				.hasArg()
-				.withArgName("SCALE")
-				.create('s')
-				);
-
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("tabs")
-				.withDescription("Tabs are normally interpreted as 8 spaces but it is possible to change that using this option. It is not advisable to use tabs in your diagrams.")
-				.hasArg()
-				.withArgName("TABS")
-				.create('t')
-				);
-		
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("background")
-				.withDescription("The background colour of the image. The format should be a six-digit hexadecimal number (as in HTML, FF0000 for red). Pass an eight-digit hex to define transparency. This is overridden by --transparent.")
-				.hasArg()
-				.withArgName("BACKGROUND")
-				.create('b')
-				);
-		
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("logfile")
-				.withDescription("Use given FILE for logging.")
-				.hasArg()
-				.withArgName("FILE")
-				.create()
-				);
-		
-//TODO: uncomment this for next version:
-//		cmdLnOptions.addOption(
-//				OptionBuilder.withLongOpt("config")
-//				.withDescription( "The shape configuration file." )
-//				.hasArg()
-//				.withArgName("CONFIG_FILE")
-//				.create('c') );
-		return cmdLnOptions;
-	}	
 
 	private static void printRunInfo(CommandLine cmdLine) {
 		System.out.println("\n"+notice+"\n");
@@ -295,5 +201,9 @@ public class CommandLineConverter {
 				System.out.println(option.getLongOpt());
 			}
 		}
+	}
+	
+	private static void printDitaaHelp() {
+		new HelpFormatter().printHelp("java -jar ditaa.jar <inpfile> [outfile]", DitaaCommandLineParser.DITAA_CLI_SPEC, true);
 	}
 }
