@@ -81,9 +81,6 @@ public class BitmapRenderer {
 		long endTime = System.currentTimeMillis();
 		long totalTime  = (endTime - startTime) / 1000;
 		System.out.println("Done in "+totalTime+"sec");
-		
-		File workDir = new File("tests/images");
-		//Process p = Runtime.getRuntime().exec("display "+filename+".png", null, workDir);
 	}
 
 	private boolean renderToPNG(Diagram diagram, String filename, RenderingOptions options){	

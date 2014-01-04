@@ -414,7 +414,6 @@ public class TextGrid {
 	}
 
 	public boolean hasBlankCells(){
-		CellSet set = new CellSet();
 		int width = getWidth();
 		int height = getHeight();
 		for(int y = 0; y < height; y++){

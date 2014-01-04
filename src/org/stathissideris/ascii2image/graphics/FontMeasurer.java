@@ -86,8 +86,6 @@ public class FontMeasurer {
 	}
 	
 	public Font getFontFor(int pixelHeight){
-		BufferedImage image = new BufferedImage(1,1, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g2 = image.createGraphics();
 		return getFontFor(pixelHeight, fakeRenderContext);
 	}
 

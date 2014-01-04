@@ -785,12 +785,6 @@ public class DiagramShape extends DiagramComponent {
 		ShapePoint point2 = new ShapePoint((float)bounds.getMaxX(), (float)bounds.getMinY());
 		ShapePoint point3 = new ShapePoint((float)bounds.getMaxX(), (float)bounds.getMaxY());
 		ShapePoint point4 = new ShapePoint((float)bounds.getMinX(), (float)bounds.getMaxY());
-		
-		ShapePoint pointMidTop = new ShapePoint((float)bounds.getCenterX(), (float)bounds.getMinY());
-		ShapePoint pointMidBottom = new ShapePoint((float)bounds.getCenterX(), (float)bounds.getMaxY());
-	
-		float diameterX = bounds.width;
-		float diameterY = 0.75f * diagram.getCellHeight();
 	
 		//control point offset X, and Y
 		float cpOffsetX = bounds.width / 6;
@@ -893,8 +887,6 @@ public class DiagramShape extends DiagramComponent {
 		ShapePoint ur = new ShapePoint((float)bounds.getMaxX() - offset, (float)bounds.getMinY());
 		ShapePoint br = new ShapePoint((float)bounds.getMaxX() + offset, (float)bounds.getMaxY());
 		ShapePoint bl = new ShapePoint((float)bounds.getMinX() - offset, (float)bounds.getMaxY());
-
-		ShapePoint pointMid = new ShapePoint((float)bounds.getCenterX(), (float)bounds.getMaxY());
 
 		GeneralPath path = new GeneralPath();
 		path.moveTo(ul.x, ul.y);

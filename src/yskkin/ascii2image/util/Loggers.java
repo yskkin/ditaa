@@ -40,7 +40,7 @@ public class Loggers {
 		} else {
 			logHandler = new ConsoleHandler();
 		}
-		addHandlerToAllLoggers(handler);
+		addHandlerToAllLoggers(logHandler);
 	}
 
 	public static void setLevelToAllLoggers(Level level) {
