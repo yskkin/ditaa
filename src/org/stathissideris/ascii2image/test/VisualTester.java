@@ -37,7 +37,9 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -61,10 +63,12 @@ public class VisualTester {
 
 	private static final String HTMLReportName = "test_suite";
 	private static final String expectedDir = "tests/images-expected";
-	private static final String actualDir = "tests/images";
 	
 	private File textFile;
 	private int index;
+
+	@Rule
+	public TemporaryFolder dir = new TemporaryFolder();
 	
 	public static void main(String[] args){
 		String reportDir = "tests/images";
@@ -76,10 +80,8 @@ public class VisualTester {
 	@Test
 	public void compareImages() throws FileNotFoundException, IOException {
 		ConversionOptions options = new ConversionOptions();
-		File actualFile = new File(actualDir + File.separator + textFile.getName() + ".png");
+		File actualFile = dir.newFile();
 		File expectedFile = new File(expectedDir + File.separator + textFile.getName() + ".png");
-				
-		System.out.println(index + ") Rendering "+textFile+" to "+actualFile);
 		
 		if(!expectedFile.exists()){
 			System.out.println("Skipping " + textFile + " -- reference image does not exist");
@@ -92,8 +94,7 @@ public class VisualTester {
 
 		RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);		
 	
-		File file = new File(actualFile.getAbsolutePath());
-		ImageIO.write(image, "png", file);
+		ImageIO.write(image, "png", actualFile);
 		
 		//compare images pixel-by-pixel
 		BufferedImage actualImage = ImageHandler.instance().loadBufferedImage(actualFile);
