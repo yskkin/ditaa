@@ -320,30 +320,30 @@ public class DiagramShape extends DiagramComponent {
 		if(!(object instanceof DiagramShape)) { return false; }
 		else shape = (DiagramShape) object;
 		if(getPoints().size() != shape.getPoints().size()) return false;
-		
-		LOG.fine("comparing shapes:");
-		
-		LOG.fine("points1: ");
-		HashMap<String, ?> points1 = new HashMap();
+
+		/*
+		 * TODO
+		 * * Should coordinates be casted into int?
+		 * * Should ShapePoint implement equals()?
+		 * * Does order of points matters?
+		 * * Does multiple identical points matters?
+		 */
+		List<String> thisPoints = new ArrayList<String>();
 		for (ShapePoint point : points){
-			points1.put( ""+((int) point.x)+","+((int) point.y), null);
-			LOG.fine(((int) point.x)+", "+((int) point.y));
+			thisPoints.add(""+((int) point.x)+","+((int) point.y));
 		}
-		
-		LOG.fine("points2: ");
-		HashMap points2 = new HashMap();
+
+		List<String> thatPoints = new ArrayList<String>();
 		for (ShapePoint point : shape.points) {
-			points2.put( ""+((int) point.x)+","+((int) point.y), null);
-			LOG.fine(((int) point.x)+", "+((int) point.y));
+			thatPoints.add( ""+((int) point.x)+","+((int) point.y));
 		}
-		
-		for (String key : points1.keySet()) {
-			if(!points2.containsKey(key)) {
-				LOG.fine("\tare not equal");
-				return false;
-			} 
+
+		if (!thatPoints.containsAll(thisPoints)) {
+			return false; 
 		}
-		LOG.fine("\tare equal");
+		if (!thisPoints.containsAll(thatPoints)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -352,7 +352,7 @@ public class DiagramShape extends DiagramComponent {
 		int result = 0;
 		for (ShapePoint point : points) {
 			result *= 23;
-			result += point.x + point.y;
+			result += (int) point.x + (int) point.y;
 		}
 		return result;
 	}
