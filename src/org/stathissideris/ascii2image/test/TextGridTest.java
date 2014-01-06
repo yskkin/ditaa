@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.stathissideris.ascii2image.text.AbstractionGrid;
 import org.stathissideris.ascii2image.text.CellSet;
 import org.stathissideris.ascii2image.text.TextGrid;
+import org.stathissideris.ascii2image.text.TextGrid.Cell;
 
 public class TextGridTest {
 	
@@ -39,7 +40,7 @@ public class TextGridTest {
 	@Test public void testLoadFrom() throws Exception {
 		TextGrid testee = new TextGrid();
 		testee.loadFrom("tests/text/simple_square01.txt");
-		assertThat(testee.getHeight(), is(6 + 3)); // 1 top + 2 bottom rows
+		assertThat(testee.getHeight(), is(5 + 4)); // 2 top + 2 bottom blank rows
 		assertThat(testee.getWidth(), is(7 + 2 * 2)); // blankBorderSize * 2
 		assertThat(testee.getRow(0).toString(), is("           "));
 		assertThat(testee.getRow(1).toString(), is("           "));
@@ -143,7 +144,7 @@ public class TextGridTest {
 		addSquareToCellSet(uGrid, expectedFilledArea,  0, 7,  9, 7);
 		addSquareToCellSet(uGrid, expectedFilledArea, 16, 7,  9, 7);
 
-		expectedFilledArea.add(uGrid.new Cell(22, 6));
+		expectedFilledArea.add(new Cell(22, 6));
 		
 		assertEquals(expectedFilledArea, filledArea);
 	}
@@ -188,7 +189,7 @@ public class TextGridTest {
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
 		
 		TextGrid copyGrid = new AbstractionGrid(grid, wholeGridSet).getCopyOfInternalBuffer();
-		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(copyGrid.new Cell(8, 8));
+		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(8, 8));
 		int size = boundaries.size();
 		
 		assertEquals(56, size);
@@ -214,7 +215,7 @@ public class TextGridTest {
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
 		
 		TextGrid copyGrid = new AbstractionGrid(grid, wholeGridSet).getCopyOfInternalBuffer();
-		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(copyGrid.new Cell(8, 8));
+		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(8, 8));
 		int size1 = boundaries.size();
 
 		assertEquals(150, size1);
@@ -250,7 +251,7 @@ public class TextGridTest {
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
 		
 		TextGrid copyGrid = new AbstractionGrid(grid, wholeGridSet).getCopyOfInternalBuffer();
-		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(copyGrid.new Cell(0, 0));
+		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(0, 0));
 		int size = boundaries.size();
 
 		assertEquals(154, size);
@@ -289,10 +290,10 @@ public class TextGridTest {
 		CellSet cellSet = cellSetFromCellsString(str, grid);
 		
 		CellSet expectedCellSet = new CellSet();
-		expectedCellSet.add(grid.new Cell(0, 2));
-		expectedCellSet.add(grid.new Cell(3, 2));
-		expectedCellSet.add(grid.new Cell(5, 3));
-		expectedCellSet.add(grid.new Cell(9, 7));
+		expectedCellSet.add(new Cell(0, 2));
+		expectedCellSet.add(new Cell(3, 2));
+		expectedCellSet.add(new Cell(5, 3));
+		expectedCellSet.add(new Cell(9, 7));
 		
 		assertEquals(expectedCellSet, cellSet);
 	}
@@ -300,7 +301,7 @@ public class TextGridTest {
 	private void addSquareToCellSet(TextGrid grid, CellSet cellSet, int x, int y, int width, int height) {
 		for(int xx = 0; xx < width; xx++){
 			for(int yy = 0; yy < height; yy++){
-				cellSet.add(grid.new Cell(x + xx, y + yy));
+				cellSet.add(new Cell(x + xx, y + yy));
 			}
 		}
 	}
@@ -311,7 +312,7 @@ public class TextGridTest {
 		for(String cellString : cellStrings) {
 			int x = Integer.parseInt(cellString.substring(1, cellString.indexOf(",")).trim());
 			int y = Integer.parseInt(cellString.substring(cellString.indexOf(",") + 1, cellString.length() - 1).trim());
-			set.add(grid.new Cell(x, y));
+			set.add(new Cell(x, y));
 		}
 		return set;
 	}

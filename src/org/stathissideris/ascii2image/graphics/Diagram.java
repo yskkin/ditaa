@@ -355,7 +355,7 @@ public class Diagram {
 				TextGrid.Cell cell = pair.cell;
 				String string = pair.string;
 				LOG.fine("Found string "+string);
-				TextGrid.Cell lastCell = isolationGrid.new Cell(cell.x + string.length() - 1, cell.y);
+				TextGrid.Cell lastCell = new Cell(cell.x + string.length() - 1, cell.y);
 			
 				int minX = getCellMinX(cell);
 				int y = getCellMaxY(cell);
@@ -475,7 +475,7 @@ public class Diagram {
 
 						CellSet boundaries =
 							copyGrid
-							.findBoundariesExpandingFrom(copyGrid.new Cell(xi, yi));
+							.findBoundariesExpandingFrom(new Cell(xi, yi));
 						if(boundaries.size() == 0) continue; //i'm not sure why these occur
 						CellSet resultCandidate = boundaries.makeScaledOneThirdEquivalent();
 						if (boundarySetsStep2.isEmpty() || !boundarySetsStep2.get(boundarySetsStep2.size() - 1).equals(resultCandidate)) {
@@ -484,7 +484,7 @@ public class Diagram {
 					
 						CellSet filled =
 							copyGrid
-							.fillContinuousArea(copyGrid.new Cell(xi, yi), '*');
+							.fillContinuousArea(new Cell(xi, yi), '*');
 						fillBuffer.fillCellsWith(filled, '*');
 						fillBuffer.fillCellsWith(boundaries, '-');
 						
@@ -813,8 +813,7 @@ public class Diagram {
 	public TextGrid.Cell getCellFor(ShapePoint point){
 		if(point == null) throw new IllegalArgumentException("ShapePoint cannot be null");
 		//TODO: the fake grid is a problem
-		TextGrid g = new TextGrid();
-		return g.new Cell((int) point.x / cellWidth,
+		return new Cell((int) point.x / cellWidth,
 							(int) point.y / cellHeight);
 	}
 

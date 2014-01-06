@@ -114,13 +114,12 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	 * @return
 	 */
 	public static CellSet copyCellSet(CellSet set) {
-		TextGrid grid = new TextGrid();
 		CellSet newSet = new CellSet();
 		
 		Iterator<TextGrid.Cell> it = set.iterator();
 		while (it.hasNext()) {
 			TextGrid.Cell cell = (TextGrid.Cell) it.next();
-			TextGrid.Cell newCell = grid.new Cell(cell);
+			TextGrid.Cell newCell = new TextGrid.Cell(cell);
 			newSet.add(newCell);
 		}
 		return newSet;
@@ -253,7 +252,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		TextGrid.Cell fillCell = null;
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
-				TextGrid.Cell cCell = temp.new Cell(x, y);
+				TextGrid.Cell cCell = new TextGrid.Cell(x, y);
 				if(temp.isBlank(cCell)){
 					fillCell = cCell;
 					break;
@@ -340,7 +339,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		boolean finished = false;
 		for(int y = 0; y < grid.getHeight() && !finished; y++){
 			for(int x = 0; x < grid.getWidth() && !finished; x++){
-				cell = grid.new Cell(x, y);
+				cell = new TextGrid.Cell(x, y);
 				if(!grid.isBlank(cell)
 					 && grid.isBlank(cell.getEast())
 					 && grid.isBlank(cell.getWest())){
@@ -644,7 +643,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		
 		for(int y = 0; y < gridBig.getHeight(); y++){
 			for(int x = 0; x < gridBig.getWidth(); x++){
-				TextGrid.Cell cell = gridBig.new Cell(x, y);
+				TextGrid.Cell cell = new TextGrid.Cell(x, y);
 				if(!gridBig.isBlank(cell)) gridSmall.set(x/3, y/3, '*');
 			}
 		}

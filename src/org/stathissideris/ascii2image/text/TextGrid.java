@@ -1377,8 +1377,7 @@ public class TextGrid {
 		public String tag;
 	}
 
-	
-	public class Cell{
+	public static class Cell {
 
 		public int x, y;
 		

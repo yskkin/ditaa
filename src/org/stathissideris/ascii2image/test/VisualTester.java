@@ -65,7 +65,6 @@ public class VisualTester {
 	private static final String expectedDir = "tests/images-expected";
 	
 	private File textFile;
-	private int index;
 
 	@Rule
 	public TemporaryFolder dir = new TemporaryFolder();
@@ -122,23 +121,20 @@ public class VisualTester {
 		assertTrue("Images for "+textFile.getName()+" are not pixel-identical, first different pixel at: "+x+","+y, pixelsEqual);
 	}
 	
-	public VisualTester(File textFile, int index) {
+	public VisualTester(File textFile) {
 		this.textFile = textFile;
-		this.index = index;
 	}
 	
 	@Parameters
-	public static Collection getTestParameters() {
+	public static Collection<File[]> getTestParameters() {
 		List<File> filesToRender = getFilesToRender();
-		Object[] params = new Object[filesToRender.size()];
-		
-		int i = 0;
-		for(File file : filesToRender) {
-			params[i] = new Object[]{ file, i };
-			i++;
+		List<File[]> result = new ArrayList<File[]>();
+
+		for (int i = 0; i < filesToRender.size(); i++) {
+			result.add(new File[]{ filesToRender.get(i) });
 		}
-		
-		return Arrays.asList(params);
+
+		return result;
 	}
 	
 	public static List<File> getFilesToRender() {
