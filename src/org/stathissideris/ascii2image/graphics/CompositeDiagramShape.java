@@ -36,7 +36,7 @@ public class CompositeDiagramShape extends DiagramComponent {
 
 	private static final Logger LOG = Loggers.getLogger(CompositeDiagramShape.class);
 
-	private ArrayList<DiagramShape> shapes = new ArrayList<DiagramShape>();
+	private List<DiagramShape> shapes = new ArrayList<DiagramShape>();
 
 	public static DiagramComponent createOpenFromBoundaryCells(
 			final TextGrid grid,
@@ -149,7 +149,7 @@ public class CompositeDiagramShape extends DiagramComponent {
 	/**
 	 * @return
 	 */
-	public ArrayList<DiagramShape> getShapes() {
+	public List<DiagramShape> getShapes() {
 		return shapes;
 	}
 

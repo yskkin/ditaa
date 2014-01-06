@@ -20,6 +20,7 @@
 package org.stathissideris.ascii2image.text;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -78,7 +79,7 @@ import yskkin.ascii2image.util.Loggers;
  */
 public class GridPattern extends TextGrid {
 	
-	private ArrayList<Pattern> regExps = new ArrayList<Pattern>(); //TODO optimise: store as PatternS
+	private List<Pattern> regExps = new ArrayList<Pattern>(); //TODO optimise: store as PatternS
 	private boolean regExpsAreValid = false;
 	
 	private static final Logger LOG = Loggers.getLogger(GridPattern.class);

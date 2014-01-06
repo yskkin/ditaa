@@ -391,7 +391,7 @@ public class TextGrid {
 
 
 	/**
-	 * Returns an ArrayList of CellStringPairs that
+	 * Returns an List of CellStringPairs that
 	 * represents all the continuous (non-blank) Strings
 	 * in the grid. Used on buffers that contain only
 	 * type, in order to find the positions and the
@@ -399,8 +399,8 @@ public class TextGrid {
 	 * 
 	 * @return
 	 */
-	public ArrayList<CellStringPair> findStrings(){
-		ArrayList<CellStringPair> result = new ArrayList<CellStringPair>();
+	public List<CellStringPair> findStrings(){
+		List<CellStringPair> result = new ArrayList<CellStringPair>();
 		int width = getWidth();
 		int height = getHeight();
 		for(int y = 0; y < height; y++){
@@ -490,7 +490,7 @@ public class TextGrid {
 	}
 
 	private void removeBoundaries(){
-		ArrayList<Cell> toBeRemoved = new ArrayList<Cell>();
+		List<Cell> toBeRemoved = new ArrayList<Cell>();
 
 		int width = getWidth();
 		int height = getHeight();
@@ -509,8 +509,8 @@ public class TextGrid {
 		}
 	}
 
-	public ArrayList<Cell> findArrowheads(){
-		ArrayList<Cell> result = new ArrayList<Cell>();
+	public List<Cell> findArrowheads(){
+		List<Cell> result = new ArrayList<Cell>();
 		int width = getWidth();
 		int height = getHeight();
 		for(int yi = 0; yi < height; yi++){
@@ -524,9 +524,9 @@ public class TextGrid {
 	}
 
 
-	public ArrayList<CellColorPair> findColorCodes(){
+	public List<CellColorPair> findColorCodes(){
 		Pattern colorCodePattern = Pattern.compile("c[A-F0-9]{3}");
-		ArrayList<CellColorPair> result = new ArrayList<CellColorPair>();
+		List<CellColorPair> result = new ArrayList<CellColorPair>();
 		int width = getWidth();
 		int height = getHeight();
 		for(int yi = 0; yi < height; yi++){
@@ -549,9 +549,9 @@ public class TextGrid {
 		return result;
 	}
 
-	public ArrayList<CellTagPair> findMarkupTags(){
+	public List<CellTagPair> findMarkupTags(){
 		Pattern tagPattern = Pattern.compile("\\{(.+?)\\}");
-		ArrayList<CellTagPair> result = new ArrayList<CellTagPair>();
+		List<CellTagPair> result = new ArrayList<CellTagPair>();
 
 		int width = getWidth();
 		int height = getHeight();
@@ -1224,7 +1224,7 @@ public class TextGrid {
 	{
 				
 		String encoding = (options == null) ? null : options.getCharacterEncoding();
-		ArrayList<StringBuilder> lines = new ArrayList<StringBuilder>();
+		List<StringBuilder> lines = new ArrayList<StringBuilder>();
 		InputStream is;
 		if ("-".equals(filename))
 		    is = System.in;
@@ -1239,7 +1239,7 @@ public class TextGrid {
 
 	public boolean initialiseWithText(String text, ProcessingOptions options) throws UnsupportedEncodingException {
 
-		ArrayList<StringBuilder> lines = new ArrayList<StringBuilder>();
+		List<StringBuilder> lines = new ArrayList<StringBuilder>();
 		String[] linesArray = text.split("(\r)?\n");
 		for(int i = 0; i  < linesArray.length; i++)
 			lines.add(new StringBuilder(linesArray[i]));
@@ -1247,7 +1247,7 @@ public class TextGrid {
 		return initialiseWithLines(lines, options);
 	}
 
-	private boolean initialiseWithLines(ArrayList<StringBuilder> lines, ProcessingOptions options) throws UnsupportedEncodingException {
+	private boolean initialiseWithLines(List<StringBuilder> lines, ProcessingOptions options) throws UnsupportedEncodingException {
 
 		//remove blank rows at the bottom
 		boolean done = false;
@@ -1285,7 +1285,7 @@ public class TextGrid {
 			index++;
 		}
 
-		ArrayList<StringBuilder> newRows = new ArrayList<StringBuilder>();
+		List<StringBuilder> newRows = new ArrayList<StringBuilder>();
 		//TODO: make the following depend on blankBorderSize
 		
 		String topBottomRow = StringUtils.repeatString(" ", maxLength + blankBorderSize * 2);

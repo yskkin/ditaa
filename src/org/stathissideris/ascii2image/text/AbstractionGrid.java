@@ -20,6 +20,7 @@
 package org.stathissideris.ascii2image.text;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import yskkin.ascii2image.util.Loggers;
@@ -143,11 +144,11 @@ public class AbstractionGrid {
 		return result;
 	}
 
-	public ArrayList<CellSet> getDistinctShapes(){
-		ArrayList<CellSet> result = new ArrayList<CellSet>();
+	public List<CellSet> getDistinctShapes(){
+		List<CellSet> result = new ArrayList<CellSet>();
 		
 		CellSet nonBlank = grid.getAllNonBlank();
-		ArrayList<CellSet> distinct = nonBlank.breakIntoDistinctBoundaries();
+		List<CellSet> distinct = nonBlank.breakIntoDistinctBoundaries();
 		
 		for (CellSet set : distinct) {
 			AbstractionGrid temp = new AbstractionGrid(this.getWidth(), this.getHeight());

@@ -302,7 +302,7 @@ public class DiagramShape extends DiagramComponent {
 	/**
 	 * @return
 	 */
-	public ArrayList getPoints() {
+	public List<ShapePoint> getPoints() {
 		return points;
 	}
 
@@ -491,8 +491,8 @@ public class DiagramShape extends DiagramComponent {
 		return path;
 	}
 	
-	public ArrayList getEdges(){
-		ArrayList edges = new ArrayList();
+	public List<ShapeEdge> getEdges(){
+		List<ShapeEdge> edges = new ArrayList<ShapeEdge>();
 		if(this.points.size() == 1) return edges;
 		int noOfPoints = points.size();
 		for(int i = 0; i < noOfPoints - 1; i++){

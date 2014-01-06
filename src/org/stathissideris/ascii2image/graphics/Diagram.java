@@ -24,6 +24,7 @@ import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -47,9 +48,9 @@ public class Diagram {
 
 	private static final Logger LOG = Loggers.getLogger(Diagram.class);
 
-	private ArrayList<DiagramShape> shapes = new ArrayList<DiagramShape>();
-	private ArrayList<CompositeDiagramShape> compositeShapes = new ArrayList<CompositeDiagramShape>();
-	private ArrayList<DiagramText> textObjects = new ArrayList<DiagramText>();
+	private List<DiagramShape> shapes = new ArrayList<DiagramShape>();
+	private List<CompositeDiagramShape> compositeShapes = new ArrayList<CompositeDiagramShape>();
+	private List<DiagramText> textObjects = new ArrayList<DiagramText>();
 	
 	private int width, height;
 	private int cellWidth, cellHeight;
@@ -129,15 +130,15 @@ public class Diagram {
 		int height = grid.getHeight();
 
 	
-		ArrayList<CellSet> boundarySetsStep2 = findBoundariesFromGrid(workGrid, width, height);
+		List<CellSet> boundarySetsStep2 = findBoundariesFromGrid(workGrid, width, height);
 
 		//split boundaries to open, closed and mixed
 		
 		LOG.finer("******* First evaluation of openess *******");
 		
-		ArrayList<CellSet> open = new ArrayList<CellSet>();
-		ArrayList<CellSet> closed = new ArrayList<CellSet>();
-		ArrayList<CellSet> mixed = new ArrayList<CellSet>();
+		List<CellSet> open = new ArrayList<CellSet>();
+		List<CellSet> closed = new ArrayList<CellSet>();
+		List<CellSet> mixed = new ArrayList<CellSet>();
 		
 		for (CellSet set : boundarySetsStep2) {
 			int type = set.getType(workGrid);
@@ -231,7 +232,7 @@ public class Diagram {
 		LOG.finer("***** MAKING SHAPES FROM BOUNDARY SETS *****");
 		LOG.finer("***** CLOSED: *****");
 		
-		ArrayList<DiagramComponent> closedShapes = new ArrayList<DiagramComponent>();
+		List<DiagramComponent> closedShapes = new ArrayList<DiagramComponent>();
 		for (CellSet set : closed) {
 			set.printAsGrid();
 			
@@ -341,7 +342,7 @@ public class Diagram {
 		//kludge
 		textGroupGrid.fillCellsWith(gaps, '|');
 		CellSet nonBlank = textGroupGrid.getAllNonBlank();
-		ArrayList<CellSet> textGroups = nonBlank.breakIntoDistinctBoundaries();
+		List<CellSet> textGroups = nonBlank.breakIntoDistinctBoundaries();
 		LOG.info(textGroups.size()+" text groups found");
 		
 		Font font = FontMeasurer.instance().getFontFor(cellHeight);
@@ -445,11 +446,11 @@ public class Diagram {
 		}
 	}
 
-	private ArrayList<CellSet> findBoundariesFromGrid(TextGrid workGrid,
+	private List<CellSet> findBoundariesFromGrid(TextGrid workGrid,
 			int width, int height) {
 		//split distinct shapes using AbstractionGrid 
 		AbstractionGrid temp = new AbstractionGrid(workGrid, workGrid.getAllBoundaries());
-		ArrayList<CellSet> boundarySetsStep1 = temp.getDistinctShapes();
+		List<CellSet> boundarySetsStep1 = temp.getDistinctShapes();
 		
 		LOG.finer("******* Distinct shapes found using AbstractionGrid *******");
 		for (CellSet set : boundarySetsStep1) {
@@ -460,7 +461,7 @@ public class Diagram {
 		
 		//Find all the boundaries by using the special version of the filling method
 		//(fills in a different buffer than the buffer it reads from)
-		ArrayList<CellSet> boundarySetsStep2 = new ArrayList<CellSet>();
+		List<CellSet> boundarySetsStep2 = new ArrayList<CellSet>();
 		for(CellSet set : boundarySetsStep1) {			
 			//the fill buffer keeps track of which cells have been
 			//filled already
@@ -505,8 +506,8 @@ public class Diagram {
 	 * 
 	 * @return
 	 */
-	public ArrayList<DiagramShape> getAllDiagramShapes(){
-		ArrayList<DiagramShape> shapes = new ArrayList<DiagramShape>();
+	public List<DiagramShape> getAllDiagramShapes(){
+		List<DiagramShape> shapes = new ArrayList<DiagramShape>();
 		shapes.addAll(this.getShapes());
 		
 		for(CompositeDiagramShape compShape : getCompositeShapes()) {
@@ -522,12 +523,12 @@ public class Diagram {
 	 * @return true if it removed any obsolete.
 	 * 
 	 */
-	private boolean removeObsoleteShapes(TextGrid grid, ArrayList<CellSet> sets){
+	private boolean removeObsoleteShapes(TextGrid grid, List<CellSet> sets){
 		LOG.finer("******* Removing obsolete shapes *******");
 		
 		boolean removedAny = false;
 		
-		ArrayList<CellSet> filledSets = new ArrayList<CellSet>();
+		List<CellSet> filledSets = new ArrayList<CellSet>();
 
 		LOG.finer("******* Sets before *******");
 		for (CellSet set : sets) {
@@ -542,14 +543,14 @@ public class Diagram {
 			} else filledSets.add(set);
 		}
 		
-		ArrayList<Integer> toBeRemovedIndices = new ArrayList<Integer>();
+		List<Integer> toBeRemovedIndices = new ArrayList<Integer>();
 
 		for (CellSet set : filledSets){
 			LOG.finer("*** Deciding if the following should be removed:");
 			set.printAsGrid();
 			
 			//find the other sets that have common cells with set
-			ArrayList<CellSet> common = new ArrayList<CellSet>();
+			List<CellSet> common = new ArrayList<CellSet>();
 			common.add(set);
 			for (CellSet set2 : filledSets) {
 				if(set != set2 && set.hasCommonCells(set2)){
@@ -604,7 +605,7 @@ public class Diagram {
 			//if(gridLargest.equals(gridOfSmalls)) toBeRemovedIndices.add(new Integer(index));
 		}
 		
-		ArrayList<CellSet> setsToBeRemoved = new ArrayList<CellSet>();
+		List<CellSet> setsToBeRemoved = new ArrayList<CellSet>();
 		for (int i : toBeRemovedIndices){
 			setsToBeRemoved.add(sets.get(i));
 		}
@@ -626,11 +627,11 @@ public class Diagram {
 		return Math.min(getCellWidth(), getCellHeight());
 	}
 	
-	private void separateCommonEdges(ArrayList<? extends DiagramComponent> shapes){
+	private void separateCommonEdges(List<? extends DiagramComponent> shapes){
 
 		float offset = getMinimumOfCellDimension() / 5;
 
-		ArrayList<ShapeEdge> edges = new ArrayList<ShapeEdge>();
+		List<ShapeEdge> edges = new ArrayList<ShapeEdge>();
 
 		//get all adges
 		for (DiagramComponent shape : shapes) {
@@ -638,7 +639,7 @@ public class Diagram {
 		}
 		
 		//group edges into pairs of touching edges
-		ArrayList<Pair<ShapeEdge, ShapeEdge>> listOfPairs = new ArrayList<Pair<ShapeEdge, ShapeEdge>>();
+		List<Pair<ShapeEdge, ShapeEdge>> listOfPairs = new ArrayList<Pair<ShapeEdge, ShapeEdge>>();
 		
 		//all-against-all touching test for the edges
 		int startIndex = 1; //skip some to avoid duplicate comparisons and self-to-self comparisons
@@ -654,7 +655,7 @@ public class Diagram {
 			startIndex++;
 		}
 		
-		ArrayList<ShapeEdge> movedEdges = new ArrayList<ShapeEdge>();
+		List<ShapeEdge> movedEdges = new ArrayList<ShapeEdge>();
 		
 		//move equivalent edges inwards
 		for (Pair<ShapeEdge, ShapeEdge> pair : listOfPairs) {
@@ -673,7 +674,7 @@ public class Diagram {
 	
 	//TODO: removes more than it should
 	private void removeDuplicateShapes() {
-		ArrayList<DiagramShape> originalShapes = new ArrayList<DiagramShape>();
+		List<DiagramShape> originalShapes = new ArrayList<DiagramShape>();
 
 		for (DiagramShape shape : shapes) {
 			boolean isOriginal = true;
@@ -756,14 +757,14 @@ public class Diagram {
 	/**
 	 * @return
 	 */
-	public ArrayList<CompositeDiagramShape> getCompositeShapes() {
+	public List<CompositeDiagramShape> getCompositeShapes() {
 		return compositeShapes;
 	}
 
 	/**
 	 * @return
 	 */
-	public ArrayList<DiagramShape> getShapes() {
+	public List<DiagramShape> getShapes() {
 		return shapes;
 	}
 	
@@ -821,7 +822,7 @@ public class Diagram {
 	/**
 	 * @return
 	 */
-	public ArrayList<DiagramText> getTextObjects() {
+	public List<DiagramText> getTextObjects() {
 		return textObjects;
 	}
 

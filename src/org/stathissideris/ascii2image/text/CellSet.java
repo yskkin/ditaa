@@ -22,6 +22,7 @@ package org.stathissideris.ascii2image.text;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -486,10 +487,10 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	/**
 	 * Takes into account character info from the grid
 	 * 
-	 * @return ArrayList of distinct BoundarySetS
+	 * @return List of distinct Boundaries
 	 */
-	public ArrayList<CellSet> breakIntoDistinctBoundaries(TextGrid grid){
-		ArrayList<CellSet> result;
+	public List<CellSet> breakIntoDistinctBoundaries(TextGrid grid){
+		List<CellSet> result;
 		
 		AbstractionGrid temp = new AbstractionGrid(grid, this);
 		result = temp.getDistinctShapes();
@@ -500,10 +501,10 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 
 	/**
 	 * 
-	 * @return ArrayList of distinct BoundarySetS
+	 * @return List of distinct Boundaries
 	 */
-	public ArrayList<CellSet> breakIntoDistinctBoundaries(){
-		ArrayList<CellSet> result = new ArrayList<CellSet>();
+	public List<CellSet> breakIntoDistinctBoundaries(){
+		List<CellSet> result = new ArrayList<CellSet>();
 
 		//CellSet tempSet = copyCellSet(this);
 		//tempSet.translate( - this.getMinX() + 1, - this.getMinY() + 1);
@@ -555,8 +556,8 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	 * @return a list of boundaries that are either open or closed but not mixed
 	 * and they are equivalent to the <code>this</code>
 	 */
-	public ArrayList<CellSet> breakTrulyMixedBoundaries(TextGrid grid){
-		ArrayList<CellSet> result = new ArrayList<CellSet>();
+	public List<CellSet> breakTrulyMixedBoundaries(TextGrid grid){
+		List<CellSet> result = new ArrayList<CellSet>();
 		CellSet visitedEnds = new CellSet();
 		
 		TextGrid workGrid = TextGrid.makeSameSizeAs(grid);

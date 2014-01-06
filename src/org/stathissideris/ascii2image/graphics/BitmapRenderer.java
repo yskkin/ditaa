@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
@@ -130,7 +131,7 @@ public class BitmapRenderer {
 		
 		g2.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
 
-		ArrayList<DiagramShape> shapes = diagram.getAllDiagramShapes();
+		List<DiagramShape> shapes = diagram.getAllDiagramShapes();
 
 		LOG.info("Rendering " + shapes.size() + " shapes (groups flattened)");
 
@@ -220,7 +221,7 @@ public class BitmapRenderer {
 		
 		
 		//find storage shapes
-		ArrayList<DiagramShape> storageShapes = new ArrayList<DiagramShape>();
+		List<DiagramShape> storageShapes = new ArrayList<DiagramShape>();
 		for (DiagramShape shape : shapes){
 			if(shape.getType() == DiagramShape.TYPE_STORAGE) {
 				storageShapes.add(shape);
@@ -262,7 +263,7 @@ public class BitmapRenderer {
 		Collections.sort(shapes, new ShapeAreaComparator());
 		
 		//render the rest of the shapes
-		ArrayList<DiagramShape> pointMarkers = new ArrayList<DiagramShape>();
+		List<DiagramShape> pointMarkers = new ArrayList<DiagramShape>();
 		for (DiagramShape shape : shapes) {
 			if(shape.getType() == DiagramShape.TYPE_POINT_MARKER) {
 				pointMarkers.add(shape);
