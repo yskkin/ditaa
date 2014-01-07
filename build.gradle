@@ -6,6 +6,9 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 version = '0_9'
 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
 repositories {
   mavenCentral()
 }
