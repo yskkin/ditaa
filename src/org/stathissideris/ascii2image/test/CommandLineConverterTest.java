@@ -14,6 +14,7 @@ import org.stathissideris.ascii2image.core.CommandLineConverter;
 public class CommandLineConverterTest {
 
 	private static final String USAGE_HEAD = "usage: java -jar ditaa.jar";
+	private static final String EOL = System.getProperty("line.separator");
 
 	@Rule
 	public final ExpectedSystemExit exit = ExpectedSystemExit.none();
@@ -55,7 +56,7 @@ public class CommandLineConverterTest {
 			@Override
 			public void checkAssertion() throws Exception {
 				assertThat(out.getLog(), is(""));
-				assertThat(err.getLog(), is("Error: invalid_encoding_name\n"));
+				assertThat(err.getLog(), is("Error: invalid_encoding_name" + EOL));
 			}
 		});
 		execute("--encoding", "invalid_encoding_name", "input.txt");
@@ -68,7 +69,7 @@ public class CommandLineConverterTest {
 			@Override
 			public void checkAssertion() throws Exception {
 				assertThat(out.getLog(), containsString(USAGE_HEAD));
-				assertThat(err.getLog(), is("Error: For input string: \"not_a_number\"\n"));
+				assertThat(err.getLog(), is("Error: For input string: \"not_a_number\"" + EOL));
 			}
 		});
 		execute("-tabs", "not_a_number", "input.txt");
@@ -81,7 +82,7 @@ public class CommandLineConverterTest {
 			@Override
 			public void checkAssertion() throws Exception {
 				assertThat(out.getLog(), containsString(USAGE_HEAD));
-				assertThat(err.getLog(), is("Unrecognized option: --unknown-option\n"));
+				assertThat(err.getLog(), is("Unrecognized option: --unknown-option" + EOL));
 			}
 			
 		});
@@ -94,7 +95,7 @@ public class CommandLineConverterTest {
 		exit.checkAssertionAfterwards(new Assertion() {
 			public void checkAssertion() throws Exception {
 				assertThat(out.getLog(), containsString(USAGE_HEAD));
-				assertThat(err.getLog(), is("Error: Please provide the input file filename\n"));
+				assertThat(err.getLog(), is("Error: Please provide the input file filename" + EOL));
 			}
 		});
 		execute("-v");
