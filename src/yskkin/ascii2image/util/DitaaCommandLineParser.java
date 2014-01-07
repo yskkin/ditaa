@@ -158,8 +158,8 @@ public class DitaaCommandLineParser {
 	private void printRunInfo(CommandLine cmdLine) {
 		String[] args = cmdLine.getArgs();
 		if (cmdLine.hasOption("html")
-				|| (args.length == 1 && args[0].equals("-")
-				|| args[1].equals("-"))) {
+				|| (args.length == 1 && !args[0].equals("-")
+				|| (args.length < 1 && !args[1].equals("-")))) {
 			System.out.println("\n" + NOTICE + "\n");
 
 			System.out.println("Running with options:");

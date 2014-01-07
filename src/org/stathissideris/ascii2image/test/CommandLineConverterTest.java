@@ -14,6 +14,7 @@ import org.stathissideris.ascii2image.core.CommandLineConverter;
 public class CommandLineConverterTest {
 
 	private static final String USAGE_HEAD = "usage: java -jar ditaa.jar";
+	private static final String NOTICE = "ditaa version 0.9, Copyright (C) 2004--2009  Efstathios (Stathis) Sideris";
 	private static final String EOL = System.getProperty("line.separator");
 
 	@Rule
@@ -99,6 +100,12 @@ public class CommandLineConverterTest {
 			}
 		});
 		execute("-v");
+	}
+
+	@Test
+	public void testPrintUsage() {
+		execute("tests/text/ditaa_bug.txt");
+		assertThat(out.getLog(), containsString(NOTICE));
 	}
 
 	private void execute(String... args) {
