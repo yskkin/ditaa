@@ -127,23 +127,6 @@ public class AbstractionGrid {
 		return grid.getHeight() / 3;
 	}
 
-	public TextGrid getAsTextGrid(){
-		TextGrid result = new TextGrid(getWidth(), getHeight());
-		for(int y = 0; y < grid.getHeight(); y++){
-			for(int x = 0; x < grid.getWidth(); x++){
-				TextGrid.Cell cell = new TextGrid.Cell(x, y);
-				if(!grid.isBlank(cell)) result.set(x/3, y/3, '*');
-			}
-		}
-
-		LOG.finer("Getting AbstractionGrid as textGrid.\nAbstractionGrid:");
-		grid.printDebug();
-		LOG.finer("...as text grid:");
-		result.printDebug();
-
-		return result;
-	}
-
 	public List<CellSet> getDistinctShapes(){
 		List<CellSet> result = new ArrayList<CellSet>();
 		

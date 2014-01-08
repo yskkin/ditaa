@@ -472,25 +472,22 @@ public class Diagram {
 					if(fillBuffer.isBlank(xi, yi)){
 						
 						TextGrid copyGrid = new AbstractionGrid(workGrid, set).getCopyOfInternalBuffer();
+						
+						CellSet[] op = copyGrid.findBoundariesExpandingFrom(new Cell(xi, yi));
 
-						CellSet boundaries =
-							copyGrid
-							.findBoundariesExpandingFrom(new Cell(xi, yi));
+						CellSet boundaries = op[0];
 						if(boundaries.size() == 0) continue; //i'm not sure why these occur
 						CellSet resultCandidate = boundaries.makeScaledOneThirdEquivalent();
 						if (boundarySetsStep2.isEmpty() || !boundarySetsStep2.get(boundarySetsStep2.size() - 1).equals(resultCandidate)) {
-							boundarySetsStep2.add(boundaries.makeScaledOneThirdEquivalent());
+							boundarySetsStep2.add(resultCandidate);
 						}
 					
-						CellSet filled =
-							copyGrid
-							.fillContinuousArea(new Cell(xi, yi), '*');
+						CellSet filled = op[1];
 						fillBuffer.fillCellsWith(filled, '*');
 						fillBuffer.fillCellsWith(boundaries, '-');
 						
-						//System.out.println("Fill buffer:");
-						//fillBuffer.printDebug();
-						boundaries.makeScaledOneThirdEquivalent().printAsGrid();
+						LOG.finer("Fill buffer:");
+						resultCandidate.printAsGrid();
 						LOG.finer("-----------------------------------");
 						
 					}

@@ -1165,11 +1165,12 @@ public class TextGrid {
 	 * @param seed
 	 * @return
 	 */
-	public CellSet findBoundariesExpandingFrom(Cell seed){
+	public CellSet[] findBoundariesExpandingFrom(Cell seed){
 		CellSet boundaries = new CellSet();
+		CellSet fill = new CellSet();
 		char oldChar = get(seed);
 
-		if(isOutOfBounds(seed)) return boundaries;
+		if(isOutOfBounds(seed)) return new CellSet[] {boundaries, fill};
 
 		char newChar = 1; //TODO: kludge
 
@@ -1192,20 +1193,35 @@ public class TextGrid {
 			char eChar = get(eCell);
 			char wChar = get(wCell);
 			
-			if(nChar == oldChar) stack.push(nCell);
+			if(nChar == oldChar) {
+				stack.push(nCell);
+				fill.add(nCell);
+			}
 			else if(nChar == '*') boundaries.add(nCell);
 			
-			if(sChar == oldChar) stack.push(sCell);
+			if(sChar == oldChar) {
+				stack.push(sCell);
+				fill.add(sCell);
+			}
 			else if(sChar == '*') boundaries.add(sCell);
 			
-			if(eChar == oldChar) stack.push(eCell);
+			if(eChar == oldChar) {
+				stack.push(eCell);
+				fill.add(eCell);
+			}
 			else if(eChar == '*') boundaries.add(eCell);
 			
-			if(wChar == oldChar) stack.push(wCell);
+			if(wChar == oldChar) {
+				stack.push(wCell);
+				fill.add(wCell);
+			}
 			else if(wChar == '*') boundaries.add(wCell);
 		}
+		for (Cell cell : fill) {
+			set(cell, '*');
+		}
 		
-		return boundaries;
+		return new CellSet[] {boundaries, fill};
 	}
 	
 	public boolean cellContainsDashedLineChar(Cell cell){

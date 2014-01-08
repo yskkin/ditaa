@@ -189,7 +189,7 @@ public class TextGridTest {
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
 		
 		TextGrid copyGrid = new AbstractionGrid(grid, wholeGridSet).getCopyOfInternalBuffer();
-		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(8, 8));
+		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(8, 8))[0];
 		int size = boundaries.size();
 		
 		assertEquals(56, size);
@@ -215,7 +215,7 @@ public class TextGridTest {
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
 		
 		TextGrid copyGrid = new AbstractionGrid(grid, wholeGridSet).getCopyOfInternalBuffer();
-		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(8, 8));
+		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(8, 8))[0];
 		int size1 = boundaries.size();
 
 		assertEquals(150, size1);
@@ -251,7 +251,7 @@ public class TextGridTest {
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
 		
 		TextGrid copyGrid = new AbstractionGrid(grid, wholeGridSet).getCopyOfInternalBuffer();
-		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(0, 0));
+		CellSet boundaries = copyGrid.findBoundariesExpandingFrom(new Cell(0, 0))[0];
 		int size = boundaries.size();
 
 		assertEquals(154, size);
