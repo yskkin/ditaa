@@ -1163,9 +1163,10 @@ public class TextGrid {
 	 * encounter if we did a flood-fill at <code>seed</code>. 
 	 * 
 	 * @param seed
-	 * @return
+	 * @return Array of 2 {@code CellSet}s. 0th element is a boundary surrounding
+	 * given cell. 1st element is a region surrounded by 0th element.
 	 */
-	public CellSet[] findBoundariesExpandingFrom(Cell seed){
+	public CellSet[] findBoundariesAndFillInternal(Cell seed){
 		CellSet boundaries = new CellSet();
 		CellSet fill = new CellSet();
 		char oldChar = get(seed);

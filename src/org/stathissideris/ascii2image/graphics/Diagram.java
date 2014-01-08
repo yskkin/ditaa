@@ -473,7 +473,7 @@ public class Diagram {
 						
 						TextGrid copyGrid = new AbstractionGrid(workGrid, set).getCopyOfInternalBuffer();
 						
-						CellSet[] op = copyGrid.findBoundariesExpandingFrom(new Cell(xi, yi));
+						CellSet[] op = copyGrid.findBoundariesAndFillInternal(new Cell(xi, yi));
 
 						CellSet boundaries = op[0];
 						if(boundaries.size() == 0) continue; //i'm not sure why these occur
