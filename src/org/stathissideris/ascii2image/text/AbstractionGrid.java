@@ -151,9 +151,11 @@ public class AbstractionGrid {
 		List<CellSet> distinct = nonBlank.breakIntoDistinctBoundaries();
 		
 		for (CellSet set : distinct) {
-			AbstractionGrid temp = new AbstractionGrid(this.getWidth(), this.getHeight());
-			temp.fillCells(set);
-			result.add(temp.getAsTextGrid().getAllNonBlank());
+			TextGrid tempGrid = new TextGrid(grid.getWidth(), grid.getHeight());
+			for (TextGrid.Cell cell : set) {
+				tempGrid.set(cell.x / 3, cell.y / 3, '*');
+			}
+			result.add(tempGrid.getAllNonBlank());
 		}
 		
 		return result; 
