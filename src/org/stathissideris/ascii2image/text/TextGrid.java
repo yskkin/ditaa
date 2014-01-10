@@ -1180,7 +1180,7 @@ public class TextGrid {
 		stack.push(seed);
 		
 		while(!stack.isEmpty()){
-			Cell cell = (Cell) stack.pop();
+			Cell cell = stack.pop();
 			
 			set(cell, newChar);
 
@@ -1218,10 +1218,6 @@ public class TextGrid {
 			}
 			else if(wChar == '*') boundaries.add(wCell);
 		}
-		for (Cell cell : fill) {
-			set(cell, '*');
-		}
-		
 		return new CellSet[] {boundaries, fill};
 	}
 	
