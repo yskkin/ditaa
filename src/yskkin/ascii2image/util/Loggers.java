@@ -61,9 +61,6 @@ public class Loggers {
 
 	private static void addHandlerToAllLoggers(Handler handler) {
 		Loggers.handler = handler;
-		if (level != null) {
-			Loggers.handler.setLevel(level);
-		}
 		Enumeration<String> loggerNames = logManager.getLoggerNames();
 		while (loggerNames.hasMoreElements()) {
 			logManager.getLogger(loggerNames.nextElement()).addHandler(handler);
