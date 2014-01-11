@@ -579,8 +579,7 @@ public class TextGrid {
 				return true;
 			} else return false;
 		}
-		//return StringUtils.isOneOf(c, undisputableBoundaries);
-		if(StringUtils.isOneOf(c, boundaries) && !isLoneDiagonal(cell)){
+		if(StringUtils.isOneOf(c, boundaries)){
 			return true;
 		}
 		return false;
@@ -669,10 +668,6 @@ public class TextGrid {
 
 	public boolean isStarOnLine(Cell cell){
 		return matchesAny(cell, GridPatternGroup.starOnLineCriteria);
-	}
-
-	private boolean isLoneDiagonal(Cell cell){
-		return matchesAny(cell, GridPatternGroup.loneDiagonalCriteria);
 	}
 
 	public boolean isArrowhead(Cell cell){
