@@ -125,12 +125,8 @@ public class Diagram {
 		workGrid.replaceTypeOnLine();
 		workGrid.replacePointMarkersOnLine();
 		workGrid.printDebug();
-		
-		int width = grid.getWidth();
-		int height = grid.getHeight();
 
-	
-		List<CellSet> boundarySetsStep2 = findBoundariesFromGrid(workGrid, width, height);
+		List<CellSet> boundarySetsStep2 = findBoundariesFromGrid(workGrid);
 
 		//split boundaries to open, closed and mixed
 		
@@ -446,8 +442,9 @@ public class Diagram {
 		}
 	}
 
-	private List<CellSet> findBoundariesFromGrid(TextGrid workGrid,
-			int width, int height) {
+	private List<CellSet> findBoundariesFromGrid(TextGrid workGrid) {
+		int width = workGrid.getWidth();
+		int height = workGrid.getHeight();
 		//split distinct shapes using AbstractionGrid 
 		AbstractionGrid temp = new AbstractionGrid(workGrid, workGrid.getAllBoundaries());
 		List<CellSet> boundarySetsStep1 = temp.getDistinctShapes();
