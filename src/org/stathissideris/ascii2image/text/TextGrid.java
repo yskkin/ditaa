@@ -148,16 +148,6 @@ public class TextGrid {
 		return getSubGrid(cell.x - 1, cell.y - 1, 3, 3);
 	}
 
-	private String getStringAt(Cell cell, int length){
-		int x = cell.x;
-		int y = cell.y;
-		if(x > getWidth() - 1
-			|| y > getHeight() - 1
-			|| x < 0
-			|| y < 0) return null;
-		return rows.get(y).substring(x, x + length);		
-	}
-
 	public void writeStringTo(int x, int y, String str){
 		writeStringTo(new Cell(x, y), str);
 	}
@@ -525,24 +515,18 @@ public class TextGrid {
 
 
 	public List<CellColorPair> findColorCodes(){
-		Pattern colorCodePattern = Pattern.compile("c[A-F0-9]{3}");
+		Pattern colorCodePattern = Pattern.compile("c([A-F0-9]{3})");
 		List<CellColorPair> result = new ArrayList<CellColorPair>();
-		int width = getWidth();
-		int height = getHeight();
-		for(int yi = 0; yi < height; yi++){
-			for(int xi = 0; xi < width - 3; xi++){
-				Cell cell = new Cell(xi, yi);
-				String s = getStringAt(cell, 4);
-				Matcher matcher = colorCodePattern.matcher(s);
-				if(matcher.matches()){
-					char cR = s.charAt(1);
-					char cG = s.charAt(2);
-					char cB = s.charAt(3);
-					int r = Integer.valueOf(String.valueOf(cR), 16).intValue() * 17;
-					int g = Integer.valueOf(String.valueOf(cG), 16).intValue() * 17;
-					int b = Integer.valueOf(String.valueOf(cB), 16).intValue() * 17;
-					result.add(new CellColorPair(cell, new Color(r, g, b)));
-				}
+
+		for (int y = 0; y < getHeight(); y++) {
+			StringBuilder row = rows.get(y);
+			Matcher matcher = colorCodePattern.matcher(row);
+			while (matcher.find()) {
+				String rawColorCode = matcher.group(1);
+				int r = Integer.valueOf(rawColorCode.substring(0, 1), 16) * 17;
+				int g = Integer.valueOf(rawColorCode.substring(1, 2), 16) * 17;
+				int b = Integer.valueOf(rawColorCode.substring(2, 3), 16) * 17;
+				result.add(new CellColorPair(new Cell(matcher.start(), y), new Color(r, g, b)));
 			}
 		}
 		LOG.info(result.size()+" color codes found");
@@ -553,22 +537,14 @@ public class TextGrid {
 		Pattern tagPattern = Pattern.compile("\\{(.+?)\\}");
 		List<CellTagPair> result = new ArrayList<CellTagPair>();
 
-		int width = getWidth();
-		int height = getHeight();
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width - 3; x++){
-				Cell cell = new Cell(x, y);
-				char c = get(cell);
-				if(c == '{'){
-					String rowPart = rows.get(y).substring(x);
-					Matcher matcher = tagPattern.matcher(rowPart);
-					if(matcher.find()){
-						String tagName = matcher.group(1);
-						if(markupTags.contains(tagName)){
-							LOG.fine("found tag "+tagName+" at "+x+", "+y);
-							result.add(new CellTagPair(new Cell(x, y), tagName));
-						}
-					}
+		for (int y = 0; y < getHeight(); y++) {
+			Matcher matcher = tagPattern.matcher(rows.get(y));
+			while (matcher.find()) {
+				String tagName = matcher.group(1);
+				if (markupTags.contains(tagName)) {
+					int x = matcher.start();
+					LOG.fine("found tag " + tagName + " at " + x + ", " + y);
+					result.add(new CellTagPair(new Cell(x, y), tagName));
 				}
 			}
 		}
