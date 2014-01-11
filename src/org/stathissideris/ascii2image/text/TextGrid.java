@@ -391,25 +391,12 @@ public class TextGrid {
 	 */
 	public List<CellStringPair> findStrings(){
 		List<CellStringPair> result = new ArrayList<CellStringPair>();
-		int width = getWidth();
-		int height = getHeight();
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
-				if(!isBlank(x, y)){
-					Cell start = new Cell(x, y);
-					StringBuilder sb = new StringBuilder(String.valueOf(get(x, y)));
-					char c = get(++x, y);
-					boolean finished = false;
-					//while(c != ' '){
-					while(!finished){
-						sb.append(c);
-						c = get(++x, y);
-						char next = get(x + 1, y);
-						if((c == ' ' || c == 0) && (next == ' ' || next == 0))
-							finished = true;
-					}
-					result.add(new CellStringPair(start, sb.toString()));
-				}
+		// This is weird, but compatible with original ditaa.
+		Pattern stringPattern = Pattern.compile("(\\S..*?)(\\s\\s|\\s$|$)");
+		for (int y = 0; y < getHeight(); y++) {
+			Matcher matcher = stringPattern.matcher(rows.get(y));
+			while (matcher.find()) {
+				result.add(new CellStringPair(new Cell(matcher.start(1), y), matcher.group(1)));
 			}
 		}
 		return result;
@@ -1343,6 +1330,28 @@ public class TextGrid {
 		}
 		public Cell cell;
 		public String string;
+
+		@Override
+		public boolean equals(Object o) {
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			if (this == o) {
+				return true;
+			}
+			CellStringPair other = (CellStringPair) o;
+			return cell.equals(other.cell) && string.equals(other.string);
+		}
+
+		@Override
+		public int hashCode() {
+			return cell.hashCode() * 31 + string.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return String.format("[x = %d, y = %d: %s]", cell.x, cell.y, string);
+		}
 	}
 
 	public static class CellTagPair{

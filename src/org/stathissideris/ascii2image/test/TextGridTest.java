@@ -20,10 +20,11 @@
 package org.stathissideris.ascii2image.test;
 
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import org.stathissideris.ascii2image.text.AbstractionGrid;
 import org.stathissideris.ascii2image.text.CellSet;
 import org.stathissideris.ascii2image.text.TextGrid;
 import org.stathissideris.ascii2image.text.TextGrid.Cell;
+import org.stathissideris.ascii2image.text.TextGrid.CellStringPair;
 
 public class TextGridTest {
 	
@@ -63,6 +65,25 @@ public class TextGridTest {
 		// Then
 		assertThat(testee.getRow(2).toString(), is("  シフトJIS  "));
 		assertThat(testee.getRow(3).toString(), is("  表示      "));
+	}
+
+	@Test public void testFindStrings() throws Exception {
+		// Given
+		TextGrid testee = new TextGrid();
+		testee.loadFrom("tests/text/art1.txt");
+		testee.removeNonText();
+		// When
+		List<CellStringPair> strings = testee.findStrings();
+		// Then
+		assertThat(strings, hasItems(
+				new CellStringPair(new Cell(43, 4), "d "),
+				new CellStringPair(new Cell(8, 6), "a "),
+				new CellStringPair(new Cell(24, 6), "b  X"),
+				new CellStringPair(new Cell(58, 6), "..."),
+				new CellStringPair(new Cell(25, 27), "testing"),
+				new CellStringPair(new Cell(18, 45), "AB"),
+				new CellStringPair(new Cell(17, 46), "/  \\"),
+				new CellStringPair(new Cell(12, 51), "/ ")));
 	}
 
 	@Test public void testFillContinuousAreaSquareOutside() throws FileNotFoundException, IOException {
