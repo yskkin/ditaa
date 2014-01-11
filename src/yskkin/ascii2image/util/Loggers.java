@@ -19,8 +19,12 @@ public class Loggers {
 	public static Logger getLogger(Class<?> clazz) {
 		Logger logger = Logger.getLogger(clazz.getName());
 		logger.setUseParentHandlers(false);
-		if (handler != null) logger.addHandler(handler);
-		if (level != null) logger.setLevel(level);
+		if (handler != null) {
+			logger.addHandler(handler);
+		}
+		if (level != null) {
+			logger.setLevel(level);
+		}
 		return logger;
 	}
 
@@ -45,14 +49,21 @@ public class Loggers {
 
 	public static void setLevelToAllLoggers(Level level) {
 		Loggers.level = level;
-		Enumeration<String> loggerNames = logManager.getLoggerNames();
-		while (loggerNames.hasMoreElements()) {
-			logManager.getLogger(loggerNames.nextElement()).setLevel(level);
+		if (handler != null) {
+			handler.setLevel(level);
+		} else {
+			Enumeration<String> loggerNames = logManager.getLoggerNames();
+			while (loggerNames.hasMoreElements()) {
+				logManager.getLogger(loggerNames.nextElement()).setLevel(level);
+			}
 		}
 	}
 
 	private static void addHandlerToAllLoggers(Handler handler) {
 		Loggers.handler = handler;
+		if (level != null) {
+			Loggers.handler.setLevel(level);
+		}
 		Enumeration<String> loggerNames = logManager.getLoggerNames();
 		while (loggerNames.hasMoreElements()) {
 			logManager.getLogger(loggerNames.nextElement()).addHandler(handler);

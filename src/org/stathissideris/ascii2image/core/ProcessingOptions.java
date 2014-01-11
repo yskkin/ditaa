@@ -171,7 +171,9 @@ public class ProcessingOptions {
 	 * @param b
 	 */
 	public void setVerbose(boolean b) {
-		Loggers.setLevelToAllLoggers(Level.ALL);
+		if (b) {
+			Loggers.setLevelToAllLoggers(Level.ALL);
+		}
 	}
 
 	/**
