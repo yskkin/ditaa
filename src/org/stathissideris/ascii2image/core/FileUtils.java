@@ -19,12 +19,12 @@
  */
 package org.stathissideris.ascii2image.core;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 
 /**
  * 
@@ -99,7 +99,8 @@ public class FileUtils {
 	private static String readFile(InputStream is, String name, String encoding, long length) throws IOException {
 
 		if (length < 0) {
-			LineNumberReader reader = new LineNumberReader(new InputStreamReader(is));
+			encoding = encoding != null ? encoding : "utf-8";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, encoding));
 			StringBuilder builder = new StringBuilder();
 			while (true) {
 				String line = reader.readLine();

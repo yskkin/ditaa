@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.stathissideris.ascii2image.core.ProcessingOptions;
 import org.stathissideris.ascii2image.text.AbstractionGrid;
 import org.stathissideris.ascii2image.text.CellSet;
 import org.stathissideris.ascii2image.text.TextGrid;
@@ -51,6 +52,17 @@ public class TextGridTest {
 		assertThat(testee.getRow(6).toString(), is("  +-----+  "));
 		assertThat(testee.getRow(7).toString(), is("           "));
 		assertThat(testee.getRow(8).toString(), is("           "));
+	}
+
+	@Test public void testLoadFrom_encoding() throws Exception {
+		// Given
+		TextGrid testee = new TextGrid();
+		ProcessingOptions option = new ProcessingOptions();
+		option.setCharacterEncoding("shift-jis");
+		testee.loadFrom("tests/text/sjis.txt", option);
+		// Then
+		assertThat(testee.getRow(2).toString(), is("  シフトJIS  "));
+		assertThat(testee.getRow(3).toString(), is("  表示      "));
 	}
 
 	@Test public void testFillContinuousAreaSquareOutside() throws FileNotFoundException, IOException {

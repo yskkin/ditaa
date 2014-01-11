@@ -1258,20 +1258,8 @@ public class TextGrid {
 		int blankBorderSize = 2;
 		
 		int maxLength = 0;
-		int index = 0;
-		
-		String encoding = null;
-		if(options != null) encoding = options.getCharacterEncoding();
-		
-		for (StringBuilder sb : rows){
-			String row = sb.toString();
-			if(encoding != null){
-				byte[] bytes = row.getBytes();
-				row = new String(bytes, encoding);
-			}
-			if(row.length() > maxLength) maxLength = row.length();
-			rows.set(index, new StringBuilder(row));
-			index++;
+		for (StringBuilder sb : rows) {
+			maxLength = Math.max(maxLength, sb.length());
 		}
 
 		List<StringBuilder> newRows = new ArrayList<StringBuilder>();
