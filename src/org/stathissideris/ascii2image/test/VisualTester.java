@@ -47,8 +47,9 @@ import static org.junit.Assert.*;
 import org.stathissideris.ascii2image.core.ConversionOptions;
 import org.stathissideris.ascii2image.graphics.BitmapRenderer;
 import org.stathissideris.ascii2image.graphics.Diagram;
-import org.stathissideris.ascii2image.graphics.ImageHandler;
 import org.stathissideris.ascii2image.text.TextGrid;
+
+import static org.stathissideris.ascii2image.test.ImageMatcher.*;
 
 /**
  * If ran as a Java application, it produces an HTML report for manual 
@@ -77,7 +78,7 @@ public class VisualTester {
 	}
 
 	@Test
-	public void compareImages() throws FileNotFoundException, IOException {
+	public void compareImages() throws Exception {
 		ConversionOptions options = new ConversionOptions();
 		File actualFile = dir.newFile();
 		File expectedFile = new File(expectedDir + File.separator + textFile.getName() + ".png");
@@ -94,31 +95,7 @@ public class VisualTester {
 		RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);		
 	
 		ImageIO.write(image, "png", actualFile);
-		
-		//compare images pixel-by-pixel
-		BufferedImage actualImage = ImageHandler.instance().loadBufferedImage(actualFile);
-		BufferedImage expectedImage = ImageHandler.instance().loadBufferedImage(expectedFile);
-		
-		assertTrue("Images are not the same size", actualImage.getWidth() == expectedImage.getWidth()
-				&& actualImage.getHeight() == expectedImage.getHeight());
-
-		boolean pixelsEqual = true;
-		int x = 0;
-		int y = 0;
-		
-		OUTER:
-		for(y = 0; y < expectedImage.getHeight(); y++) {
-			for(x = 0; x < expectedImage.getWidth(); x++) {
-				int expectedPixel = expectedImage.getRGB(x, y);
-				int actualPixel = actualImage.getRGB(x, y);
-				if(actualPixel != expectedPixel) {
-					pixelsEqual = false;
-					break OUTER;
-				}
-			}
-		}
-		
-		assertTrue("Images for "+textFile.getName()+" are not pixel-identical, first different pixel at: "+x+","+y, pixelsEqual);
+		assertThat(actualFile, hasSameImageAs(expectedFile));
 	}
 	
 	public VisualTester(File textFile) {
