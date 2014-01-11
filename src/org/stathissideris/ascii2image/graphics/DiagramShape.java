@@ -68,9 +68,6 @@ public class DiagramShape extends DiagramComponent {
 
 	CustomShapeDefinition definition = null;
 
-	public static void main(String[] args) {
-	}
-
 	public static DiagramShape createArrowhead(TextGrid grid, TextGrid.Cell cell, int cellXSize, int cellYSize) {
 		if(!grid.isArrowhead(cell)) return null;
 		if(grid.isNorthArrowhead(cell)) return createNorthArrowhead(grid, cell, cellXSize, cellYSize);
@@ -563,67 +560,9 @@ public class DiagramShape extends DiagramComponent {
 		return result;
 	}
 
-
-	/**
-	 * 
-	 * Returns C, if A is point in cell and B is otherPoint:
-	 * 
-	 * <pre>
-	 *     Cell
-	 *    +-----+
-	 *    |  A  |                  B
-	 *  C *--*--+------------------*
-	 *    |     |
-	 *    +-----+
-	 * </pre>
-	 * 
-	 * @param pointInCell
-	 * @param otherPoint
-	 * @param diagram
-	 * @return
-	 */
-
-	public ShapePoint getCellEdgeProjectionPointBetween(ShapePoint pointInCell, ShapePoint otherPoint, Diagram diagram){
-		if(pointInCell == null || otherPoint == null || diagram == null)
-			throw new IllegalArgumentException("None of the parameters can be null");
-		if(pointInCell.equals(otherPoint))
-			throw new IllegalArgumentException("The two points cannot be the same: "+pointInCell+" and "+otherPoint+" passed");
-
-		ShapePoint result = null;
-		TextGrid.Cell cell = diagram.getCellFor(pointInCell);
-		
-		if(cell == null)
-			throw new RuntimeException("Upexpected error, cannot find cell corresponding to point "+pointInCell+" for diagram "+diagram);
-		
-		if(otherPoint.isNorthOf(pointInCell))
-			result = new ShapePoint(pointInCell.x,
-										diagram.getCellMaxY(cell));
-		else if(otherPoint.isSouthOf(pointInCell))
-			result = new ShapePoint(pointInCell.x,
-										diagram.getCellMinY(cell));
-		else if(otherPoint.isWestOf(pointInCell))
-			result = new ShapePoint(diagram.getCellMaxX(cell),
-										pointInCell.y);
-		else if(otherPoint.isEastOf(pointInCell))
-			result = new ShapePoint(diagram.getCellMinX(cell),
-										pointInCell.y);
-		
-		if(result == null)
-			throw new RuntimeException("Upexpected error, cannot find cell edge point for points "+pointInCell+" and "+otherPoint+" for diagram "+diagram);
-
-		
-		return result;
-	}
-
 	public boolean contains(ShapePoint point){
 		GeneralPath path = makeIntoPath();
 		if(path != null) return path.contains(point);
-		return false;
-	}
-
-	public boolean contains(Rectangle2D rect){
-		GeneralPath path = makeIntoPath();
-		if(path != null) return path.contains(rect);
 		return false;
 	}
 
@@ -653,25 +592,7 @@ public class DiagramShape extends DiagramComponent {
 	public void setType(int i) {
 		type = i;
 	}
-	
-	public void moveEndsToCellEdges(TextGrid grid, Diagram diagram){
-		if(isClosed()) return;
-		
-		ShapePoint linesEnd = (ShapePoint) points.get(0);
-		ShapePoint nextPoint = (ShapePoint) points.get(1);
 
-		ShapePoint projectionPoint = getCellEdgeProjectionPointBetween(linesEnd, nextPoint, diagram);
-		
-		linesEnd.moveTo(projectionPoint);
-
-		linesEnd = (ShapePoint) points.get(points.size() - 1);
-		nextPoint = (ShapePoint) points.get(points.size() - 2);
-
-		projectionPoint = getCellEdgeProjectionPointBetween(linesEnd, nextPoint, diagram);
-		
-		linesEnd.moveTo(projectionPoint);
-	}
-	
 	public void connectEndsToAnchors(TextGrid grid, Diagram diagram){
 		if(isClosed()) return;
 

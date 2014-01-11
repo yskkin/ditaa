@@ -271,7 +271,6 @@ public class Diagram {
 					} else if(shape instanceof DiagramShape) {
 						shapes.add((DiagramShape) shape);
 						((DiagramShape) shape).connectEndsToAnchors(workGrid, this);
-						((DiagramShape) shape).moveEndsToCellEdges(grid, this);
 					}
 				}
 					
