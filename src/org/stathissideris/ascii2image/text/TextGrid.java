@@ -317,26 +317,23 @@ public class TextGrid {
 	}
 
 	public boolean hasBlankCells(){
-		int width = getWidth();
-		int height = getHeight();
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
-				Cell cell = new Cell(x, y);
-				if(isBlank(cell)) return true;
+		Pattern blank = Pattern.compile("\\s");
+		for (int y = 0; y < getHeight(); y++) {
+			Matcher matcher = blank.matcher(rows.get(y));
+			if (matcher.find()) {
+				return true;
 			}
 		}
 		return false;
 	}
 
-
 	public CellSet getAllNonBlank(){
+		Pattern nonBlank = Pattern.compile("\\S");
 		CellSet set = new CellSet();
-		int width = getWidth();
-		int height = getHeight();
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
-				Cell cell = new Cell(x, y);
-				if(!isBlank(cell)) set.add(cell);
+		for (int y = 0; y < getHeight(); y++){
+			Matcher matcher = nonBlank.matcher(rows.get(y));
+			while (matcher.find()) {
+				set.add(new Cell(matcher.start(), y));
 			}
 		}
 		return set;
