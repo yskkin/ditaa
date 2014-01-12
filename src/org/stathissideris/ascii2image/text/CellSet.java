@@ -505,22 +505,14 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	public List<CellSet> breakIntoDistinctBoundaries(){
 		List<CellSet> result = new ArrayList<CellSet>();
 
-		//CellSet tempSet = copyCellSet(this);
-		//tempSet.translate( - this.getMinX() + 1, - this.getMinY() + 1);
-
-//		TextGrid boundaryGrid = new TextGrid(tempSet.getMaxX()+2, tempSet.getMaxY()+2);
-//		boundaryGrid.fillCellsWith(tempSet, '*');
-
 		TextGrid boundaryGrid = new TextGrid(getMaxX()+2, getMaxY()+2);
 		boundaryGrid.fillCellsWith(this, '*');
 
-		
-		Iterator<TextGrid.Cell> it = iterator();
-		while(it.hasNext()){
-			TextGrid.Cell cell = (TextGrid.Cell) it.next();
-			if(boundaryGrid.isBlank(cell.x, cell.y)) continue;
+		for (TextGrid.Cell cell : this) {
+			if (boundaryGrid.isBlank(cell.x, cell.y)) {
+				continue;
+			}
 			CellSet boundarySet = boundaryGrid.fillContinuousArea(cell.x, cell.y, ' ');
-			//boundarySet.translate( this.getMinX() - 1, this.getMinY() - 1);
 			result.add(boundarySet);
 		}
 		return result;
