@@ -21,10 +21,7 @@ package org.stathissideris.ascii2image.text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
-import yskkin.ascii2image.util.Loggers;
 
 /**
  * This is a TextGrid (usually 3x3) that contains the equivalent of a
@@ -81,9 +78,7 @@ public class GridPattern extends TextGrid {
 	
 	private List<Pattern> regExps = new ArrayList<Pattern>(); //TODO optimise: store as PatternS
 	private boolean regExpsAreValid = false;
-	
-	private static final Logger LOG = Loggers.getLogger(GridPattern.class);
-	
+
 	private boolean usesStandardSyntax = false;
 
 	public GridPattern(){
@@ -111,10 +106,9 @@ public class GridPattern extends TextGrid {
 		if(!regExpsAreValid) prepareRegExps(); 
 
 		for(int i = 0; i < grid.getHeight(); i++) {
-			String row = grid.getRow(i).toString();
+			StringBuilder row = grid.getRow(i);
 			Pattern regexp = regExps.get(i);
 			if(!regexp.matcher(row).matches()) {
-				LOG.fine(row + " does not match " + regexp);
 				return false;
 			} 
 		}
@@ -124,13 +118,11 @@ public class GridPattern extends TextGrid {
 	private void prepareRegExps(){
 		regExpsAreValid = true;
 		regExps.clear();
-		LOG.fine("Trying to match:");
-		if(!usesStandardSyntax){
+		if (!usesStandardSyntax) {
 			for (StringBuilder sb : getRows()) {
 				String row = sb.toString();
 				regExps.add(Pattern.compile(makeRegExp(row)));
-				LOG.fine(row + " becomes " + makeRegExp(row));
-			}			
+			}
 		} else {
 			for (StringBuilder sb : getRows()) {
 				String row = sb.toString();

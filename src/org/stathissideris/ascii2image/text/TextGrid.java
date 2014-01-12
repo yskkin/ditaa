@@ -189,17 +189,7 @@ public class TextGrid {
 	}
 
 	public void printDebug(){
-		int i = 0;
-		LOG.finer(
-			"    "
-			+StringUtils.repeatString("0123456789", (int) Math.floor(getWidth()/10)+1));
-		for (StringBuilder sb : rows) {
-			String row = sb.toString();
-			String index = Integer.toString(i);
-			if(i < 10) index = " "+index;
-			LOG.finer(index+" ("+row+")");
-			i++; 
-		}
+		LOG.finer("TextGrid:\n" + getDebugString());
 	}
 
 	public String getDebugString(){
