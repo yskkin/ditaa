@@ -134,11 +134,11 @@ public class AbstractionGrid {
 		List<CellSet> distinct = nonBlank.breakIntoDistinctBoundaries();
 		
 		for (CellSet set : distinct) {
-			TextGrid tempGrid = new TextGrid(grid.getWidth(), grid.getHeight());
+			CellSet smallCellSet = new CellSet();
 			for (TextGrid.Cell cell : set) {
-				tempGrid.set(cell.x / 3, cell.y / 3, '*');
+				smallCellSet.add(new TextGrid.Cell(cell.x / 3, cell.y / 3));
 			}
-			result.add(tempGrid.getAllNonBlank());
+			result.add(smallCellSet);
 		}
 		
 		return result; 
