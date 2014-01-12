@@ -27,12 +27,6 @@ import java.util.ArrayList;
  */
 @SuppressWarnings("serial")
 public class GridPatternGroup extends ArrayList<GridPattern> {
-	public boolean areAllMatchedBy(TextGrid grid){
-		for (GridPattern pattern : this) {
-			if(!pattern.isMatchedBy(grid)) return false;
-		}
-		return true;
-	}
 
 	public boolean isAnyMatchedBy(TextGrid grid){
 		for (GridPattern pattern : this) {
@@ -40,391 +34,306 @@ public class GridPatternGroup extends ArrayList<GridPattern> {
 		}
 		return false;
 	}
-	
-	
-	public void add(GridPattern... patterns) {
-		for(GridPattern p : patterns) add(p);
-	}
-	
+
+	public static final GridPatternGroup normalCorner1Criteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".[.",
+					"~+(",
+					".^."));
+		}
+	};
+	public static final GridPatternGroup normalCorner2Criteria = new GridPatternGroup(){
+		{
+			add(new GridPattern(
+					".[.",
+					"(+~",
+					".^."));
+		}
+	};
+	public static final GridPatternGroup normalCorner3Criteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".^.",
+					"(+~",
+					".[."));
+		}
+	};
+	public static final GridPatternGroup normalCorner4Criteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".^.",
+					"~+(",
+					".[."));
+		}
+	};
+
+	public static final GridPatternGroup roundCorner1Criteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".[.",
+					"~/4",
+					".2."));
+		}
+	};
+	public static final GridPatternGroup roundCorner2Criteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".[.",
+					"4\\~",
+					".2."));
+		}
+	};
+	public static final GridPatternGroup roundCorner3Criteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".6.",
+					"4/~",
+					".[."));
+		}
+	};
+	public static final GridPatternGroup roundCorner4Criteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".6.",
+					"~\\8",
+					".[."));
+		}
+	};
+
 	//TODO: define criteria for on-line type?
-	
-	public static final GridPatternGroup cornerCriteria = new GridPatternGroup();
-	public static final GridPatternGroup normalCornerCriteria = new GridPatternGroup();
-	public static final GridPatternGroup roundCornerCriteria = new GridPatternGroup();
 
-	public static final GridPatternGroup corner1Criteria = new GridPatternGroup();
-	public static final GridPatternGroup corner2Criteria = new GridPatternGroup();
-	public static final GridPatternGroup corner3Criteria = new GridPatternGroup();
-	public static final GridPatternGroup corner4Criteria = new GridPatternGroup();
-
-	
-	public static final GridPatternGroup normalCorner1Criteria = new GridPatternGroup();
-	public static final GridPatternGroup normalCorner2Criteria = new GridPatternGroup();
-	public static final GridPatternGroup normalCorner3Criteria = new GridPatternGroup();
-	public static final GridPatternGroup normalCorner4Criteria = new GridPatternGroup();
-
-	public static final GridPatternGroup roundCorner1Criteria = new GridPatternGroup();
-	public static final GridPatternGroup roundCorner2Criteria = new GridPatternGroup();
-	public static final GridPatternGroup roundCorner3Criteria = new GridPatternGroup();
-	public static final GridPatternGroup roundCorner4Criteria = new GridPatternGroup();
-	
-	public static final GridPatternGroup intersectionCriteria = new GridPatternGroup();
-	public static final GridPatternGroup TCriteria = new GridPatternGroup();
-	public static final GridPatternGroup inverseTCriteria = new GridPatternGroup();
-	public static final GridPatternGroup KCriteria = new GridPatternGroup();
-	public static final GridPatternGroup inverseKCriteria = new GridPatternGroup();
-
-	public static final GridPatternGroup crossCriteria = new GridPatternGroup();
-	
-	public static final GridPatternGroup stubCriteria = new GridPatternGroup();
-	public static final GridPatternGroup verticalLinesEndCriteria = new GridPatternGroup();
-	public static final GridPatternGroup horizontalLinesEndCriteria = new GridPatternGroup();
-	public static final GridPatternGroup linesEndCriteria = new GridPatternGroup();
-	
-	public static final GridPatternGroup crossOnLineCriteria = new GridPatternGroup();
-	public static final GridPatternGroup horizontalCrossOnLineCriteria = new GridPatternGroup();
-	public static final GridPatternGroup verticalCrossOnLineCriteria = new GridPatternGroup();
-
-	public static final GridPatternGroup starOnLineCriteria = new GridPatternGroup();
-	public static final GridPatternGroup horizontalStarOnLineCriteria = new GridPatternGroup();
-	public static final GridPatternGroup verticalStarOnLineCriteria = new GridPatternGroup();
-
-	public static final GridPatternGroup loneDiagonalCriteria = new GridPatternGroup();
-
-	static {
-		GridPattern crossPattern1 = new GridPattern(
-				".6.",
-				"4+8",
-				".2."
-			);
-		crossCriteria.add(crossPattern1);
-		
-		GridPattern KPattern1 = new GridPattern(
-				".6.",
-				"%4+8",
-				".2."
-			);
-		KCriteria.add(KPattern1);
-
-		GridPattern inverseKPattern1 = new GridPattern(
-				".6.",
-				"4+%8",
-				".2."
-			);
-		inverseKCriteria.add(inverseKPattern1);
-
-		GridPattern TPattern1 = new GridPattern(
-				".%6.",
-				"4+8",
-				".2."
-			);
-		TCriteria.add(TPattern1);
-
-		GridPattern inverseTPattern1 = new GridPattern(
-				".6.",
-				"4+8",
-				".%2."
-			);
-		inverseTCriteria.add(inverseTPattern1);
-
-
-		// ****** normal corners *******
-
-		GridPattern normalCorner1Pattern1 = new GridPattern(
-				".[.",
-				"~+(",
-				".^."
-			);
-		normalCorner1Criteria.add(normalCorner1Pattern1);
-
-		GridPattern normalCorner2Pattern1 = new GridPattern(
-				".[.",
-				"(+~",
-				".^."
-			);
-		normalCorner2Criteria.add(normalCorner2Pattern1);
-
-		GridPattern normalCorner3Pattern1 = new GridPattern(
-				".^.",
-				"(+~",
-				".[."
-			);
-		normalCorner3Criteria.add(normalCorner3Pattern1);
-
-		GridPattern normalCorner4Pattern1 = new GridPattern(
-				".^.",
-				"~+(",
-				".[."
-			);
-		normalCorner4Criteria.add(normalCorner4Pattern1);
-
-		// ******* round corners *******
-
-		GridPattern roundCorner1Pattern1 = new GridPattern(
-				".[.",
-				"~/4",
-				".2."
-			);
-		roundCorner1Criteria.add(roundCorner1Pattern1);
-
-		GridPattern roundCorner2Pattern1 = new GridPattern(
-				".[.",
-				"4\\~",
-				".2."
-			);
-		roundCorner2Criteria.add(roundCorner2Pattern1);
-
-		GridPattern roundCorner3Pattern1 = new GridPattern(
-				".6.",
-				"4/~",
-				".[."
-			);
-		roundCorner3Criteria.add(roundCorner3Pattern1);
-
-		GridPattern roundCorner4Pattern1 = new GridPattern(
-				".6.",
-				"~\\8",
-				".[."
-			);
-		roundCorner4Criteria.add(roundCorner4Pattern1);
-
-		//stubs
-
-		GridPattern stubPattern1 = new GridPattern(
-				"!^!",
-				"!+!",
-				".!."
-			);
-		stubCriteria.add(stubPattern1);
-
-		GridPattern stubPattern2 = new GridPattern(
-				"!^!",
-				"!+!",
-				".-."
-			);
-		stubCriteria.add(stubPattern2);
-
-		GridPattern stubPattern3 = new GridPattern(
-				"!!.",
-				"(+!",
-				"!!."
-			);
-		stubCriteria.add(stubPattern3);
-
-		GridPattern stubPattern4 = new GridPattern(
-				"!!.",
-				"(+|",
-				"!!."
-			);
-		stubCriteria.add(stubPattern4);
-
-		GridPattern stubPattern5 = new GridPattern(
-				".!.",
-				"!+!",
-				"!^!"
-			);
-		stubCriteria.add(stubPattern5);
-
-		GridPattern stubPattern6 = new GridPattern(
-				".-.",
-				"!+!",
-				"!^!"
-			);
-		stubCriteria.add(stubPattern6);
-		
-		GridPattern stubPattern7 = new GridPattern(
-				".!!",
-				"!+(",
-				".!!"
-			);
-		stubCriteria.add(stubPattern7);
-
-		GridPattern stubPattern8 = new GridPattern(
-				".!!",
-				"|+(",
-				".!!"
-			);
-		stubCriteria.add(stubPattern8);
-
-
-		// ****** ends of lines ******
-		GridPattern verticalLinesEndPattern1 = new GridPattern(
-				".^.",
-				".|.",
-				".!."
-			);
-		verticalLinesEndCriteria.add(verticalLinesEndPattern1);
-
-		GridPattern verticalLinesEndPattern2 = new GridPattern(
-				".^.",
-				".|.",
-				".-."
-			);
-		verticalLinesEndCriteria.add(verticalLinesEndPattern2);
-
-		GridPattern horizontalLinesEndPattern3 = new GridPattern(
-				"...",
-				"(-!",
-				"..."
-			);
-		horizontalLinesEndCriteria.add(horizontalLinesEndPattern3);
-
-		GridPattern horizontalLinesEndPattern4 = new GridPattern(
-				"...",
-				"(-|",
-				"..."
-			);
-		horizontalLinesEndCriteria.add(horizontalLinesEndPattern4);
-
-		GridPattern verticalLinesEndPattern5 = new GridPattern(
-				".!.",
-				".|.",
-				".^."
-			);
-		verticalLinesEndCriteria.add(verticalLinesEndPattern5);
-
-		GridPattern verticalLinesEndPattern6 = new GridPattern(
-				".-.",
-				".|.",
-				".^."
-			);
-		verticalLinesEndCriteria.add(verticalLinesEndPattern6);
-
-		GridPattern horizontalLinesEndPattern7 = new GridPattern(
-				"...",
-				"!-(",
-				"..."
-			);
-		horizontalLinesEndCriteria.add(horizontalLinesEndPattern7);
-
-		GridPattern horizontalLinesEndPattern8 = new GridPattern(
-				"...",
-				"|-(",
-				"..."
-			);
-		horizontalLinesEndCriteria.add(horizontalLinesEndPattern8);
-
-
-
-		// ****** others *******
-
-		GridPattern horizontalCrossOnLinePattern1 = new GridPattern(
-				"...",
-				"(+(",
-				"..."
-			);
-		horizontalCrossOnLineCriteria.add(horizontalCrossOnLinePattern1);
-
-		GridPattern verticalCrossOnLinePattern1 = new GridPattern(
-				".^.",
-				".+.",
-				".^."
-			);
-		verticalCrossOnLineCriteria.add(verticalCrossOnLinePattern1);
-
-
-		GridPattern horizontalStarOnLinePattern1 = new GridPattern(
-				"...",
-				"(*(",
-				"..."
-			);
-		horizontalStarOnLineCriteria.add(horizontalStarOnLinePattern1);
-
-		GridPattern horizontalStarOnLinePattern2 = new GridPattern(
-				"...",
-				"!*(",
-				"..."
-			);
-		horizontalStarOnLineCriteria.add(horizontalStarOnLinePattern2);
-
-		GridPattern horizontalStarOnLinePattern3 = new GridPattern(
-				"...",
-				"(*!",
-				"..."
-			);
-		horizontalStarOnLineCriteria.add(horizontalStarOnLinePattern3);
-
-
-		GridPattern verticalStarOnLinePattern1 = new GridPattern(
-				".^.",
-				".*.",
-				".^."
-			);
-		verticalStarOnLineCriteria.add(verticalStarOnLinePattern1);
-
-		GridPattern verticalStarOnLinePattern2 = new GridPattern(
-				".!.",
-				".*.",
-				".^."
-			);
-		verticalStarOnLineCriteria.add(verticalStarOnLinePattern2);
-
-		GridPattern verticalStarOnLinePattern3 = new GridPattern(
-				".^.",
-				".*.",
-				".!."
-			);
-		verticalStarOnLineCriteria.add(verticalStarOnLinePattern3);
-
-		
-		GridPattern loneDiagonalPattern1 = new GridPattern(
-				".%6%7",
-				"%4/%8",
-				"%3%2."
-			);
-		loneDiagonalCriteria.add(loneDiagonalPattern1);
-
-		GridPattern loneDiagonalPattern2 = new GridPattern(
-				"%1%6.",
-				"%4\\%8",
-				".%2%5"
-			);
-		loneDiagonalCriteria.add(loneDiagonalPattern2);
-
-
-		//groups
-		
-		intersectionCriteria.addAll(crossCriteria);
-		intersectionCriteria.addAll(KCriteria);
-		intersectionCriteria.addAll(TCriteria);
-		intersectionCriteria.addAll(inverseKCriteria);
-		intersectionCriteria.addAll(inverseTCriteria);
-
-		normalCornerCriteria.addAll(normalCorner1Criteria);
-		normalCornerCriteria.addAll(normalCorner2Criteria);
-		normalCornerCriteria.addAll(normalCorner3Criteria);
-		normalCornerCriteria.addAll(normalCorner4Criteria);
-
-		roundCornerCriteria.addAll(roundCorner1Criteria);
-		roundCornerCriteria.addAll(roundCorner2Criteria);
-		roundCornerCriteria.addAll(roundCorner3Criteria);
-		roundCornerCriteria.addAll(roundCorner4Criteria);
-		
-		corner1Criteria.addAll(normalCorner1Criteria);
-		corner1Criteria.addAll(roundCorner1Criteria);
-
-		corner2Criteria.addAll(normalCorner2Criteria);
-		corner2Criteria.addAll(roundCorner2Criteria);
-
-		corner3Criteria.addAll(normalCorner3Criteria);
-		corner3Criteria.addAll(roundCorner3Criteria);
-
-		corner4Criteria.addAll(normalCorner4Criteria);
-		corner4Criteria.addAll(roundCorner4Criteria);
-
-		cornerCriteria.addAll(normalCornerCriteria);
-		cornerCriteria.addAll(roundCornerCriteria);
-		
-		crossOnLineCriteria.addAll(horizontalCrossOnLineCriteria);
-		crossOnLineCriteria.addAll(verticalCrossOnLineCriteria);
-
-		starOnLineCriteria.addAll(horizontalStarOnLineCriteria);
-		starOnLineCriteria.addAll(verticalStarOnLineCriteria);
-
-
-		linesEndCriteria.addAll(horizontalLinesEndCriteria);
-		linesEndCriteria.addAll(verticalLinesEndCriteria);		
-		linesEndCriteria.addAll(stubCriteria);
-
-	}
+	public static final GridPatternGroup normalCornerCriteria = new GridPatternGroup() {
+		{
+			addAll(normalCorner1Criteria);
+			addAll(normalCorner2Criteria);
+			addAll(normalCorner3Criteria);
+			addAll(normalCorner4Criteria);
+		}
+	};
+	public static final GridPatternGroup roundCornerCriteria = new GridPatternGroup() {
+		{
+			addAll(roundCorner1Criteria);
+			addAll(roundCorner2Criteria);
+			addAll(roundCorner3Criteria);
+			addAll(roundCorner4Criteria);
+		}
+	};
+
+	public static final GridPatternGroup cornerCriteria = new GridPatternGroup() {
+		{
+			addAll(normalCornerCriteria);
+			addAll(roundCornerCriteria);
+		}
+	};
+
+	public static final GridPatternGroup corner1Criteria = new GridPatternGroup() {
+		{
+			addAll(normalCorner1Criteria);
+			addAll(roundCorner1Criteria);
+		}
+	};
+	public static final GridPatternGroup corner2Criteria = new GridPatternGroup() {
+		{
+			addAll(normalCorner2Criteria);
+			addAll(roundCorner2Criteria);
+		}
+	};
+	public static final GridPatternGroup corner3Criteria = new GridPatternGroup() {
+		{
+			addAll(normalCorner3Criteria);
+			addAll(roundCorner3Criteria);
+		}
+	};
+	public static final GridPatternGroup corner4Criteria = new GridPatternGroup() {
+		{
+			addAll(normalCorner4Criteria);
+			addAll(roundCorner4Criteria);
+		}
+	};
+
+	public static final GridPatternGroup TCriteria = new GridPatternGroup(){
+		{
+			add(new GridPattern(
+					".%6.",
+					"4+8",
+					".2."));
+		}
+	};
+	public static final GridPatternGroup inverseTCriteria = new GridPatternGroup(){
+		{
+			add(new GridPattern(
+					".6.",
+					"4+8",
+					".%2."
+			));
+		}
+	};
+	public static final GridPatternGroup KCriteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".6.",
+					"%4+8",
+					".2."));
+		}
+	};
+	public static final GridPatternGroup inverseKCriteria = new GridPatternGroup(){
+		{
+			add(new GridPattern(
+					".6.",
+					"4+%8",
+					".2."));
+		}
+	};
+
+	public static final GridPatternGroup crossCriteria = new GridPatternGroup(){
+		{
+			add(new GridPattern(
+					".6.",
+					"4+8",
+					".2."));
+		}
+	};
+
+	public static final GridPatternGroup intersectionCriteria = new GridPatternGroup() {
+		{
+			addAll(crossCriteria);
+			addAll(KCriteria);
+			addAll(TCriteria);
+			addAll(inverseKCriteria);
+			addAll(inverseTCriteria);
+		}
+	};
+
+	public static final GridPatternGroup stubCriteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					"!^!",
+					"!+!",
+					".!."));
+			add(new GridPattern(
+					"!^!",
+					"!+!",
+					".-."));
+			add(new GridPattern(
+					"!!.",
+					"(+!",
+					"!!."));
+			add(new GridPattern(
+					"!!.",
+					"(+|",
+					"!!."));
+			add(new GridPattern(
+					".!.",
+					"!+!",
+					"!^!"));
+			add(new GridPattern(
+					".-.",
+					"!+!",
+					"!^!"));
+			add(new GridPattern(
+					".!!",
+					"!+(",
+					".!!"));
+			add(new GridPattern(
+					".!!",
+					"|+(",
+					".!!"));
+		}
+	};
+
+	public static final GridPatternGroup linesEndCriteria = new GridPatternGroup() {
+		{
+			addAll(stubCriteria);
+			// horizontal
+			add(new GridPattern(
+					"...",
+					"(-!",
+					"..."));
+			add(new GridPattern(
+					"...",
+					"(-|",
+					"..."));
+			add(new GridPattern(
+					"...",
+					"!-(",
+					"..."));
+			add(new GridPattern(
+					"...",
+					"|-(",
+					"..."));
+			// vertical
+			add(new GridPattern(
+					".^.",
+					".|.",
+					".!."));
+			add(new GridPattern(
+					".^.",
+					".|.",
+					".-."));
+			add(new GridPattern(
+					".!.",
+					".|.",
+					".^."));
+			add(new GridPattern(
+					".-.",
+					".|.",
+					".^."));
+		}
+	};
+
+	public static final GridPatternGroup horizontalCrossOnLineCriteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					"...",
+					"(+(",
+					"..."));
+		}
+	};
+	public static final GridPatternGroup verticalCrossOnLineCriteria = new GridPatternGroup() {
+		{
+			add(new GridPattern(
+					".^.",
+					".+.",
+					".^."));
+		}
+	};
+
+	public static final GridPatternGroup crossOnLineCriteria = new GridPatternGroup() {
+		{
+			addAll(horizontalCrossOnLineCriteria);
+			addAll(verticalCrossOnLineCriteria);
+		}
+	};
+
+	public static final GridPatternGroup starOnLineCriteria = new GridPatternGroup() {
+		{
+			// horizontal
+			add(new GridPattern(
+					"...",
+					"(*(",
+					"..."));
+			add(new GridPattern(
+					"...",
+					"!*(",
+					"..."));
+			add(new GridPattern(
+					"...",
+					"(*!",
+					"..."));
+			// vertical
+			add(new GridPattern(
+					".^.",
+					".*.",
+					".^."));
+			add(new GridPattern(
+					".!.",
+					".*.",
+					".^."));
+			add(new GridPattern(
+					".^.",
+					".*.",
+					".!."));
+		}
+	};
 }
