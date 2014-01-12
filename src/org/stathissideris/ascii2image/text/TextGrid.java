@@ -30,6 +30,7 @@ import org.stathissideris.ascii2image.core.FileUtils;
 import org.stathissideris.ascii2image.core.ProcessingOptions;
 
 import yskkin.ascii2image.util.Loggers;
+import yskkin.ascii2image.util.PresetColorCode;
 
 
 /**
@@ -62,17 +63,6 @@ public class TextGrid {
 		put(7, new Character[]{'/'});
 		put(8, new Character[]{'-', '=', '+', '\\', '/'});
 	}};
-
-	private static HashMap<String, String> humanColorCodes = new HashMap<String, String>();
-	static {
-		humanColorCodes.put("GRE", "9D9");
-		humanColorCodes.put("BLU", "55B");
-		humanColorCodes.put("PNK", "FAA");
-		humanColorCodes.put("RED", "E32");
-		humanColorCodes.put("YEL", "FF3");
-		humanColorCodes.put("BLK", "000");
-		
-	}
 
 	private static HashSet<String> markupTags =
 		new HashSet<String>();
@@ -297,25 +287,6 @@ public class TextGrid {
 		return result;
 	}
 
-
-	private void replaceHumanColorCodes(){
-		for (StringBuilder row : rows) {
-			for (Map.Entry<String, String> entry : humanColorCodes.entrySet()) {
-				String humanCode = entry.getKey();
-				String hexCode = entry.getValue();
-
-				humanCode = "c" + humanCode;
-				hexCode = "c" + hexCode;
-				int start = row.indexOf(humanCode);
-				while (start != -1) {
-					int end = start + humanCode.length();
-					row.replace(start, end, hexCode);
-					start = row.indexOf(humanCode, end	);
-				}
-			}
-		}
-	}
-
 	public boolean hasBlankCells(){
 		Pattern blank = Pattern.compile("\\s");
 		for (int y = 0; y < getHeight(); y++) {
@@ -427,7 +398,6 @@ public class TextGrid {
 		//since the south-pointing arrowheads
 		//are determined based on the surrounding boundaries
 		removeArrowheads();
-		removeColorCodes();
 		removeBoundaries();
 		removeMarkupTags();
 	}
@@ -441,16 +411,6 @@ public class TextGrid {
 				if(isArrowhead(cell)) set(cell, ' ');
 			}
 		}		
-	}
-
-	private void removeColorCodes(){
-		for (CellColorPair colorPair : findColorCodes()) {
-			Cell cell = colorPair.cell;
-			set(cell, ' ');
-			cell = cell.getEast(); set(cell, ' ');
-			cell = cell.getEast(); set(cell, ' ');
-			cell = cell.getEast(); set(cell, ' ');
-		}
 	}
 
 	private void removeBoundaries(){
@@ -487,20 +447,32 @@ public class TextGrid {
 		return result;
 	}
 
-
-	public List<CellColorPair> findColorCodes(){
-		Pattern colorCodePattern = Pattern.compile("c([A-F0-9]{3})");
+	/**
+	 * Read color code on TextGrid and remove it from underlying TextGrid.
+	 * 
+	 * @return color code appeared on TextGrid.
+	 */
+	public List<CellColorPair> resolveColorCode() {
+		Pattern colorCodePattern = Pattern.compile("c(([A-F0-9]{3})|(GRE|BLU|PNK|RED|YEL|BLK))");
 		List<CellColorPair> result = new ArrayList<CellColorPair>();
 
 		for (int y = 0; y < getHeight(); y++) {
 			StringBuilder row = rows.get(y);
 			Matcher matcher = colorCodePattern.matcher(row);
 			while (matcher.find()) {
-				String rawColorCode = matcher.group(1);
-				int r = Integer.valueOf(rawColorCode.substring(0, 1), 16) * 17;
-				int g = Integer.valueOf(rawColorCode.substring(1, 2), 16) * 17;
-				int b = Integer.valueOf(rawColorCode.substring(2, 3), 16) * 17;
-				result.add(new CellColorPair(new Cell(matcher.start(), y), new Color(r, g, b)));
+				Color color;
+				String rawColorCode = matcher.group(2);
+				if (rawColorCode != null) {
+					int r = Integer.valueOf(rawColorCode.substring(0, 1), 16) * 17;
+					int g = Integer.valueOf(rawColorCode.substring(1, 2), 16) * 17;
+					int b = Integer.valueOf(rawColorCode.substring(2, 3), 16) * 17;
+					color = new Color(r, g, b);
+				} else {
+					String presetColorCode = matcher.group(3);
+					color = new PresetColorCode().getColor(presetColorCode);
+				}
+				result.add(new CellColorPair(new Cell(matcher.start(), y), color));
+				row.replace(matcher.start(), matcher.end(), "    ");
 			}
 		}
 		LOG.info(result.size()+" color codes found");
@@ -1259,7 +1231,6 @@ public class TextGrid {
 		rows = newRows;
 		
 		replaceBullets();
-		replaceHumanColorCodes();
 		
 		return true;
 	}

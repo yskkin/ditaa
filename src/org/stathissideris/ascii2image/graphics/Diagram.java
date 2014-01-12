@@ -121,6 +121,7 @@ public class Diagram {
 		width = grid.getWidth() * cellWidth;
 		height = grid.getHeight() * cellHeight;
 		
+		List<CellColorPair> colorPair = grid.resolveColorCode();
 		TextGrid workGrid = new TextGrid(grid);
 		workGrid.replaceTypeOnLine();
 		workGrid.replacePointMarkersOnLine();
@@ -279,7 +280,7 @@ public class Diagram {
 
 		//assign color codes to shapes
 		//TODO: text on line should not change its color
-		for (CellColorPair pair : grid.findColorCodes()) {
+		for (CellColorPair pair : colorPair) {
 			ShapePoint point =
 				new ShapePoint(getCellMidX(pair.cell), getCellMidY(pair.cell));
 			DiagramShape containingShape = findSmallestShapeContaining(point);
