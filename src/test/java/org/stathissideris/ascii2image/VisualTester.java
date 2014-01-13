@@ -17,7 +17,7 @@
  * License along with ditaa.  If not, see <http://www.gnu.org/licenses/>.
  *   
  */
-package org.stathissideris.ascii2image.test;
+package org.stathissideris.ascii2image;
 
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -48,7 +48,7 @@ import org.stathissideris.ascii2image.graphics.BitmapRenderer;
 import org.stathissideris.ascii2image.graphics.Diagram;
 import org.stathissideris.ascii2image.text.TextGrid;
 
-import static org.stathissideris.ascii2image.test.ImageMatcher.*;
+import static yskkin.ascii2image.ImageMatcher.*;
 
 /**
  * If ran as a Java application, it produces an HTML report for manual 

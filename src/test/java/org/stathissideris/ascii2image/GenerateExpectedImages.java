@@ -17,33 +17,19 @@
  * License along with ditaa.  If not, see <http://www.gnu.org/licenses/>.
  *   
  */
-package org.stathissideris.ascii2image.test;
+package org.stathissideris.ascii2image;
 
-import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.stathissideris.ascii2image.text.CellSet;
-import org.stathissideris.ascii2image.text.GridPattern;
-import org.stathissideris.ascii2image.text.TextGrid;
-
-public class GridPatternTest {
-	TextGrid g = new TextGrid(6,4);
-	GridPattern pattern = new GridPattern();
-	
-	@Before public void setUp() {
-		g.setRow(0, "+----+");
-		g.setRow(1, "|    |");
-		g.setRow(2, "|    |");
-		g.setRow(3, "+----+");
+/**
+ * Run this to generate the expected (correct) images for unit testing
+ * when the code is at a state that produces correct output.
+ * 
+ * @author sideris
+ *
+ */
+public class GenerateExpectedImages {
+	public static void main(String[] args) throws Exception {
+		VisualTester.generateImages(VisualTester.getFilesToRender(), "tests/images-expected");
+		System.out.println("Done");	
 	}
-	
-	@Test public void testContains() {
-		pattern.isMatchedBy(g);
-		pattern.isMatchedBy(g);
-		pattern.isMatchedBy(g);
-		pattern.isMatchedBy(g);
-		pattern.isMatchedBy(g);
-	}
-
 }

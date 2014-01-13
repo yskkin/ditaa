@@ -1,4 +1,4 @@
-package org.stathissideris.ascii2image.test;
+package org.stathissideris.ascii2image.core;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;

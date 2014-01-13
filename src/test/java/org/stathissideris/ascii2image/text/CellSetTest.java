@@ -17,7 +17,7 @@
  * License along with ditaa.  If not, see <http://www.gnu.org/licenses/>.
  *   
  */
-package org.stathissideris.ascii2image.test;
+package org.stathissideris.ascii2image.text;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;

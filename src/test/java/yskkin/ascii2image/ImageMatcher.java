@@ -1,4 +1,4 @@
-package org.stathissideris.ascii2image.test;
+package yskkin.ascii2image;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
