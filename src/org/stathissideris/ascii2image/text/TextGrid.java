@@ -31,6 +31,7 @@ import org.stathissideris.ascii2image.core.ProcessingOptions;
 
 import yskkin.ascii2image.util.Loggers;
 import yskkin.ascii2image.util.PresetColorCode;
+import yskkin.ascii2image.util.PresetTag;
 
 
 /**
@@ -64,21 +65,10 @@ public class TextGrid {
 		put(8, new Character[]{'-', '=', '+', '\\', '/'});
 	}};
 
-	private static HashSet<String> markupTags =
-		new HashSet<String>();
-
-	static {
-		markupTags.add("d");
-		markupTags.add("s");
-		markupTags.add("io");
-		markupTags.add("c");
-		markupTags.add("mo");
-		markupTags.add("tr");
-		markupTags.add("o");
-	}
+	private static PresetTag tag = new PresetTag();
 
 	public void addToMarkupTags(Collection<String> tags){
-		markupTags.addAll(tags);
+		tag.addAllTag(tags);
 	}
 
 	public TextGrid(){
@@ -399,7 +389,6 @@ public class TextGrid {
 		//are determined based on the surrounding boundaries
 		removeArrowheads();
 		removeBoundaries();
-		removeMarkupTags();
 	}
 
 	private void removeArrowheads(){
@@ -470,33 +459,25 @@ public class TextGrid {
 		return result;
 	}
 
-	public List<CellTagPair> findMarkupTags(){
-		Pattern tagPattern = Pattern.compile("\\{(.+?)\\}");
+	public List<CellTagPair> resolveTag() {
+		Pattern tagPattern = tag.getTagPatern();
 		List<CellTagPair> result = new ArrayList<CellTagPair>();
 
 		for (int y = 0; y < getHeight(); y++) {
-			Matcher matcher = tagPattern.matcher(rows.get(y));
+			StringBuilder row = rows.get(y);
+			Matcher matcher = tagPattern.matcher(row);
 			while (matcher.find()) {
 				String tagName = matcher.group(1);
-				if (markupTags.contains(tagName)) {
-					int x = matcher.start();
-					LOG.fine("found tag " + tagName + " at " + x + ", " + y);
-					result.add(new CellTagPair(new Cell(x, y), tagName));
-				}
+				int x = matcher.start();
+				int end = matcher.end();
+				LOG.fine("found tag " + tagName + " at " + x + ", " + y);
+				result.add(new CellTagPair(new Cell(x, y), tagName));
+				String padding = StringUtils.repeatString(" ", end - x);
+				row.replace(x, end, padding);
 			}
 		}
 		return result;
 	}
-		
-	private void removeMarkupTags(){
-		for (CellTagPair pair : findMarkupTags()) {
-			String tagName = pair.tag;
-			if(tagName == null) continue;
-			int length = 2 + tagName.length();
-			writeStringTo(pair.cell, StringUtils.repeatString(" ", length));
-		}
-	}
-		
 
 
 	private boolean matchesAny(GridPatternGroup criteria){

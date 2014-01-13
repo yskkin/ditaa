@@ -122,6 +122,7 @@ public class Diagram {
 		height = grid.getHeight() * cellHeight;
 		
 		List<CellColorPair> colorPair = grid.resolveColorCode();
+		List<CellTagPair> tagPair = grid.resolveTag();
 		TextGrid workGrid = new TextGrid(grid);
 		workGrid.replaceTypeOnLine();
 		workGrid.replacePointMarkersOnLine();
@@ -290,7 +291,7 @@ public class Diagram {
 		}
 
 		//assign markup to shapes
-		for (CellTagPair pair : grid.findMarkupTags()) {
+		for (CellTagPair pair : tagPair) {
 			ShapePoint point =
 				new ShapePoint(getCellMidX(pair.cell), getCellMidY(pair.cell));
 			
