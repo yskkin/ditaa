@@ -19,7 +19,6 @@
  */
 package org.stathissideris.ascii2image.test;
 
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,14 +62,14 @@ import static org.stathissideris.ascii2image.test.ImageMatcher.*;
 public class VisualTester {
 
 	private static final String HTMLReportName = "test_suite";
-	private static final String expectedDir = "tests/images-expected";
+	private static final String expectedDir = "/tests/images-expected";
 	
 	private File textFile;
 
 	@Rule
 	public TemporaryFolder dir = new TemporaryFolder();
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception {
 		String reportDir = "tests/images";
 		VisualTester.createHTMLTestReport(getFilesToRender(), reportDir, HTMLReportName);
 		
@@ -81,8 +80,8 @@ public class VisualTester {
 	public void compareImages() throws Exception {
 		ConversionOptions options = new ConversionOptions();
 		File actualFile = dir.newFile();
-		File expectedFile = new File(expectedDir + File.separator + textFile.getName() + ".png");
-		
+		File expectedFile = new File(getClass().getResource(expectedDir + "/" + textFile.getName() + ".png").toURI());
+
 		if(!expectedFile.exists()){
 			System.out.println("Skipping " + textFile + " -- reference image does not exist");
 			throw new FileNotFoundException("Reference image "+expectedFile+" does not exist");
@@ -103,7 +102,7 @@ public class VisualTester {
 	}
 	
 	@Parameters
-	public static Collection<File[]> getTestParameters() {
+	public static Collection<File[]> getTestParameters() throws Exception {
 		List<File> filesToRender = getFilesToRender();
 		List<File[]> result = new ArrayList<File[]>();
 
@@ -114,10 +113,10 @@ public class VisualTester {
 		return result;
 	}
 	
-	public static List<File> getFilesToRender() {
-		String textDir = "tests/text";
+	public static List<File> getFilesToRender() throws Exception {
+		String textDir = "/tests/text";
 		
-		File textDirObj = new File(textDir);
+		File textDirObj = new File(VisualTester.class.getResource(textDir).toURI());
 		ArrayList<File> textFiles
 			= new ArrayList<File>(Arrays.asList(textDirObj.listFiles()));
 	

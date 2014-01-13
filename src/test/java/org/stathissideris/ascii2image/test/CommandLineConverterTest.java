@@ -3,6 +3,8 @@ package org.stathissideris.ascii2image.test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
+import java.io.File;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;
@@ -103,12 +105,16 @@ public class CommandLineConverterTest {
 	}
 
 	@Test
-	public void testPrintUsage() {
-		execute("tests/text/ditaa_bug.txt");
+	public void testPrintUsage() throws Exception {
+		execute(getFilePath("/tests/text/ditaa_bug.txt"));
 		assertThat(out.getLog(), containsString(NOTICE));
 	}
 
 	private void execute(String... args) {
 		CommandLineConverter.main(args);
+	}
+
+	private String getFilePath(String name) throws Exception {
+		return new File(CommandLineConverterTest.class.getResource(name).toURI()).getAbsolutePath();
 	}
 }

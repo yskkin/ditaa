@@ -22,8 +22,7 @@ package org.stathissideris.ascii2image.test;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.File;
 import java.util.List;
 
 import org.junit.Before;
@@ -42,7 +41,7 @@ public class TextGridTest {
 	
 	@Test public void testLoadFrom() throws Exception {
 		TextGrid testee = new TextGrid();
-		testee.loadFrom("tests/text/simple_square01.txt");
+		testee.loadFrom(getFilePath("/tests/text/simple_square01.txt"));
 		assertThat(testee.getHeight(), is(5 + 4)); // 2 top + 2 bottom blank rows
 		assertThat(testee.getWidth(), is(7 + 2 * 2)); // blankBorderSize * 2
 		assertThat(testee.getRow(0).toString(), is("           "));
@@ -61,7 +60,7 @@ public class TextGridTest {
 		TextGrid testee = new TextGrid();
 		ProcessingOptions option = new ProcessingOptions();
 		option.setCharacterEncoding("shift-jis");
-		testee.loadFrom("tests/text/sjis.txt", option);
+		testee.loadFrom(getFilePath("/tests/text/sjis.txt"), option);
 		// Then
 		assertThat(testee.getRow(2).toString(), is("  シフトJIS  "));
 		assertThat(testee.getRow(3).toString(), is("  表示      "));
@@ -70,7 +69,7 @@ public class TextGridTest {
 	@Test public void testFindStrings() throws Exception {
 		// Given
 		TextGrid testee = new TextGrid();
-		testee.loadFrom("tests/text/art1.txt");
+		testee.loadFrom(getFilePath("/tests/text/art1.txt"));
 		testee.removeNonText();
 		// When
 		List<CellStringPair> strings = testee.findStrings();
@@ -86,10 +85,10 @@ public class TextGridTest {
 				new CellStringPair(new Cell(12, 51), "/ ")));
 	}
 
-	@Test public void testFillContinuousAreaSquareOutside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSquareOutside() throws Exception {
 		TextGrid squareGrid;
 		squareGrid = new TextGrid();
-		squareGrid.loadFrom("tests/text/simple_square01.txt");
+		squareGrid.loadFrom(getFilePath("/tests/text/simple_square01.txt"));
 
 		CellSet filledArea = squareGrid.fillContinuousArea(0, 0, '*');
 		int size = filledArea.size();
@@ -103,10 +102,10 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaSquareInside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSquareInside() throws Exception {
 		TextGrid squareGrid;
 		squareGrid = new TextGrid();
-		squareGrid.loadFrom("tests/text/simple_square01.txt");
+		squareGrid.loadFrom(getFilePath("/tests/text/simple_square01.txt"));
 		
 		CellSet filledArea = squareGrid.fillContinuousArea(3, 3, '*');
 		int size = filledArea.size();
@@ -117,10 +116,10 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaUInside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaUInside() throws Exception {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
-		uGrid.loadFrom("tests/text/simple_U01.txt");
+		uGrid.loadFrom(getFilePath("/tests/text/simple_U01.txt"));
 		
 		CellSet filledArea = uGrid.fillContinuousArea(3, 3, '*');
 		int size = filledArea.size();
@@ -134,10 +133,10 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaUOutside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaUOutside() throws Exception {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
-		uGrid.loadFrom("tests/text/simple_U01.txt");
+		uGrid.loadFrom(getFilePath("/tests/text/simple_U01.txt"));
 		
 		CellSet filledArea = uGrid.fillContinuousArea(0, 0, '*');
 		int size = filledArea.size();
@@ -156,10 +155,10 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaSOutside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSOutside() throws Exception {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
-		uGrid.loadFrom("tests/text/simple_S01.txt");
+		uGrid.loadFrom(getFilePath("/tests/text/simple_S01.txt"));
 		
 		CellSet filledArea = uGrid.fillContinuousArea(0, 0, '*');
 		int size = filledArea.size();
@@ -182,10 +181,10 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaSInside1() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSInside1() throws Exception {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
-		uGrid.loadFrom("tests/text/simple_S01.txt");
+		uGrid.loadFrom(getFilePath("/tests/text/simple_S01.txt"));
 		
 		CellSet filledArea = uGrid.fillContinuousArea(3, 3, '*');
 		int size = filledArea.size();
@@ -197,10 +196,10 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaSInside2() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSInside2() throws Exception {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
-		uGrid.loadFrom("tests/text/simple_S01.txt");
+		uGrid.loadFrom(getFilePath("/tests/text/simple_S01.txt"));
 		
 		CellSet filledArea = uGrid.fillContinuousArea(17, 3, '*');
 		int size = filledArea.size();
@@ -213,10 +212,10 @@ public class TextGridTest {
 	}
 
 	
-	@Test public void testFindBoundariesExpandingFromSquare() throws FileNotFoundException, IOException {
+	@Test public void testFindBoundariesExpandingFromSquare() throws Exception {
 		TextGrid grid;
 		grid = new TextGrid();
-		grid.loadFrom("tests/text/simple_square01.txt");
+		grid.loadFrom(getFilePath("/tests/text/simple_square01.txt"));
 
 		CellSet wholeGridSet = new CellSet();
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
@@ -239,10 +238,10 @@ public class TextGridTest {
 
 	}
 
-	@Test public void testFindBoundariesExpandingFromUInside() throws FileNotFoundException, IOException {
+	@Test public void testFindBoundariesExpandingFromUInside() throws Exception {
 		TextGrid grid;
 		grid = new TextGrid();
-		grid.loadFrom("tests/text/simple_U01.txt");
+		grid.loadFrom(getFilePath("/tests/text/simple_U01.txt"));
 
 		CellSet wholeGridSet = new CellSet();
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
@@ -275,10 +274,10 @@ public class TextGridTest {
 	}
 
 	
-	@Test public void testFindBoundariesExpandingFromUOutside() throws FileNotFoundException, IOException {
+	@Test public void testFindBoundariesExpandingFromUOutside() throws Exception {
 		TextGrid grid;
 		grid = new TextGrid();
-		grid.loadFrom("tests/text/simple_U01.txt");
+		grid.loadFrom(getFilePath("/tests/text/simple_U01.txt"));
 
 		CellSet wholeGridSet = new CellSet();
 		addSquareToCellSet(grid, wholeGridSet, 0,0, grid.getWidth(),grid.getHeight());
@@ -348,5 +347,9 @@ public class TextGridTest {
 			set.add(new Cell(x, y));
 		}
 		return set;
+	}
+
+	private String getFilePath(String name) throws Exception {
+		return new File(TextGridTest.class.getResource(name).toURI()).getAbsolutePath();
 	}
 }

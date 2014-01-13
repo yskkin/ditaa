@@ -29,28 +29,6 @@ dependencies {
   testCompile 'com.github.stefanbirkner:system-rules:1.4.0'
 }
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src'
-      exclude '**/test/**'
-    }
-    resources {
-      srcDir 'src'
-    }
-  }
-  test {
-    java {
-      srcDir 'src'
-      include '**/test/**'
-    }
-    resources {
-      srcDir rootDir
-      include 'tests/**'
-    }
-  }
-}
-
 jar {
   manifest {
     attributes('Main-Class': 'org.stathissideris.ascii2image.core.CommandLineConverter')
