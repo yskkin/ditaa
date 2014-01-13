@@ -122,12 +122,7 @@ public class VisualTester {
 	
 		Set<String> excludedFiles = new HashSet<String>();
 		excludedFiles.addAll( Arrays.asList(new String[]{
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.txt",
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.2.txt",
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.3.txt",
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.4.txt",
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.edit.txt",
-			"dak_orgstruktur_vs_be.ditaa.txt"
+			"sjis.txt"
 		}));
 		
 		Iterator<File> it = textFiles.iterator();
