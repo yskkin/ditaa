@@ -453,29 +453,20 @@ public class TextGrid {
 	 * @return color code appeared on TextGrid.
 	 */
 	public List<CellColorPair> resolveColorCode() {
-		Pattern colorCodePattern = Pattern.compile("c(([A-F0-9]{3})|(GRE|BLU|PNK|RED|YEL|BLK))");
+		PresetColorCode pcc = new PresetColorCode();
+		Pattern colorCodePattern = pcc.getColorCodePattern();
 		List<CellColorPair> result = new ArrayList<CellColorPair>();
 
 		for (int y = 0; y < getHeight(); y++) {
 			StringBuilder row = rows.get(y);
 			Matcher matcher = colorCodePattern.matcher(row);
 			while (matcher.find()) {
-				Color color;
-				String rawColorCode = matcher.group(2);
-				if (rawColorCode != null) {
-					int r = Integer.valueOf(rawColorCode.substring(0, 1), 16) * 17;
-					int g = Integer.valueOf(rawColorCode.substring(1, 2), 16) * 17;
-					int b = Integer.valueOf(rawColorCode.substring(2, 3), 16) * 17;
-					color = new Color(r, g, b);
-				} else {
-					String presetColorCode = matcher.group(3);
-					color = new PresetColorCode().getColor(presetColorCode);
-				}
+				Color color = pcc.getColor(matcher.group(1));
 				result.add(new CellColorPair(new Cell(matcher.start(), y), color));
 				row.replace(matcher.start(), matcher.end(), "    ");
 			}
 		}
-		LOG.info(result.size()+" color codes found");
+		LOG.info(result.size() + " color codes found");
 		return result;
 	}
 

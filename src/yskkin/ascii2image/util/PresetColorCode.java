@@ -3,6 +3,7 @@ package yskkin.ascii2image.util;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class PresetColorCode {
 
@@ -20,8 +21,20 @@ public class PresetColorCode {
 	public Color getColor(String colorCode) {
 		Color result = presetColor.get(colorCode);
 		if (result == null) {
-			throw new IllegalArgumentException("Color code " + colorCode + " is unknown.");
+			try {
+				int r = Integer.valueOf(colorCode.substring(0, 1), 16) * 17;
+				int g = Integer.valueOf(colorCode.substring(1, 2), 16) * 17;
+				int b = Integer.valueOf(colorCode.substring(2, 3), 16) * 17;
+				result = new Color(r, g, b);
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Color code " + colorCode + " is unknown.");
+			}
 		}
 		return result;
+	}
+
+	public Pattern getColorCodePattern() {
+		StringBuilder sb = new StringBuilder("c(([A-F0-9]{3})|(GRE|BLU|PNK|RED|YEL|BLK))");
+		return Pattern.compile(sb.toString());
 	}
 }
