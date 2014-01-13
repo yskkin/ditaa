@@ -636,27 +636,14 @@ public class TextGrid {
 //	25CB white circle
 //	25BA black right-pointing pointer
 
-	
-	private boolean isBullet(Cell cell){
-		char c = get(cell);
-		if((c == 'o' || c == '*')
-			&& isBlank(cell.getEast())
-			&& isBlank(cell.getWest())
-			&& Character.isLetterOrDigit(get(cell.getEast().getEast())) )
-			return true;
-		return false;
-	}
-	
 	private void replaceBullets(){
-		int width = getWidth();
-		int height = getHeight();
-		for(int yi = 0; yi < height; yi++){
-			for(int xi = 0; xi < width; xi++){
-				Cell cell = new Cell(xi, yi);
-				if(isBullet(cell)){
-					set(cell, ' ');
-					set(cell.getEast(), '\u2022');
-				}
+		Pattern bulletPattern = Pattern.compile("( |^)(o|\\*) [^\\p{Punct}\\s]");
+		for (int yi = 0; yi < getHeight(); yi++) {
+			StringBuilder row = rows.get(yi);
+			Matcher matcher = bulletPattern.matcher(row);
+			while (matcher.find()) {
+				int bulletPosition = matcher.start(2);
+				row.replace(bulletPosition, bulletPosition + 2, " \u2022");
 			}
 		}
 	}
