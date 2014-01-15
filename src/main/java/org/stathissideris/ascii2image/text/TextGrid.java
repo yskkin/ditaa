@@ -388,6 +388,7 @@ public class TextGrid {
 		//since the south-pointing arrowheads
 		//are determined based on the surrounding boundaries
 		removeArrowheads();
+		// TODO This removes textual colon (e.g. URL's 'http://').
 		removeBoundaries();
 	}
 

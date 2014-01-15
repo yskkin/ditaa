@@ -327,56 +327,40 @@ public class Diagram {
 		// ****** handle text *******
 		//break up text into groups
 		TextGrid textGroupGrid = new TextGrid(workGrid);
-		CellSet gaps = textGroupGrid.getAllBlanksBetweenCharacters();
-		//kludge
-		textGroupGrid.fillCellsWith(gaps, '|');
-		CellSet nonBlank = textGroupGrid.getAllNonBlank();
-		List<CellSet> textGroups = nonBlank.breakIntoDistinctBoundaries();
-		LOG.info(textGroups.size()+" text groups found");
+
 		
 		Font font = FontMeasurer.instance().getFontFor(cellHeight);
-		
-		for (CellSet textGroupCellSet : textGroups) {
-			TextGrid isolationGrid = new TextGrid(width, height);
-			workGrid.copyCellsTo(textGroupCellSet, isolationGrid);
-			 
-			for (CellStringPair pair : isolationGrid.findStrings()) {
-				TextGrid.Cell cell = pair.cell;
-				String string = pair.string;
-				LOG.fine("Found string "+string);
-				TextGrid.Cell lastCell = new Cell(cell.x + string.length() - 1, cell.y);
-			
-				int minX = getCellMinX(cell);
-				int y = getCellMaxY(cell);
-				int maxX = getCellMaxX(lastCell);
-			
-				DiagramText textObject;
-				if(FontMeasurer.instance().getWidthFor(string, font) > maxX - minX){ //does not fit horizontally
-					Font lessWideFont = FontMeasurer.instance().getFontFor(maxX - minX, string);
-					textObject = new DiagramText(minX, y, string, lessWideFont);
-				} else textObject = new DiagramText(minX, y, string, font);
-			
-				textObject.centerVerticallyBetween(getCellMinY(cell), getCellMaxY(cell));
-			
-				//TODO: if the strings start with bullets they should be aligned to the left
-			
-				//position text correctly
-				int otherStart = isolationGrid.otherStringsStartInTheSameColumn(cell);
-				int otherEnd = isolationGrid.otherStringsEndInTheSameColumn(lastCell);
-				if(0 == otherStart && 0 == otherEnd) {
-					textObject.centerHorizontallyBetween(minX, maxX);
-				} else if(otherEnd > 0 && otherStart == 0) {
-					textObject.alignRightEdgeTo(maxX);
-				} else if(otherEnd > 0 && otherStart > 0){
-					if(otherEnd > otherStart){
-						textObject.alignRightEdgeTo(maxX);
-					} else if(otherEnd == otherStart){
-						textObject.centerHorizontallyBetween(minX, maxX);
-					}
-				}
-			
-				addToTextObjects(textObject);
+
+		for (CellStringPair pair : textGroupGrid.findStrings()) {
+			TextGrid.Cell cell = pair.cell;
+			String string = pair.string;
+			LOG.fine("Found string " + string);
+			TextGrid.Cell lastCell = new Cell(cell.x + string.length() - 1, cell.y);
+
+			int minX = getCellMinX(cell);
+			int y = getCellMaxY(cell);
+			int maxX = getCellMaxX(lastCell);
+
+			DiagramText textObject;
+			if (FontMeasurer.instance().getWidthFor(string, font) > maxX - minX) {
+				// does not fit horizontally
+				Font lessWideFont = FontMeasurer.instance().getFontFor(maxX - minX, string);
+				textObject = new DiagramText(minX, y, string, lessWideFont);
+			} else {
+				textObject = new DiagramText(minX, y, string, font);
 			}
+
+			textObject.centerVerticallyBetween(getCellMinY(cell), getCellMaxY(cell));
+			// TODO: if the strings start with bullets they should be aligned to the left
+
+			//position text correctly
+			int otherStart = textGroupGrid.otherStringsStartInTheSameColumn(cell);
+			int otherEnd = textGroupGrid.otherStringsEndInTheSameColumn(lastCell);
+			if (otherEnd > 0 && otherStart < otherEnd) {
+				textObject.alignRightEdgeTo(maxX);
+			}
+
+			addToTextObjects(textObject);
 		}
 		
 		LOG.info("Positioned text");
