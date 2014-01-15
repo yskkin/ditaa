@@ -36,8 +36,10 @@ public class ImageMatcher extends TypeSafeMatcher<File> {
 					.exec(String.format("compare %s %s %s",
 							actualFile.getAbsoluteFile(),
 							expectedFile.getAbsolutePath(),
-							getDiiffFileName(expectedFile)));
+							getDiiffFileName(expectedFile)))
+							.waitFor();
 			} catch (IOException ignored) {
+			} catch (InterruptedException ignored) {
 			}
 		}
 	}
