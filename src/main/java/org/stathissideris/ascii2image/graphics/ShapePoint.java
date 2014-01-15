@@ -123,14 +123,6 @@ public class ShapePoint extends Float {
 		this.y = point.y;
 	}
 
-
-	/**
-	 * @return
-	 */
-	public boolean isLocked() {
-		return locked;
-	}
-
 	/**
 	 * @param b
 	 */

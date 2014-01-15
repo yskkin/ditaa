@@ -479,7 +479,7 @@ public class Diagram {
 	 */
 	public List<DiagramShape> getAllDiagramShapes(){
 		List<DiagramShape> shapes = new ArrayList<DiagramShape>();
-		shapes.addAll(this.getShapes());
+		shapes.addAll(this.shapes);
 		
 		for(CompositeDiagramShape compShape : getCompositeShapes()) {
 			shapes.addAll(compShape.getShapes());
@@ -663,7 +663,7 @@ public class Diagram {
 	
 	private DiagramShape findSmallestShapeContaining(ShapePoint point) {
 		DiagramShape containingShape = null;
-		for (DiagramShape shape : getShapes()) {
+		for (DiagramShape shape : shapes) {
 			if(shape.contains(point)){
 				if(containingShape == null){
 					containingShape = shape;
@@ -679,7 +679,7 @@ public class Diagram {
 	
 	private DiagramShape findSmallestShapeIntersecting(Rectangle2D rect) {
 		DiagramShape intersectingShape = null;
-		for (DiagramShape shape : getShapes()) {
+		for (DiagramShape shape : shapes) {
 			if(shape.intersects(rect)){
 				if(intersectingShape == null){
 					intersectingShape = shape;
@@ -730,13 +730,6 @@ public class Diagram {
 	 */
 	public List<CompositeDiagramShape> getCompositeShapes() {
 		return compositeShapes;
-	}
-
-	/**
-	 * @return
-	 */
-	public List<DiagramShape> getShapes() {
-		return shapes;
 	}
 	
 	public int getCellMinX(TextGrid.Cell cell){
