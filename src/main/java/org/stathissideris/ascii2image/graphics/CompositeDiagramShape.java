@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.stathissideris.ascii2image.core.DebugUtils;
 import org.stathissideris.ascii2image.text.*;
 
 import yskkin.ascii2image.util.Loggers;
@@ -100,14 +99,12 @@ public class CompositeDiagramShape extends DiagramComponent {
 		DiagramShape shape = new DiagramShape();
 		
 		shape.addToPoints(makePointForCell(previousCell, workGrid, cellWidth, cellHeight, allRound));
-		LOG.fine("point at "+previousCell+" (call from line: "+DebugUtils.getLineNumber()+")");
 		if(workGrid.cellContainsDashedLineChar(previousCell)) shape.setStrokeDashed(true);
 
 		boolean finished = false;
 		while(!finished) {
 			visitedCells.add(cell);
 			if(workGrid.isPointCell(cell)) {
-				LOG.fine("point at "+cell+" (call from line: "+DebugUtils.getLineNumber()+")");
 				shape.addToPoints(makePointForCell(cell, workGrid, cellWidth, cellHeight, allRound));
 			}
 			
@@ -122,7 +119,6 @@ public class CompositeDiagramShape extends DiagramComponent {
 			if(nextCells.size() == 1) {
 				previousCell = cell;
 				cell = (TextGrid.Cell) nextCells.getFirst();
-				LOG.fine("tracing at "+cell+" (call from line: "+DebugUtils.getLineNumber()+")");
 			} else if(nextCells.size() > 1 || nextCells.size() == 0) {//3- or 4- way intersection
 				finished = true;
 				for(TextGrid.Cell nextCell : nextCells)
