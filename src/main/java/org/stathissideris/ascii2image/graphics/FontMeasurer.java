@@ -36,7 +36,7 @@ import yskkin.ascii2image.util.Loggers;
  */
 public class FontMeasurer {
 	
-	private static final String fontFamilyName = "Dialog";
+	private static final String fontFamilyName = Font.MONOSPACED;
 	//private static final String fontFamilyName = "Helvetica";
 	
 	private static final Logger LOG = Loggers.getLogger(FontMeasurer.class);

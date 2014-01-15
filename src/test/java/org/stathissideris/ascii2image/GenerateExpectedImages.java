@@ -29,7 +29,7 @@ package org.stathissideris.ascii2image;
  */
 public class GenerateExpectedImages {
 	public static void main(String[] args) throws Exception {
-		VisualTester.generateImages(VisualTester.getFilesToRender(), "tests/images-expected");
+		VisualTester.generateImages(VisualTester.getFilesToRender(), "src/test/resources/tests/images-expected");
 		System.out.println("Done");	
 	}
 }
