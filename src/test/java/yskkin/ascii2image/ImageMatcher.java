@@ -47,7 +47,7 @@ public class ImageMatcher extends TypeSafeMatcher<File> {
 	private String getDiiffFileName(File expectedFile) {
 		StringBuffer baseName = new StringBuffer(expectedFile.getName());
 		baseName.insert(baseName.lastIndexOf("."), "_diff");
-		return baseName.toString();
+		return "build/failed-images/" + baseName.toString();
 	}
 
 	@Override

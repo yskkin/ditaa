@@ -36,6 +36,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -63,11 +64,9 @@ public class VisualTester {
 
 	private static final String HTMLReportName = "test_suite";
 	private static final String expectedDir = "/tests/images-expected";
+	private static final File failedImageDir = new File("build", "failed-images");
 	
 	private File textFile;
-
-	@Rule
-	public TemporaryFolder dir = new TemporaryFolder();
 	
 	public static void main(String[] args) throws Exception {
 		String reportDir = "tests/images";
@@ -76,10 +75,19 @@ public class VisualTester {
 		System.out.println("Tests completed");
 	}
 
+	@BeforeClass
+	public static void setUp() {
+		failedImageDir.mkdirs();
+		for (File previousTest : failedImageDir.listFiles()) {
+			previousTest.delete();
+		}
+	}
+
 	@Test
 	public void compareImages() throws Exception {
 		ConversionOptions options = new ConversionOptions();
-		File actualFile = dir.newFile();
+		String actualBaseName = textFile.getName().substring(0, textFile.getName().lastIndexOf(".")) + ".png";
+		File actualFile = new File(failedImageDir, actualBaseName);
 		File expectedFile = new File(getClass().getResource(expectedDir + "/" + textFile.getName() + ".png").toURI());
 
 		if(!expectedFile.exists()){
@@ -95,6 +103,7 @@ public class VisualTester {
 	
 		ImageIO.write(image, "png", actualFile);
 		assertThat(actualFile, hasSameImageAs(expectedFile));
+		actualFile.delete(); // Delete succeeded case.
 	}
 	
 	public VisualTester(File textFile) {
