@@ -234,13 +234,10 @@ public class Diagram {
 		for (CellSet set : closed) {
 			set.printAsGrid();
 			
-			DiagramComponent shape = DiagramComponent.createClosedFromBoundaryCells(workGrid, set, cellWidth, cellHeight, allCornersRound); 
-			if(shape != null){
-				if(shape instanceof DiagramShape){
-					shapes.add((DiagramShape) shape);
-					closedShapes.add(shape);
-				} else if(shape instanceof CompositeDiagramShape)
-					compositeShapes.add((CompositeDiagramShape) shape);
+			DiagramShape shape = DiagramComponent.createClosedFromBoundaryCells(workGrid, set, cellWidth, cellHeight, allCornersRound); 
+			if (shape != null) {
+				shapes.add(shape);
+				closedShapes.add(shape);
 			}
 		}
 
@@ -261,19 +258,14 @@ public class Diagram {
 			} else { //normal shape
                 LOG.finer(set.getCellsAsString());
 				
-				DiagramComponent shape =
+				CompositeDiagramShape shape =
 					CompositeDiagramShape
 						.createOpenFromBoundaryCells(
 								workGrid, set, cellWidth, cellHeight, allCornersRound);
 
 				if(shape != null){
-					if(shape instanceof CompositeDiagramShape){
-						compositeShapes.add((CompositeDiagramShape) shape);
-						((CompositeDiagramShape) shape).connectEndsToAnchors(workGrid, this);
-					} else if(shape instanceof DiagramShape) {
-						shapes.add((DiagramShape) shape);
-						((DiagramShape) shape).connectEndsToAnchors(workGrid, this);
-					}
+					compositeShapes.add(shape);
+					shape.connectEndsToAnchors(workGrid, this);
 				}
 					
 			}

@@ -38,7 +38,7 @@ public class CompositeDiagramShape extends DiagramComponent {
 
 	private List<DiagramShape> shapes = new ArrayList<DiagramShape>();
 
-	public static DiagramComponent createOpenFromBoundaryCells(
+	public static CompositeDiagramShape createOpenFromBoundaryCells(
 			final TextGrid grid,
 			final CellSet boundaryCells,
 			final int cellWidth,
