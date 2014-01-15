@@ -17,19 +17,19 @@ import org.stathissideris.ascii2image.text.StringUtils;
 public class StringUtilsTest {
 
 	@RunWith(Parameterized.class)
-	public static class ReportStringTest {
+	public static class RepeatStringTest {
 		String sourceString;
 		int number;
 		String expected;
 
-		public ReportStringTest(String sourceString, int number, String expected) {
+		public RepeatStringTest(String sourceString, int number, String expected) {
 			this.sourceString = sourceString;
 			this.number = number;
 			this.expected = expected;
 		}
 
 		@Test
-		public void testReportString() {
+		public void testRepeatString() {
 			String actual = StringUtils.repeatString(sourceString, number);
 			assertThat(actual, is(expected));
 		}
