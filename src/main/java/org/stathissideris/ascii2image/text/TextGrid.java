@@ -22,6 +22,7 @@ package org.stathissideris.ascii2image.text;
 import java.awt.Color;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -169,10 +170,12 @@ public class TextGrid {
 	}
 
 	public void printDebug(){
-		LOG.finer("TextGrid:\n" + getDebugString());
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("TextGrid:\n" + this);
+		}
 	}
 
-	public String getDebugString(){
+	public String toString(){
 		StringBuilder buffer = new StringBuilder();
 		int i = 0;
 		buffer.append(
@@ -188,10 +191,6 @@ public class TextGrid {
 			i++; 
 		}
 		return buffer.toString();
-	}
-
-	public String toString(){
-		return getDebugString();
 	}
 
 	/**

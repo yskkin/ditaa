@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yskkin.ascii2image.util.Loggers;
@@ -83,12 +84,14 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	}
 
 	public void printDebug(){
-		StringBuilder sb = new StringBuilder();
-		for (TextGrid.Cell cell : internalSet){
-			sb.append(cell.toString()).append(",");
+		if (LOG.isLoggable(Level.FINER)) {
+			StringBuilder sb = new StringBuilder();
+			for (TextGrid.Cell cell : internalSet) {
+				sb.append(cell.toString()).append(",");
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			LOG.finer(sb.toString());
 		}
-		sb.deleteCharAt(sb.length() - 1);
-		LOG.finer(sb.toString());
 	}
 
 	public String getCellsAsString(){
@@ -104,7 +107,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	public String toString(){
 		TextGrid grid = new TextGrid(getMaxX()+2, getMaxY()+2);
 		grid.fillCellsWith(this, '*');
-		return grid.getDebugString();		
+		return grid.toString();
 	}
 	
 	/**

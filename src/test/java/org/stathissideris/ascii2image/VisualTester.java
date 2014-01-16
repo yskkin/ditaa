@@ -186,7 +186,7 @@ public class VisualTester {
 				
 			} catch (Exception e) {
 				System.err.println("!!! Failed to render: "+textFile+" !!!\n");
-				System.err.println(grid.getDebugString()+"\n");
+				System.err.println(grid.toString()+"\n");
 				e.printStackTrace(System.err);
 				
 				continue;
@@ -251,7 +251,7 @@ public class VisualTester {
 				
 			} catch (Exception e) {
 				s.println("<b>!!! Failed to render: "+textFile+" !!!</b>");
-				s.println("<pre>\n"+grid.getDebugString()+"\n</pre>");
+				s.println("<pre>\n"+grid.toString()+"\n</pre>");
 				s.println(e.getMessage());
 				s.println("<hr />");
 				s.flush();
@@ -282,7 +282,7 @@ public class VisualTester {
 	private static String makeReportTable(String gridURI, TextGrid grid, String imageURI, long time){
 		StringBuffer buffer = new StringBuffer("<center><table border=\"0\">");
 		buffer.append("<th colspan=\"2\"><h3>"+gridURI+" ("+Math.round(time/10e6)+"msec)</h3></th>");
-		buffer.append("<tr><td><pre>\n"+grid.getDebugString()+"\n</pre></td>");
+		buffer.append("<tr><td><pre>\n"+grid.toString()+"\n</pre></td>");
 		buffer.append("<td><img border=\"0\" src=\""+imageURI+"\"</td></tr>");
 		buffer.append("</table></center>");
 		return buffer.toString();
