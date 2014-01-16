@@ -312,21 +312,6 @@ public class TextGrid {
 		return set;
 	}
 
-
-	public CellSet getAllBlanksBetweenCharacters(){
-		CellSet set = new CellSet();
-		int width = getWidth();
-		int height = getHeight();
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
-				Cell cell = new Cell(x, y);
-				if(isBlankBetweenCharacters(cell)) set.add(cell);
-			}
-		}
-		return set;
-	}
-
-
 	/**
 	 * Returns an List of CellStringPairs that
 	 * represents all the continuous (non-blank) Strings
@@ -363,19 +348,6 @@ public class TextGrid {
 			return StringUtils.isOneOf(c, entryPoints.get(entryPointId));
 		}
 		return false;
-	}
-
-	/**
-	 * true if cell is blank and the east and west cells are not
-	 * (used to find gaps between words)
-	 * 
-	 * @param cell
-	 * @return
-	 */
-	private boolean isBlankBetweenCharacters(Cell cell){
-		return (isBlank(cell)
-				&& !isBlank(cell.getEast())
-				&& !isBlank(cell.getWest()));
 	}
 
 	/**
