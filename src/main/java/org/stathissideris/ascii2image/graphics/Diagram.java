@@ -24,8 +24,10 @@ import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.stathissideris.ascii2image.core.ConversionOptions;
@@ -48,7 +50,7 @@ public class Diagram {
 
 	private static final Logger LOG = Loggers.getLogger(Diagram.class);
 
-	private List<DiagramShape> shapes = new ArrayList<DiagramShape>();
+	private Set<DiagramShape> shapes = new HashSet<DiagramShape>();
 	private List<CompositeDiagramShape> compositeShapes = new ArrayList<CompositeDiagramShape>();
 	private List<DiagramText> textObjects = new ArrayList<DiagramText>();
 	
@@ -314,8 +316,6 @@ public class Diagram {
 			shapes.add(mark);
 		}
 
-		removeDuplicateShapes();
-		
 		LOG.finer("Shape count: "+shapes.size());
 		LOG.finer("Composite shape count: "+compositeShapes.size());
 		
@@ -641,26 +641,7 @@ public class Diagram {
 		}
 
 	}
-	
-	
-	//TODO: removes more than it should
-	private void removeDuplicateShapes() {
-		List<DiagramShape> originalShapes = new ArrayList<DiagramShape>();
 
-		for (DiagramShape shape : shapes) {
-			boolean isOriginal = true;
-			for (DiagramShape originalShape : originalShapes) {
-				if(shape.equals(originalShape)){
-					isOriginal = false;
-				}
-			}
-			if(isOriginal) originalShapes.add(shape);
-		}
-
-		shapes.clear();
-		shapes.addAll(originalShapes);
-	}
-	
 	private DiagramShape findSmallestShapeContaining(ShapePoint point) {
 		DiagramShape containingShape = null;
 		for (DiagramShape shape : shapes) {
