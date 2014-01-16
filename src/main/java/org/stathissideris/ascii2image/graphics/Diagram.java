@@ -360,34 +360,17 @@ public class Diagram {
 				textObject.alignRightEdgeTo(maxX);
 			}
 
+			DiagramShape shape = findSmallestShapeIntersecting(textObject.getBounds());
+			if (shape != null
+					&& shape.getFillColor() != null
+					&& BitmapRenderer.isColorDark(shape.getFillColor())) {
+				LOG.info("Corrected color of text according to underlying color");
+				textObject.setColor(Color.WHITE);
+			}
 			addToTextObjects(textObject);
 		}
 		
 		LOG.info("Positioned text");
-		
-		//correct the color of the text objects according
-		//to the underlying color
-		for(DiagramText textObject : getTextObjects()) {
-			DiagramShape shape = findSmallestShapeIntersecting(textObject.getBounds());
-			if(shape != null 
-					&& shape.getFillColor() != null 
-					&& BitmapRenderer.isColorDark(shape.getFillColor())) {
-				textObject.setColor(Color.white);
-			}
-		}
-
-		//set outline to true for test within custom shapes
-		for (DiagramShape shape : getAllDiagramShapes()) {
-			if(shape.getType() == DiagramShape.TYPE_CUSTOM){
-				for (DiagramText textObject : getTextObjects()) {
-					textObject.setHasOutline(true);
-					textObject.setColor(DiagramText.DEFAULT_COLOR);
-				}
-			}
-		}
-		
-		LOG.info("Corrected color of text according to underlying color");
-
 	}
 
 	private void handleCellTagPair(ConversionOptions options, CellTagPair pair,
