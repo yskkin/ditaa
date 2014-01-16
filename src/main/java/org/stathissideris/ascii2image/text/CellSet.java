@@ -484,23 +484,6 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		return internalSet.hashCode();
 	}
 
-	
-	
-	/**
-	 * Takes into account character info from the grid
-	 * 
-	 * @return List of distinct Boundaries
-	 */
-	public List<CellSet> breakIntoDistinctBoundaries(TextGrid grid){
-		List<CellSet> result;
-		
-		AbstractionGrid temp = new AbstractionGrid(grid, this);
-		result = temp.getDistinctShapes();
-
-		return result;		
-	}
-
-
 	/**
 	 * 
 	 * @return List of distinct Boundaries
@@ -561,8 +544,8 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		workGrid.printDebug();
 
 		Iterator<TextGrid.Cell> it = iterator();
-		while(it.hasNext()){
-			TextGrid.Cell start = (TextGrid.Cell) it.next();
+		while (it.hasNext()) {
+			TextGrid.Cell start = it.next();
 			if(workGrid.isLinesEnd(start) && !visitedEnds.contains(start)){
 				
 				LOG.fine("Starting new subshape:");

@@ -173,7 +173,7 @@ public class Diagram {
 				// closed sets from them
 				if(set.getType(workGrid) == CellSet.TYPE_OPEN) {
 					boundarySetsStep2.remove(set);
-					boundarySetsStep2.addAll(set.breakIntoDistinctBoundaries(workGrid));
+					boundarySetsStep2.addAll(set.breakIntoDistinctBoundaries());
 				}
 			}
 
