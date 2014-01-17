@@ -544,7 +544,7 @@ public class Diagram {
 		}
 		
 		//group edges into pairs of touching edges
-		List<Pair<ShapeEdge, ShapeEdge>> listOfPairs = new ArrayList<Pair<ShapeEdge, ShapeEdge>>();
+		List<Pair<ShapeEdge>> listOfPairs = new ArrayList<Pair<ShapeEdge>>();
 		
 		//all-against-all touching test for the edges
 		int startIndex = 1; //skip some to avoid duplicate comparisons and self-to-self comparisons
@@ -554,7 +554,7 @@ public class Diagram {
 				ShapeEdge edge2 =  edges.get(k);
 				
 				if(edge1.touchesWith(edge2)) {
-					listOfPairs.add(new Pair<ShapeEdge, ShapeEdge>(edge1, edge2));
+					listOfPairs.add(new Pair<ShapeEdge>(edge1, edge2));
 				}
 			}
 			startIndex++;
@@ -563,7 +563,7 @@ public class Diagram {
 		List<ShapeEdge> movedEdges = new ArrayList<ShapeEdge>();
 		
 		//move equivalent edges inwards
-		for (Pair<ShapeEdge, ShapeEdge> pair : listOfPairs) {
+		for (Pair<ShapeEdge> pair : listOfPairs) {
 			if(!movedEdges.contains(pair.first)) {
 				pair.first.moveInwardsBy(offset);
 				movedEdges.add(pair.first);
