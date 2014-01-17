@@ -189,13 +189,6 @@ public class DiagramShape extends DiagramComponent {
 		points.add(point);
 	}
 	
-	public void scale(float factor){
-		for (ShapePoint point : points) {
-			point.x *= factor;
-			point.y *= factor;
-		}
-	}
-	
 	public boolean isEmpty(){
 		return points.isEmpty();
 	}

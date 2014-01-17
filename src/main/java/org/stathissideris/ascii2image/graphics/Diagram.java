@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 
 import org.stathissideris.ascii2image.core.ConversionOptions;
 import org.stathissideris.ascii2image.core.Pair;
-import org.stathissideris.ascii2image.text.AbstractionGrid;
 import org.stathissideris.ascii2image.text.CellSet;
 import org.stathissideris.ascii2image.text.TextGrid;
 import org.stathissideris.ascii2image.text.TextGrid.Cell;
