@@ -96,7 +96,7 @@ public class TextGrid {
 	}
 
 //	duplicated code due to lots of hits to this function
-	private char get(int x, int y){
+	public char get(int x, int y){
 		if(x > getWidth() - 1
 			|| y > getHeight() - 1
 			|| x < 0

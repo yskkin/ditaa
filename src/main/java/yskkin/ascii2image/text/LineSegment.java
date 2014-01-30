@@ -1,5 +1,8 @@
 package yskkin.ascii2image.text;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * A line delimited by white spaces, arrows (v, V, <, >, ^), and corners (/, \, +).
  * 
@@ -54,6 +57,38 @@ public class LineSegment {
 			}
 			return result;
 		}
+		public static LineDelimiter getLineDelimiter(char ch) {
+			LineDelimiter result;
+			switch (ch) {
+			case '^':
+				result = NORTH_ARROW;
+				break;
+			case '>':
+				result = EAST_ARROW;
+				break;
+			case 'v': /*FALL THROUGH*/
+			case 'V':
+				result = SOUTH_ARROW;
+				break;
+			case '<':
+				result = WEST_ARROW;
+				break;
+			case '/':
+				result = DIAGONAL_CORNER;
+				break;
+			case '\\':
+				result = ANTI_DAIGONAL_CORNER;
+				break;
+			case '+':
+				result = CROSS_CORNER;
+				break;
+			case ' ': /*FALL THROUGH*/
+			default:
+				result = WHITESPACE;
+				break;
+			}
+			return result;
+		}
 	}
 
 	public static class LineEnd {
@@ -65,6 +100,11 @@ public class LineSegment {
 			this.x = x;
 			this.y = y;
 			this.delimiter = delimiter;
+		}
+		public LineEnd(int x, int y, char delimiterChar) {
+			this.x = x;
+			this.y = y;
+			this.delimiter = LineDelimiter.getLineDelimiter(delimiterChar);
 		}
 		public int getX() {
 			return x;
@@ -87,15 +127,28 @@ public class LineSegment {
 		public int hashCode() {
 			return x * 31 * 31 + y * 31 + delimiter.hashCode();
 		}
+		@Override
+		public String toString() {
+			return String.format("(%d, %d)", x, y);
+		}
 	}
 
 	public static final int HORIZONTAL = 0x01;
 	public static final int VERTICAL = 0x02;
 
+	/**
+	 * A smaller end of a line.
+	 */
 	private LineEnd start;
+	/**
+	 * A greater end of a line.
+	 */
 	private LineEnd end;
 
 	public LineSegment(LineEnd a, LineEnd b) {
+		if (a == null || b == null) {
+			throw new NullPointerException("line end is null.");
+		}
 		if (a.x < b.x || (a.x == b.x && a.y < b.y)) {
 			this.start = a;
 			this.end = b;
@@ -125,5 +178,32 @@ public class LineSegment {
 				|| (end.equals(other.end) && end.delimiter.isIn(LineDelimiter.DIAGONAL_CORNER, LineDelimiter.CROSS_CORNER));
 		result &= getOrientation() != other.getOrientation();
 		return result;
+	}
+
+	/**
+	 * Get both ends of a line.
+	 * 
+	 * @return List of ends whose size is always 2.
+	 */
+	public List<LineEnd> getEnds() {
+		return Arrays.asList(start, end);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof LineSegment)) {
+			return false;
+		}
+		LineSegment that = (LineSegment) o;
+		return this.start.equals(that.start) && this.end.equals(that.end);
+	}
+	@Override
+	public int hashCode() {
+		return start.hashCode() * 31 + end.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[%s, %s]", start, end);
 	}
 }
